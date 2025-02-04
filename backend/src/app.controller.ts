@@ -18,6 +18,7 @@ const analyzeSchema = z.object({
         .pipe(z.array(z.enum(['axebuilder'])))
         .transform((val) => [...new Set(val)]),
 });
+export type AnalyzePayload = z.infer<typeof analyzeSchema>;
 
 @Controller()
 export class AppController {
@@ -25,10 +26,9 @@ export class AppController {
 
     @Get('analyze')
     @UsePipes(new ZodValidationPipe(analyzeSchema, 'analyze'))
-    analyze(
-        @Query() query: z.infer<typeof analyzeSchema>,
-        @Res() res: Response,
-    ) {
-        return res.json(query);
+    async analyze(@Query() query: AnalyzePayload, @Res() res: Response) {
+        const result = await this.appService.analyze(query);
+
+        return res.json(result);
     }
 }
