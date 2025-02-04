@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { EnvService } from '../env/env.service';
+import { xml2json } from 'xml-js';
 
 @Injectable()
-export class PageSpeedInsightService {
+export class WhoIsService {
     private baseUrl: string =
-        'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?';
+        'https://www.whoisxmlapi.com/whoisserver/WhoisService?';
 
     constructor(private readonly envService: EnvService) {}
     async analyze(url: string) {
@@ -12,24 +13,23 @@ export class PageSpeedInsightService {
             const response = await fetch(
                 this.baseUrl +
                     new URLSearchParams({
-                        key: this.envService.pageSpeedInsightApiKey,
-                        url,
+                        apiKey: this.envService.whoIsApiKey,
+                        domainName: new URL(url).host,
                     }),
             );
-
             if (!response.ok)
                 return {
-                    error: `Error at PageSpeed Insight. Status:${response.status}`,
+                    error: `Error at WhoIs. Status:${response.status}`,
                 };
 
-            const result = await response.json();
+            const resultAsXML = await response.text();
 
-            return result;
+            return JSON.parse(xml2json(resultAsXML));
         } catch (error) {
             console.error(error);
 
             return {
-                error: `Error at PageSpeed Insight Analzyer..! Check the server console.`,
+                error: `Error at WhoIs Analzyer..! Check the server console.`,
             };
         }
     }

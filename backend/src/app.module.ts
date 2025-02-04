@@ -7,6 +7,7 @@ import { AxeBuilderService } from './services/axe-builder/axe-builder.service';
 import { EnvService } from './services/env/env.service';
 import { ConfigModule } from '@nestjs/config';
 import { PageSpeedInsightService } from './services/page-speed-insight/page-speed-insight.service';
+import { WhoIsService } from './services/who-is/who-is.service';
 
 @Module({
     imports: [
@@ -31,6 +32,7 @@ import { PageSpeedInsightService } from './services/page-speed-insight/page-spee
         EnvService,
         AxeBuilderService,
         PageSpeedInsightService,
+        WhoIsService,
     ],
 })
 export class AppModule {}

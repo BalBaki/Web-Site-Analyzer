@@ -3,12 +3,14 @@ import { AxeBuilderService } from './services/axe-builder/axe-builder.service';
 import type { AnalyzePayload } from './app.controller';
 import { InvalidPayloadException } from './exceptions/invalid-payload.exception';
 import { PageSpeedInsightService } from './services/page-speed-insight/page-speed-insight.service';
+import { WhoIsService } from './services/who-is/who-is.service';
 
 @Injectable()
 export class AppService {
     constructor(
         private axeBuilderService: AxeBuilderService,
         private pageSpeedInsightService: PageSpeedInsightService,
+        private whoIsService: WhoIsService,
     ) {}
 
     async analyze(payload: AnalyzePayload) {
@@ -22,6 +24,8 @@ export class AppService {
                             return this.pageSpeedInsightService.analyze(
                                 payload.url,
                             );
+                        case 'whois':
+                            return this.whoIsService.analyze(payload.url);
                         default:
                             throw new InvalidPayloadException();
                     }
