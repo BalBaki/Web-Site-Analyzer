@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { EnvService } from '../env/env.service';
-import { xml2json } from 'xml-js';
 
 @Injectable()
 export class WhoIsService {
-    private baseUrl: string =
-        'https://www.whoisxmlapi.com/whoisserver/WhoisService?';
+    private baseUrl: string = 'https://whoisjson.com/api/v1/whois?';
 
     constructor(private readonly envService: EnvService) {}
     async analyze(url: string) {
@@ -13,18 +11,23 @@ export class WhoIsService {
             const response = await fetch(
                 this.baseUrl +
                     new URLSearchParams({
-                        apiKey: this.envService.whoIsApiKey,
-                        domainName: new URL(url).host,
+                        domain: new URL(url).host,
                     }),
+                {
+                    headers: new Headers({
+                        Authorization: `TOKEN=${this.envService.whoIsApiKey}`,
+                    }),
+                    method: 'GET',
+                },
             );
             if (!response.ok)
                 return {
                     error: `Error at WhoIs. Status:${response.status}`,
                 };
 
-            const resultAsXML = await response.text();
+            const result = await response.json();
 
-            return JSON.parse(xml2json(resultAsXML));
+            return result;
         } catch (error) {
             console.error(error);
 
