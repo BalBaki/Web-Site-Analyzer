@@ -18,7 +18,11 @@ export class AxeBuilderService {
 
             return result.incomplete;
         } catch (error) {
-            console.log(error);
+            console.error(error);
+
+            return {
+                error: `Error at AxeBuilder Analyzer..! Check the server console.`,
+            };
         } finally {
             await browser.close();
         }

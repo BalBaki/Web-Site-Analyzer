@@ -15,7 +15,7 @@ const analyzeSchema = z.object({
                 throw new Error('Invalid JSON format');
             }
         })
-        .pipe(z.array(z.enum(['axebuilder'])))
+        .pipe(z.array(z.enum(['axebuilder', 'pagespeedinsight'])))
         .transform((val) => [...new Set(val)]),
 });
 export type AnalyzePayload = z.infer<typeof analyzeSchema>;

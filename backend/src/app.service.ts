@@ -2,27 +2,42 @@ import { Injectable } from '@nestjs/common';
 import { AxeBuilderService } from './services/axe-builder/axe-builder.service';
 import type { AnalyzePayload } from './app.controller';
 import { InvalidPayloadException } from './exceptions/invalid-payload.exception';
+import { PageSpeedInsightService } from './services/page-speed-insight/page-speed-insight.service';
 
 @Injectable()
 export class AppService {
-    constructor(private axeBuilderService: AxeBuilderService) {}
+    constructor(
+        private axeBuilderService: AxeBuilderService,
+        private pageSpeedInsightService: PageSpeedInsightService,
+    ) {}
 
     async analyze(payload: AnalyzePayload) {
-        const analyzeResults = await Promise.all(
-            payload.services.map((service) => {
-                switch (service) {
-                    case 'axebuilder':
-                        return this.axeBuilderService.analyze(payload.url);
-                    default:
-                        throw new InvalidPayloadException();
-                }
-            }),
-        );
+        try {
+            const analyzeResults = await Promise.all(
+                payload.services.map((service) => {
+                    switch (service) {
+                        case 'axebuilder':
+                            return this.axeBuilderService.analyze(payload.url);
+                        case 'pagespeedinsight':
+                            return this.pageSpeedInsightService.analyze(
+                                payload.url,
+                            );
+                        default:
+                            throw new InvalidPayloadException();
+                    }
+                }),
+            );
 
-        return payload.services.reduce((results, service, index) => {
-            results[service] = analyzeResults[index];
+            return {
+                analyze: true,
+                results: payload.services.reduce((results, service, index) => {
+                    results[service] = analyzeResults[index];
 
-            return results;
-        }, {});
+                    return results;
+                }, {}),
+            };
+        } catch (error) {
+            return { analyze: false, error: 'Something went wrong..!' };
+        }
     }
 }
