@@ -20,6 +20,7 @@ export class WhoIsService {
                     method: 'GET',
                 },
             );
+
             if (!response.ok)
                 return {
                     error: `Error at WhoIs. Status:${response.status}`,

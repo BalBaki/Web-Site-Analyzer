@@ -9,11 +9,11 @@ import Services from './Services';
 import { Button } from './ui/button';
 
 const analyzeSchema = z.object({
-    url: z.string().url(),
+    url: z.string().url('Enter Valid Url'),
     services: z
         .array(z.enum(['axebuilder', 'pagespeedinsight', 'whois']))
         .transform((val) => [...new Set(val)])
-        .refine((val) => val.length > 0, 'Select at least one service..!'),
+        .refine((val) => val.length > 0, 'Select at least one service!'),
 });
 export type AnalyzeForm = z.infer<typeof analyzeSchema>;
 
@@ -27,19 +27,34 @@ export default function Analyze() {
         },
     });
 
-    const onSubmit: SubmitHandler<AnalyzeForm> = (data) => console.log(data);
+    const onSubmit: SubmitHandler<AnalyzeForm> = async (data) => {
+        try {
+            const response = await fetch(
+                'http://localhost:3000/analyze?' +
+                    new URLSearchParams({ url: data.url, data: JSON.stringify(data.services) })
+            );
+
+            if (!response.ok) console.log('Error. Status: ', response.status);
+
+            const result = await response.json();
+
+            console.log(result);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex ">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex justify-center gap-3 max-sm:flex-col mt-2">
                 <FormField
                     control={form.control}
                     name="url"
                     render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="space-y-0 sm:max-w-96 w-full">
                             <FormLabel className="sr-only">Url</FormLabel>
                             <FormControl>
-                                <Input placeholder="https://wwww.google.com" {...field} />
+                                <Input placeholder="https://wwww.google.com" className="w-full" {...field} />
                             </FormControl>
                             <FormDescription />
                             <FormMessage />
@@ -47,7 +62,7 @@ export default function Analyze() {
                     )}
                 />
                 <Services />
-                <Button type="submit" disabled={!form.formState.isValid}>
+                <Button type="submit" disabled={!form.formState.isValid} className="h-full">
                     Analyze
                 </Button>
             </form>

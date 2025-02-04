@@ -3,7 +3,7 @@
 import { useFormContext } from 'react-hook-form';
 import { FaCheck } from 'react-icons/fa';
 import { Button } from '@/components/ui/button';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
@@ -37,7 +37,7 @@ export default function Services() {
             control={form.control}
             name="services"
             render={({ field }) => (
-                <FormItem className="">
+                <FormItem className="space-y-0">
                     <FormLabel className="sr-only">Services</FormLabel>
                     <Popover>
                         <PopoverTrigger asChild>
@@ -45,7 +45,10 @@ export default function Services() {
                                 <Button
                                     variant="outline"
                                     role="combobox"
-                                    className={cn('justify-between', !field.value && 'text-muted-foreground')}
+                                    className={cn(
+                                        'justify-between w-full sm:w-52',
+                                        !field.value && 'text-muted-foreground'
+                                    )}
                                     aria-label="Select your services"
                                 >
                                     Select Service

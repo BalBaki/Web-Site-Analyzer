@@ -9,11 +9,7 @@ const analyzeSchema = z.object({
     services: z
         .string()
         .transform((val) => {
-            try {
-                return JSON.parse(val);
-            } catch {
-                throw new Error('Invalid JSON format');
-            }
+            return val.split(',');
         })
         .pipe(z.array(z.enum(['axebuilder', 'pagespeedinsight', 'whois'])))
         .transform((val) => [...new Set(val)]),
