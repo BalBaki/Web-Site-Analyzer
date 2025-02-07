@@ -9,7 +9,7 @@ const analyzeSchema = z.object({
     services: z
         .string()
         .transform((val) => {
-            return val.split(',');
+            return JSON.parse(val);
         })
         .pipe(z.array(z.enum(['axebuilder', 'pagespeedinsight', 'whois'])))
         .transform((val) => [...new Set(val)]),

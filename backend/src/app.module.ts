@@ -14,7 +14,7 @@ import { WhoIsService } from './services/who-is/who-is.service';
         ThrottlerModule.forRoot([
             {
                 ttl: 60 * 1000, //60 seconds as miliseconds
-                limit: 10,
+                limit: 100,
             },
         ]),
         ConfigModule.forRoot({
