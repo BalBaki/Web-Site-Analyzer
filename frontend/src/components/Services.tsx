@@ -7,11 +7,11 @@ import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { AnalyzeForm } from './Analyze';
+import type { AnalyzeFormData } from '@/types';
 
 interface Service {
     name: string;
-    value: AnalyzeForm['services'][number];
+    value: AnalyzeFormData['services'][number];
 }
 
 const services: Service[] = [
@@ -30,7 +30,7 @@ const services: Service[] = [
 ];
 
 export default function Services() {
-    const form = useFormContext<AnalyzeForm>();
+    const form = useFormContext<AnalyzeFormData>();
 
     return (
         <FormField

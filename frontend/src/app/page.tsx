@@ -1,11 +1,14 @@
 import Analyze from '@/components/Analyze';
 
-export default function Home() {
-    return (
-        <>
-            <section aria-label="Analyze web site" className="px-3">
-                <Analyze />
-            </section>
-        </>
-    );
+type AnalyzeProps = {
+    searchParams: Promise<{
+        url: string | undefined;
+        services: string[] | undefined;
+    }>;
+};
+
+export default async function HomePage({ searchParams }: AnalyzeProps) {
+    const _searchParams = await searchParams;
+
+    return <Analyze searchParams={_searchParams} />;
 }
