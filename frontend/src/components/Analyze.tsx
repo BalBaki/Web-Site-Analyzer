@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import AnalyzeForm from './AnalyzeForm';
-import AnalyzeResult from './AnalyzeResult';
+import AnalyzeResult from './analyze-result';
 import { analyzeSearchParamsSchema } from '@/schemas';
 
 type AnalyzeProps = {
