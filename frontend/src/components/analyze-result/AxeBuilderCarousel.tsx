@@ -10,6 +10,7 @@ import {
     CarouselItem,
     type CarouselApi,
 } from '../ui/carousel';
+import { Badge } from '@/components/ui/badge';
 
 type AxeBuilderCarouselProps = {
     result: Result[];
@@ -60,7 +61,7 @@ export default function AxeBuilderCarousel({ result }: AxeBuilderCarouselProps) 
                                         {node.all.length > 0 && (
                                             <>
                                                 <div>Message: {`${node.all[0].message}`}</div>
-                                                {node.all[0].data?.contrastRatio && (
+                                                {node.all[0].data?.contrastRatio >= 0 && (
                                                     <div>Current Ratio: {node.all[0].data.contrastRatio}</div>
                                                 )}
                                                 {node.all[0].data?.expectedContrastRatio && (
@@ -68,6 +69,12 @@ export default function AxeBuilderCarousel({ result }: AxeBuilderCarouselProps) 
                                                 )}
                                             </>
                                         )}
+                                        <div className="flex items-center flex-wrap gap-2 mt-1">
+                                            <Badge className="capitalize">{node.impact}</Badge>
+                                            {err.tags.map((tag) => (
+                                                <Badge key={tag}>{tag}</Badge>
+                                            ))}
+                                        </div>
                                     </CarouselItem>
                                 );
                             })}
