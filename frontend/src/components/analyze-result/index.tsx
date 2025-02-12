@@ -2,37 +2,9 @@
 
 import { useEffect, type Dispatch, type SetStateAction } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { stringifyObjectValues } from '@/lib/utils';
-import type { AnalyzeFormData, AnalyzeResult, AnalyzeSearchParams } from '@/types';
 import AxeBuilder from './AxeBuilder';
-
-const analyzeSite = async (params: AnalyzeFormData): Promise<AnalyzeResult> => {
-    const res = await fetch('http://localhost:3000/analyze?' + new URLSearchParams(stringifyObjectValues(params)));
-
-    if (!res.ok) {
-        let error: string;
-
-        switch (res.status) {
-            case 402:
-                error = 'Enter valid data..!';
-                break;
-
-            case 429:
-                error = 'Too many request. Try a few minute later..!';
-                break;
-
-            default:
-                error = 'Something went wrong..!';
-                break;
-        }
-
-        return { analyze: false, error };
-    }
-
-    const result = await res.json();
-
-    return result as AnalyzeResult;
-};
+import analyzer from '@/services/analyzer.service';
+import type { AnalyzeResult, AnalyzeSearchParams } from '@/types';
 
 type AnalyzeResultProps = {
     searchParams: AnalyzeSearchParams;
@@ -41,7 +13,7 @@ type AnalyzeResultProps = {
 
 export default function AnalyzeResult({ searchParams, setIsAnalyzing }: AnalyzeResultProps) {
     const { data, isFetching, error } = useQuery({
-        queryFn: () => analyzeSite(searchParams),
+        queryFn: () => analyzer.analyze(searchParams),
         queryKey: [searchParams],
         refetchOnWindowFocus: false,
     });
@@ -53,7 +25,7 @@ export default function AnalyzeResult({ searchParams, setIsAnalyzing }: AnalyzeR
     if (isFetching) return <div>Analyzing...</div>;
     if (error) return <div>Error: {error.message || 'Something went wrong..!'}</div>;
     if (!data?.analyze) return <div>{data?.error}</div>;
-
+    console.log(data);
     return (
         <>
             <pre className="max-w-full overflow-auto">
@@ -64,8 +36,9 @@ export default function AnalyzeResult({ searchParams, setIsAnalyzing }: AnalyzeR
                     2
                     )}
                     </code> */}
-                {data.results.axebuilder.reduce((total, result) => (total += result.nodes.length), 0)}
+                {/* {data.results.axebuilder.reduce((total, result) => (total += result.nodes.length), 0)} */}
             </pre>
+
             {data.results.axebuilder && <AxeBuilder result={data.results.axebuilder} />}
         </>
     );
