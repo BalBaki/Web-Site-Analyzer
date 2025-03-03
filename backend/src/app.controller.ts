@@ -1,20 +1,9 @@
 import { Controller, Get, Query, Res, UsePipes } from '@nestjs/common';
 import { AppService } from './app.service';
-import type { Response } from 'express';
+import { analyzeSchema } from './schemas';
 import { ZodValidationPipe } from 'src/pipes/zod-validation.pipe';
-import * as z from 'zod';
-
-const analyzeSchema = z.object({
-    url: z.string().url(),
-    services: z
-        .string()
-        .transform((val) => {
-            return JSON.parse(val);
-        })
-        .pipe(z.array(z.enum(['axebuilder', 'pagespeedinsight', 'whois'])))
-        .transform((val) => [...new Set(val)]),
-});
-export type AnalyzePayload = z.infer<typeof analyzeSchema>;
+import type { Response } from 'express';
+import type { AnalyzePayload } from './types';
 
 @Controller()
 export class AppController {

@@ -5,8 +5,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { calculateImpactErrors } from '@/lib/utils';
-import type { Result } from '@/types';
 import AxeBuilderCarousel from './AxeBuilderCarousel';
+import type { Result } from '@/types';
 
 type AxeBuilderProps = {
     result: Result[];
@@ -43,6 +43,7 @@ export default function AxeBuilder({ result }: AxeBuilderProps) {
 
     const errorCount = calculateImpactErrors(result);
     const resultGroupedById = Object.groupBy(result, ({ id }) => id);
+    const chartTickCount = Math.ceil(Object.values(errorCount).toSorted((a, b) => b - a)[1] / 5) + 1;
 
     const renderedResult = Object.keys(resultGroupedById).map((id) => {
         return (
@@ -108,7 +109,17 @@ export default function AxeBuilder({ result }: AxeBuilderProps) {
                                 axisLine={false}
                                 tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label}
                             />
-                            <XAxis dataKey="count" type="number" />
+                            <XAxis
+                                dataKey="count"
+                                type="number"
+                                ticks={Array.from(
+                                    {
+                                        length: chartTickCount,
+                                    },
+                                    (_, i) => i * 5
+                                )}
+                                tickCount={chartTickCount}
+                            />
                             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
                             <Bar dataKey="count" layout="vertical" radius={5} />
                         </BarChart>

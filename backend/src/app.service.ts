@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { AxeBuilderService } from './services/axe-builder/axe-builder.service';
-import type { AnalyzePayload } from './app.controller';
 import { InvalidPayloadException } from './exceptions/invalid-payload.exception';
 import { PageSpeedInsightService } from './services/page-speed-insight/page-speed-insight.service';
 import { WhoIsService } from './services/who-is/who-is.service';
+import type { AnalyzePayload } from './types';
 
 @Injectable()
 export class AppService {
@@ -21,9 +21,7 @@ export class AppService {
                         case 'axebuilder':
                             return this.axeBuilderService.analyze(payload.url);
                         case 'pagespeedinsight':
-                            return this.pageSpeedInsightService.analyze(
-                                payload.url,
-                            );
+                            return this.pageSpeedInsightService.analyze(payload.url);
                         case 'whois':
                             return this.whoIsService.analyze(payload.url);
                         default:

@@ -1,14 +1,11 @@
 import { stringifyObjectValues } from '@/lib/utils';
+import { env } from './env.service';
 import type { AnalyzeFormData, AnalyzeResult } from '@/types';
 
 class Analyzer {
-    private apiUrl: string;
+    private readonly apiUrl = env.apiUrl;
 
-    constructor() {
-        if (!process.env.NEXT_PUBLIC_API_URL) throw new Error('Missing Backend Api Url..!');
-
-        this.apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    }
+    constructor() {}
 
     analyze = async (params: AnalyzeFormData): Promise<AnalyzeResult> => {
         const res = await fetch(this.apiUrl + 'analyze?' + new URLSearchParams(stringifyObjectValues(params)));

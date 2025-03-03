@@ -25,7 +25,7 @@ export default function AnalyzeResult({ searchParams, setIsAnalyzing }: AnalyzeR
     if (isFetching) return <div>Analyzing...</div>;
     if (error) return <div>Error: {error.message || 'Something went wrong..!'}</div>;
     if (!data?.analyze) return <div>{data?.error}</div>;
-    console.log(data);
+
     return (
         <>
             <pre className="max-w-full overflow-auto">

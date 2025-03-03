@@ -3,15 +3,14 @@ import { EnvService } from '../env/env.service';
 
 @Injectable()
 export class PageSpeedInsightService {
-    private baseUrl: string =
-        'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?';
+    private baseUrl: string = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?';
     private categories = [
         // 'ACCESSIBILITY',
         'BEST_PRACTICES',
         'PERFORMANCE',
         'SEO',
     ];
-    private strategies = ['DESKTOP', 'MOBILE'];
+    private strategies = ['desktop', 'mobile'];
 
     constructor(private readonly envService: EnvService) {}
     async analyze(url: string) {
@@ -20,13 +19,11 @@ export class PageSpeedInsightService {
                 key: this.envService.pageSpeedInsightApiKey,
                 url,
             });
-            this.categories.forEach((category) =>
-                searchParams.append('category', category),
-            );
+            this.categories.forEach((category) => searchParams.append('category', category));
 
             const responses = await Promise.all(
                 this.strategies.map((strategy) => {
-                    searchParams.set('strategy', strategy);
+                    searchParams.set('strategy', strategy.toLocaleLowerCase());
 
                     return fetch(this.baseUrl + searchParams);
                 }),
@@ -37,12 +34,10 @@ export class PageSpeedInsightService {
                     error: `Error at PageSpeed Insight.`,
                 };
 
-            const results = await Promise.all(
-                responses.map((response) => response.json()),
-            );
+            const results = await Promise.all(responses.map((response) => response.json()));
 
             return this.strategies.reduce((result, strategy, index) => {
-                result[strategy.toLocaleLowerCase()] = results[index];
+                result[strategy] = results[index];
 
                 return result;
             }, {});

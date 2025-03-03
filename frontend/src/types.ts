@@ -51,7 +51,7 @@ export type AnalyzeResult =
     | {
           analyze: true;
           results: {
-              axebuilder: Result[];
+              axebuilder?: Result[];
           };
       }
     | { analyze: false; error: string };
