@@ -8,28 +8,23 @@ import Services from './Services';
 import { Button } from './ui/button';
 import { usePathname, useRouter } from 'next/navigation';
 import { analyzeFormSchema } from '@/schemas';
-import type { AnalyzeFormData, AnalyzeSearchParams } from '@/types';
+import type { AnalyzeFormData } from '@/types';
 import { stringifyObjectValues } from '@/lib/utils';
 
-type AnalyzeFormProps = {
-    searchParams: AnalyzeSearchParams | null;
-    isAnalyzing: boolean;
-};
-
-export default function AnalyzeForm({ searchParams, isAnalyzing }: AnalyzeFormProps) {
+export default function AnalyzeForm() {
     const pathname = usePathname();
     const router = useRouter();
     const form = useForm<AnalyzeFormData>({
         mode: 'all',
         resolver: zodResolver(analyzeFormSchema),
-        defaultValues: searchParams || {
+        defaultValues: {
             url: '',
             services: ['axebuilder', 'pagespeedinsight', 'whois'],
         },
     });
 
     const onSubmit: SubmitHandler<AnalyzeFormData> = async (data) => {
-        router.push(`${pathname}?${new URLSearchParams(stringifyObjectValues(data))}`);
+        router.push(`${pathname}analysis/?${new URLSearchParams(stringifyObjectValues(data))}`);
     };
 
     return (
@@ -50,13 +45,8 @@ export default function AnalyzeForm({ searchParams, isAnalyzing }: AnalyzeFormPr
                     )}
                 />
                 <Services />
-                <Button
-                    type="submit"
-                    disabled={!form.formState.isValid || isAnalyzing}
-                    aria-label={isAnalyzing ? 'Analyzing web site' : 'Analyze'}
-                    className="h-full"
-                >
-                    {isAnalyzing ? 'Analyzing.' : 'Analyze'}
+                <Button type="submit" disabled={!form.formState.isValid} className="h-full">
+                    Analyze
                 </Button>
             </form>
         </Form>

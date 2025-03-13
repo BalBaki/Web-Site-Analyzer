@@ -1,45 +1,44 @@
-'use client';
-
-import { useEffect, type Dispatch, type SetStateAction } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AxeBuilder from './AxeBuilder';
 import analyzer from '@/services/analyzer.service';
 import type { AnalyzeResult, AnalyzeSearchParams } from '@/types';
 
 type AnalyzeResultProps = {
     searchParams: AnalyzeSearchParams;
-    setIsAnalyzing: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function AnalyzeResult({ searchParams, setIsAnalyzing }: AnalyzeResultProps) {
-    const { data, isFetching, error } = useQuery({
-        queryFn: () => analyzer.analyze(searchParams),
-        queryKey: [searchParams],
-        refetchOnWindowFocus: false,
-    });
+const services = {
+    axebuilder: 'Axe Builder',
+    pagespeedinsight: 'Page Speed Insight',
+    whois: 'Who Is',
+} as const;
 
-    useEffect(() => {
-        setIsAnalyzing(isFetching);
-    }, [isFetching, setIsAnalyzing]);
+export default async function AnalyzeResult({ searchParams }: AnalyzeResultProps) {
+    const analysisData = await analyzer.analyze(searchParams);
 
-    if (isFetching) return <div>Analyzing...</div>;
-    if (error) return <div>Error: {error.message || 'Something went wrong..!'}</div>;
-    if (!data?.analyze) return <div>{data?.error}</div>;
+    if (!analysisData.analyze && analysisData.error)
+        return <div>Error: {analysisData.error || 'Something went wrong..!'}</div>;
 
     return (
         <>
-            <pre className="max-w-full overflow-auto">
-                {/* <code>
-                {JSON.stringify(
-                    Object.groupBy(data.results.axebuilder, (result) => result.id),
-                    null,
-                    2
+            {analysisData.analyze && (
+                <Tabs defaultValue={Object.keys(analysisData.results)[0]}>
+                    <TabsList>
+                        {Object.keys(analysisData.results).map((service) => {
+                            return (
+                                <TabsTrigger key={service} value={service} className="capitalize">
+                                    {services[service as keyof typeof services]}
+                                </TabsTrigger>
+                            );
+                        })}
+                    </TabsList>
+                    {analysisData.results.axebuilder && (
+                        <TabsContent value="axebuilder">
+                            <AxeBuilder result={analysisData.results.axebuilder} />
+                        </TabsContent>
                     )}
-                    </code> */}
-                {/* {data.results.axebuilder.reduce((total, result) => (total += result.nodes.length), 0)} */}
-            </pre>
-
-            {data.results.axebuilder && <AxeBuilder result={data.results.axebuilder} />}
+                </Tabs>
+            )}
         </>
     );
 }

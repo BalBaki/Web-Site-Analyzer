@@ -1,14 +1,9 @@
-import Analyze from '@/components/Analyze';
+import AnalyzeForm from '@/components/AnalyzeForm';
 
-type HomePageProps = {
-    searchParams: Promise<{
-        url: string | undefined;
-        services: string[] | undefined;
-    }>;
-};
-
-export default async function HomePage({ searchParams }: HomePageProps) {
-    const _searchParams = await searchParams;
-
-    return <Analyze searchParams={_searchParams} />;
+export default function HomePage() {
+    return (
+        <section aria-label="Analyze Form">
+            <AnalyzeForm />
+        </section>
+    );
 }
