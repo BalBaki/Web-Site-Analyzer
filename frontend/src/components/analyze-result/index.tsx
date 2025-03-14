@@ -25,7 +25,7 @@ export default async function AnalyzeResult({ searchParams }: AnalyzeResultProps
         <>
             {analysisData.analyze && (
                 <Tabs defaultValue={Object.keys(analysisData.result)[0]}>
-                    <TabsList>
+                    <TabsList className="flex-wrap h-auto justify-normal gap-y-1.5">
                         {Object.keys(analysisData.result).map((service) => {
                             return (
                                 <TabsTrigger

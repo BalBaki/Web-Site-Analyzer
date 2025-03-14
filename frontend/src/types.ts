@@ -156,7 +156,7 @@ interface ConfigSettings {
 
 interface Environment {
     benchmarkIndex?: number | null;
-    credits?: { [key: string]: string } | null;
+    credits?: Record<string, string> | null;
     hostUserAgent?: string | null;
     networkUserAgent?: string | null;
 }
@@ -176,7 +176,7 @@ interface LhrEntity {
 
 interface LighthouseAuditResultV5 {
     description?: string | null;
-    details?: { [key: string]: any } | null;
+    details?: Record<string, any> | null;
     displayValue?: string | null;
     errorMessage?: string | null;
     explanation?: string | null;
@@ -200,9 +200,9 @@ interface LighthouseCategoryV5 {
 }
 
 interface LighthouseResultV5 {
-    audits?: { [key: string]: LighthouseAuditResultV5 } | null;
+    audits?: Record<string, LighthouseAuditResultV5> | null;
     categories?: Categories;
-    categoryGroups?: { [key: string]: CategoryGroupV5 } | null;
+    categoryGroups?: Record<string, CategoryGroupV5> | null;
     configSettings?: ConfigSettings;
     entities?: LhrEntity[];
     environment?: Environment;
@@ -232,12 +232,12 @@ interface MetricSavings {
 interface PagespeedApiLoadingExperienceV5 {
     id?: string | null;
     initial_url?: string | null;
-    metrics?: { [key: string]: UserPageLoadMetricV5 } | null;
+    metrics?: Record<string, UserPageLoadMetricV5> | null;
     origin_fallback?: boolean | null;
     overall_category?: string | null;
 }
 
-interface PagespeedApiPagespeedResponseV5 {
+export interface PagespeedApiPagespeedResponseV5 {
     analysisUTCTimestamp?: string | null;
     captchaResult?: string | null;
     id?: string | null;
@@ -310,7 +310,7 @@ interface RuntimeError {
 }
 
 interface StackPack {
-    descriptions?: { [key: string]: string } | null;
+    descriptions?: Record<string, string> | null;
     iconDataURL?: string | null;
     id?: string | null;
     title?: string | null;

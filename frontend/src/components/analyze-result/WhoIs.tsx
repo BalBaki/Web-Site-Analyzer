@@ -42,7 +42,7 @@ export default function WhoIs({ result }: WhoIsProps) {
                 <h2 className="text-2xl font-bold border-b-2 mt-2">OWNER</h2>
                 <div>
                     {Object.entries(result.contacts.owner[0])
-                        .filter(([, value]) => value)
+                        .filter(([, value]) => Boolean(value))
                         .map(([key, value]) => {
                             return (
                                 <div
@@ -51,7 +51,7 @@ export default function WhoIs({ result }: WhoIsProps) {
                                 >
                                     <h3 className="capitalize font-semibold">{key}</h3>
                                     <span>:</span>
-                                    <p className="ml-1">{value}</p>
+                                    <p className="ml-1 break-all">{value}</p>
                                 </div>
                             );
                         })}
