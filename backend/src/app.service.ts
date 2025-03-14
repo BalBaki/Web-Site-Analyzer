@@ -32,10 +32,10 @@ export class AppService {
 
             return {
                 analyze: true,
-                results: payload.services.reduce((results, service, index) => {
-                    results[service] = analyzeResults[index];
+                result: payload.services.reduce((result, service, index) => {
+                    result[service] = analyzeResults[index];
 
-                    return results;
+                    return result;
                 }, {}),
             };
         } catch (error) {

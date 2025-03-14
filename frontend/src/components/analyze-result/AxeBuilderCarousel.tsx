@@ -11,6 +11,8 @@ import {
     type CarouselApi,
 } from '../ui/carousel';
 import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 type AxeBuilderCarouselProps = {
     result: Result[];
@@ -51,13 +53,33 @@ export default function AxeBuilderCarousel({ result }: AxeBuilderCarouselProps) 
                                 return (
                                     <CarouselItem key={_index}>
                                         <div>
-                                            Impact : <span className="capitalize text-red-500"> {node.impact}</span>
+                                            Impact :{' '}
+                                            <span
+                                                className={cn('capitalize', {
+                                                    'text-[hsl(var(--chart-1))]': node.impact === 'critical',
+                                                    'text-[hsl(var(--chart-2))]': node.impact === 'serious',
+                                                    'text-[hsl(var(--chart-3))]': node.impact === 'moderate',
+                                                    'text-[hsl(var(--chart-4))]': node.impact === 'minor',
+                                                    'text-[hsl(var(--chart-5))]': node.impact === 'trivial',
+                                                })}
+                                            >
+                                                {node.impact}
+                                            </span>
                                         </div>
                                         <div>HTML : {node.html}</div>
                                         <div>Selector: {node.target}</div>
                                         <div>Description: {err.description}</div>
                                         <div>Help: {err.help}</div>
-                                        <div>Help URL: {err.helpUrl}</div>
+                                        <div>
+                                            Help URL:
+                                            <Link
+                                                href={err.helpUrl}
+                                                target="_blank"
+                                                className="ml-1 underline"
+                                            >
+                                                {err.helpUrl}
+                                            </Link>
+                                        </div>
                                         {node.all.length > 0 && (
                                             <>
                                                 <div>Message: {`${node.all[0].message}`}</div>
@@ -69,7 +91,7 @@ export default function AxeBuilderCarousel({ result }: AxeBuilderCarouselProps) 
                                                 )}
                                             </>
                                         )}
-                                        <div className="flex items-center flex-wrap gap-2 mt-1">
+                                        <div className="flex items-center flex-wrap gap-2 mt-2">
                                             <Badge className="capitalize">{node.impact}</Badge>
                                             {err.tags.map((tag) => (
                                                 <Badge key={tag}>{tag}</Badge>

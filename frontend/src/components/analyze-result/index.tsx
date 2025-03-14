@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AxeBuilder from './AxeBuilder';
 import analyzer from '@/services/analyzer.service';
 import type { AnalyzeResult, AnalyzeSearchParams } from '@/types';
+import WhoIs from './WhoIs';
 
 type AnalyzeResultProps = {
     searchParams: AnalyzeSearchParams;
@@ -22,19 +23,28 @@ export default async function AnalyzeResult({ searchParams }: AnalyzeResultProps
     return (
         <>
             {analysisData.analyze && (
-                <Tabs defaultValue={Object.keys(analysisData.results)[0]}>
+                <Tabs defaultValue={Object.keys(analysisData.result)[0]}>
                     <TabsList>
-                        {Object.keys(analysisData.results).map((service) => {
+                        {Object.keys(analysisData.result).map((service) => {
                             return (
-                                <TabsTrigger key={service} value={service} className="capitalize">
+                                <TabsTrigger
+                                    key={service}
+                                    value={service}
+                                    className="capitalize"
+                                >
                                     {services[service as keyof typeof services]}
                                 </TabsTrigger>
                             );
                         })}
                     </TabsList>
-                    {analysisData.results.axebuilder && (
+                    {analysisData.result.axebuilder && (
                         <TabsContent value="axebuilder">
-                            <AxeBuilder result={analysisData.results.axebuilder} />
+                            <AxeBuilder result={analysisData.result.axebuilder} />
+                        </TabsContent>
+                    )}
+                    {analysisData.result.whois && (
+                        <TabsContent value="whois">
+                            <WhoIs result={analysisData.result.whois} />
                         </TabsContent>
                     )}
                 </Tabs>

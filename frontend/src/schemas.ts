@@ -20,6 +20,6 @@ export const analyzeFormSchema = z.object({
     url: z.string().url('Enter Valid Url'),
     services: z
         .array(z.enum(['axebuilder', 'pagespeedinsight', 'whois']))
-        .transform((val) => [...new Set(val)])
-        .refine((val) => val.length > 0, 'Select at least one service!'),
+        .min(1, 'Select at least one service!')
+        .transform((val) => [...new Set(val)]),
 });
