@@ -1,9 +1,9 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import AxeBuilder from './AxeBuilder';
 import analyzer from '@/services/analyzer.service';
 import WhoIs from './WhoIs';
 import PageSpeedInsight from './PageSpeedInsight';
 import type { AnalyzeResult, AnalyzeSearchParams } from '@/types';
+import AxeBuilder from './AxeBuilder';
 
 type AnalyzeResultProps = {
     searchParams: AnalyzeSearchParams;
@@ -40,7 +40,10 @@ export default async function AnalyzeResult({ searchParams }: AnalyzeResultProps
                     </TabsList>
                     {analysisData.result.axebuilder && (
                         <TabsContent value="axebuilder">
-                            <AxeBuilder result={analysisData.result.axebuilder} />
+                            <AxeBuilder
+                                analyzeResult={analysisData.result.axebuilder}
+                                defaultUrl={searchParams.url}
+                            />
                         </TabsContent>
                     )}
                     {analysisData.result.whois && (

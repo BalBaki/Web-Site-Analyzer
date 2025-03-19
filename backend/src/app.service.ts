@@ -19,7 +19,7 @@ export class AppService {
                 payload.services.map((service) => {
                     switch (service) {
                         case 'axebuilder':
-                            return this.axeBuilderService.analyze(payload.url);
+                            return this.axeBuilderService.analyze(payload);
                         case 'pagespeedinsight':
                             return this.pageSpeedInsightService.analyze(payload.url);
                         case 'whois':

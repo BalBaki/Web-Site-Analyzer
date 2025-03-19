@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header';
 import Providers from './providers';
+import ReactScan from '@/components/ReactScan';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -25,13 +26,20 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" suppressHydrationWarning>
+        <html
+            lang="en"
+            suppressHydrationWarning
+        >
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col px-2`}
             >
+                {process.env.NODE_ENV === 'development' && <ReactScan />}
                 <Providers>
                     <Header />
-                    <main role="main" className="flex-1">
+                    <main
+                        role="main"
+                        className="flex-1"
+                    >
                         {children}
                     </main>
                 </Providers>

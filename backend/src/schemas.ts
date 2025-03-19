@@ -14,4 +14,5 @@ export const analyzeSchema = z.object({
         })
         .pipe(z.array(z.enum(['axebuilder', 'pagespeedinsight', 'whois'])))
         .transform((val) => [...new Set(val)]),
+    deepscan: z.coerce.boolean().default(false),
 });

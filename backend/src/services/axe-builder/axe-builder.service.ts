@@ -1,40 +1,72 @@
 import { Injectable } from '@nestjs/common';
 import { AxeBuilder } from '@axe-core/playwright';
 import * as playwright from 'playwright';
+import type { AnalyzePayload } from 'src/types';
 
 @Injectable()
 export class AxeBuilderService {
-    async analyze(url: string) {
+    private localePatterns: RegExp[] = [
+        /^\/[a-z]{2}(-[A-Z]{2})?\//, // Matches patterns like /en/, /en-US/, /tr/, etc.
+        /\/[a-z]{2}(-[A-Z]{2})?\//, // Matches patterns like /something/en/page, /page/fr-CA/
+    ];
+    private excludedURLParts = ['javascript:', 'mailto:', 'tel:'];
+
+    async analyze({ url, deepscan }: AnalyzePayload) {
         const browser = await playwright.chromium.launch({
             headless: true,
         });
 
         try {
+            const urlAsURLObject = new URL(url);
             const context = await browser.newContext();
             const page = await context.newPage();
-            await page.goto(url);
+            const urls = [urlAsURLObject.href];
 
-            const result = await new AxeBuilder({ page }).analyze();
+            await page.goto(urlAsURLObject.href, {
+                waitUntil: 'networkidle',
+            });
 
-            return result.incomplete
-                .concat(result.violations, result.inapplicable)
-                .filter((result) => result.nodes.length > 0)
-                .map((result) => {
-                    if (!result.impact) {
-                        result = Object.assign(result, { impact: 'trivial' });
-                    }
+            if (deepscan) {
+                const additionalUrls = await page.evaluate(
+                    ({ localePatterns, urlAsURLObject, excludedURLParts }) => {
+                        return Array.from(document.querySelectorAll('a[href]'))
+                            .filter((a: HTMLAnchorElement) => {
+                                const { href, origin } = new URL(a.href);
 
-                    result.nodes.forEach((node) => {
-                        node.all = node.all
-                            .concat(node.any, node.none)
-                            .filter((data) => data.relatedNodes.length > 0);
+                                return (
+                                    !a.download &&
+                                    !excludedURLParts.some((urlPart) => href.startsWith(urlPart)) &&
+                                    !localePatterns.some((pattern) => pattern.test(href)) &&
+                                    origin === urlAsURLObject.origin
+                                );
+                            })
+                            .map((a: HTMLAnchorElement) => a.href.split('#')[0]);
+                    },
+                    {
+                        localePatterns: this.localePatterns,
+                        urlAsURLObject: urlAsURLObject,
+                        excludedURLParts: this.excludedURLParts,
+                    },
+                );
 
-                        delete node.any;
-                        delete node.none;
-                    });
-
-                    return result;
+                additionalUrls.forEach((additionalUrl) => {
+                    if (!urls.includes(additionalUrl)) urls.push(additionalUrl);
                 });
+            }
+
+            const results = [];
+
+            for (const url of urls) {
+                if (url !== urlAsURLObject.href) {
+                    await page.goto(url, {
+                        waitUntil: 'networkidle',
+                    });
+                }
+
+                results.push({ url: url, result: this.parseResult(await new AxeBuilder({ page }).analyze()) });
+            }
+
+            return results;
         } catch (error) {
             console.error(error);
 
@@ -44,5 +76,25 @@ export class AxeBuilderService {
         } finally {
             await browser.close();
         }
+    }
+
+    private parseResult(result: Awaited<ReturnType<AxeBuilder['analyze']>>) {
+        return result.incomplete
+            .concat(result.violations, result.inapplicable)
+            .filter((result) => result.nodes.length > 0)
+            .map((result) => {
+                if (!result.impact) {
+                    result = Object.assign(result, { impact: 'trivial' });
+                }
+
+                result.nodes.forEach((node) => {
+                    node.all = node.all.concat(node.any, node.none).filter((data) => data.relatedNodes.length > 0);
+
+                    delete node.any;
+                    delete node.none;
+                });
+
+                return result;
+            });
     }
 }

@@ -1,133 +1,74 @@
 'use client';
 
-import { Bar, BarChart, XAxis, YAxis } from 'recharts';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { calculateImpactErrors } from '@/lib/utils';
-import AxeBuilderCarousel from './AxeBuilderCarousel';
-import type { Result } from '@/types';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import AxeBuilderItem from './AxeBuilderItem';
+import { Check } from 'lucide-react';
+import type { AxeBuilderResult } from '@/types';
 
 type AxeBuilderProps = {
-    result: Result[];
+    analyzeResult: AxeBuilderResult;
+    defaultUrl: string;
 };
 
-const chartConfig = {
-    count: {
-        label: 'Count',
-    },
-    critical: {
-        label: 'Critical',
-        color: 'hsl(var(--chart-1))',
-    },
-    serious: {
-        label: 'Serious',
-        color: 'hsl(var(--chart-2))',
-    },
-    moderate: {
-        label: 'Moderate',
-        color: 'hsl(var(--chart-3))',
-    },
-    minor: {
-        label: 'Minor',
-        color: 'hsl(var(--chart-4))',
-    },
-    trivial: {
-        label: 'Trivial',
-        color: 'hsl(var(--chart-5))',
-    },
-} satisfies ChartConfig;
-
-export default function AxeBuilder({ result }: AxeBuilderProps) {
-    if (result.length < 0) return null;
-
-    const errorCount = calculateImpactErrors(result);
-    const resultGroupedById = Object.groupBy(result, ({ id }) => id);
-    const chartTickCount = Math.ceil(Object.values(errorCount).toSorted((a, b) => b - a)[1] / 5) + 1;
-
-    const renderedResult = Object.keys(resultGroupedById).map((id) => {
-        return (
-            <AccordionItem value={id} key={id} className="w-full max-w-screen-lg">
-                <AccordionTrigger className="underline text-red-400">
-                    {resultGroupedById[id]?.[0]?.help}
-                </AccordionTrigger>
-                <AccordionContent>
-                    {resultGroupedById[id] && <AxeBuilderCarousel result={resultGroupedById[id]} />}
-                </AccordionContent>
-            </AccordionItem>
-        );
-    });
+export default function AxeBuilder({ analyzeResult, defaultUrl }: AxeBuilderProps) {
+    const [open, setOpen] = useState(false);
+    const [url, setUrl] = useState(defaultUrl);
+    const selectedReport = analyzeResult.find((result) => result.url === url);
 
     return (
-        <section aria-label="Axe builder analyze result">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Error Count</CardTitle>
-                    <CardDescription className="sr-only">This card shows count of errors</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <ChartContainer config={chartConfig} className="w-full max-w-screen-sm">
-                        <BarChart
-                            accessibilityLayer
-                            data={[
-                                {
-                                    impact: 'critical',
-                                    count: errorCount.critical,
-                                    fill: 'var(--color-critical)',
-                                },
-                                {
-                                    impact: 'serious',
-                                    count: errorCount.serious,
-                                    fill: 'var(--color-serious)',
-                                },
-                                {
-                                    impact: 'moderate',
-                                    count: errorCount.moderate,
-                                    fill: 'var(--color-moderate)',
-                                },
-                                {
-                                    impact: 'minor',
-                                    count: errorCount.minor,
-                                    fill: 'var(--color-minor)',
-                                },
-                                {
-                                    impact: 'trivial',
-                                    count: errorCount.trivial,
-                                    fill: 'var(--color-trivial)',
-                                },
-                            ]}
-                            layout="vertical"
-                            margin={{
-                                left: 0,
-                            }}
-                        >
-                            <YAxis
-                                dataKey="impact"
-                                type="category"
-                                tickLine={false}
-                                tickMargin={10}
-                                axisLine={false}
-                                tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label}
-                            />
-                            <XAxis
-                                dataKey="count"
-                                type="number"
-                                ticks={Array.from(
-                                    {
-                                        length: chartTickCount,
-                                    },
-                                    (_, i) => i * 5
-                                )}
-                                tickCount={chartTickCount}
-                            />
-                            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-                            <Bar dataKey="count" layout="vertical" radius={5} />
-                        </BarChart>
-                    </ChartContainer>
-                </CardContent>
-                <CardFooter className="flex-col items-start gap-2 text-sm"></CardFooter>
-            </Card>
-            <Accordion type="multiple">{renderedResult}</Accordion>
+        <section>
+            <Popover
+                open={open}
+                onOpenChange={setOpen}
+            >
+                <PopoverTrigger asChild>
+                    <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={open}
+                        className="w-full sm:max-w-screen-sm justify-between mb-2"
+                    >
+                        {url ? analyzeResult.find((result) => result.url === url)?.url : 'Enter Valid URL..!'}
+                        {/* <ChevronsUpDown className="opacity-50" /> */}
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="p-0 popover-content-width-same-as-its-trigger">
+                    <Command>
+                        <CommandInput
+                            placeholder="Search Url"
+                            className="h-9"
+                        />
+                        <CommandList>
+                            <CommandEmpty>No Url found.</CommandEmpty>
+                            <CommandGroup>
+                                {analyzeResult.map((result) => (
+                                    <CommandItem
+                                        key={result.url}
+                                        value={result.url}
+                                        disabled={result.url === url}
+                                        onSelect={(currentValue) => {
+                                            if (currentValue === url) return;
+
+                                            setUrl(currentValue);
+                                            setOpen(false);
+                                        }}
+                                    >
+                                        {result.url}
+                                        <Check
+                                            className={cn('ml-auto', url === result.url ? 'opacity-100' : 'opacity-0')}
+                                        />
+                                    </CommandItem>
+                                ))}
+                            </CommandGroup>
+                        </CommandList>
+                    </Command>
+                </PopoverContent>
+            </Popover>
+            {selectedReport && <AxeBuilderItem axeReport={selectedReport} />}
         </section>
     );
 }

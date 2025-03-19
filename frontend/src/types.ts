@@ -10,7 +10,7 @@ export type AnalyzeResult =
     | {
           analyze: true;
           result: {
-              axebuilder?: Result[];
+              axebuilder?: AxeBuilderResult;
               whois?: WhoisResult;
               pagespeedinsight?: PageSpeedInsightResult;
           };
@@ -18,6 +18,8 @@ export type AnalyzeResult =
     | { analyze: false; error: string };
 
 //AxeBuilder Start
+export type AxeBuilderResult = Array<{ url: string; result: Result[] }>;
+
 export type ImpactValue = 'trivial' | 'minor' | 'moderate' | 'serious' | 'critical';
 
 interface NodeResult {

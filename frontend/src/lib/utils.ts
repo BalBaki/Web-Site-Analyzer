@@ -10,7 +10,13 @@ export const stringifyObjectValues = <T extends Record<string, unknown>>(payload
     Object.fromEntries(
         Object.entries(payload).map(([key, value]) => [
             key,
-            !value ? '' : typeof value === 'object' ? JSON.stringify(value) : String(value),
+            value === null || value === undefined
+                ? ''
+                : typeof value === 'object'
+                ? value instanceof Date
+                    ? value.toISOString()
+                    : JSON.stringify(value)
+                : String(value),
         ])
     ) as Record<keyof T, string>;
 

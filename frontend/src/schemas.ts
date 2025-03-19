@@ -14,6 +14,7 @@ export const analyzeSearchParamsSchema = z.object({
         })
         .pipe(z.array(z.enum(['axebuilder', 'pagespeedinsight', 'whois'])))
         .transform((val) => [...new Set(val)]),
+    deepscan: z.coerce.boolean().default(false),
 });
 
 export const analyzeFormSchema = z.object({
@@ -22,4 +23,5 @@ export const analyzeFormSchema = z.object({
         .array(z.enum(['axebuilder', 'pagespeedinsight', 'whois']))
         .min(1, 'Select at least one service!')
         .transform((val) => [...new Set(val)]),
+    deepscan: z.coerce.boolean().default(false),
 });
