@@ -1,6 +1,6 @@
 'use client';
 
-import { Result } from '@/types';
+import { AccessibilityViolation } from '@/types';
 import { Fragment, useEffect, useState } from 'react';
 import {
     Carousel,
@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 type AxeBuilderCarouselProps = {
-    result: Result[];
+    result: AccessibilityViolation[];
 };
 
 export default function AxeBuilderCarousel({ result }: AxeBuilderCarouselProps) {

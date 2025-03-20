@@ -6,6 +6,7 @@ type AnalyzeProps = {
     searchParams: {
         url: string | undefined;
         services: string[] | undefined;
+        deepscan: string | undefined;
     };
 };
 

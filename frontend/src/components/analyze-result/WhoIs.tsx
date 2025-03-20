@@ -1,62 +1,66 @@
-import type { WhoisResult } from '@/types';
+import type { WhoIsResponse } from '@/types';
 
 type WhoIsProps = {
-    result: WhoisResult;
+    analyzeResult: WhoIsResponse;
 };
 
-export default function WhoIs({ result }: WhoIsProps) {
+export default function WhoIs({ analyzeResult }: WhoIsProps) {
+    if ('error' in analyzeResult) return <div>Error at Who Is</div>;
+
     return (
         <div>
             <h3 className="text-2xl font-bold border-b-2">DOMAIN</h3>
             <div className="flex">
                 <h3 className="font-semibold">Name</h3>
                 <span>:</span>
-                <p className="ml-1">{result.idnName}</p>
+                <p className="ml-1">{analyzeResult.idnName}</p>
             </div>
             <div className="flex">
                 <h3 className="font-semibold">Created At</h3>
                 <span>:</span>
-                <p className="ml-1">{result.created}</p>
+                <p className="ml-1">{analyzeResult.created}</p>
             </div>
             <div className="flex">
                 <h3 className="font-semibold">Changed At</h3>
                 <span>:</span>
-                <p className="ml-1">{result.changed}</p>
+                <p className="ml-1">{analyzeResult.changed}</p>
             </div>
             <div className="flex">
                 <h3 className="font-semibold">Expires At</h3>
                 <span>:</span>
-                <p className="ml-1">{result.expires}</p>
+                <p className="ml-1">{analyzeResult.expires}</p>
             </div>
             <div className="flex">
                 <h3 className="font-semibold">IPs</h3>
                 <span>:</span>
-                <p className="ml-1">{result.ips}</p>
+                <p className="ml-1">{analyzeResult.ips}</p>
             </div>
             <div className="flex">
                 <h3 className="font-semibold"> Servers</h3>
                 <span>:</span>
-                <p className="ml-1">{result.nameserver.join(', ')}</p>
+                <p className="ml-1">{analyzeResult.nameserver.join(', ')}</p>
             </div>
-            <div>
-                <h2 className="text-2xl font-bold border-b-2 mt-2">OWNER</h2>
+            {analyzeResult.contacts.owner && analyzeResult.contacts.owner.length > 0 && (
                 <div>
-                    {Object.entries(result.contacts.owner[0])
-                        .filter(([, value]) => Boolean(value))
-                        .map(([key, value]) => {
-                            return (
-                                <div
-                                    key={key}
-                                    className="flex"
-                                >
-                                    <h3 className="capitalize font-semibold">{key}</h3>
-                                    <span>:</span>
-                                    <p className="ml-1 break-all">{value}</p>
-                                </div>
-                            );
-                        })}
+                    <h2 className="text-2xl font-bold border-b-2 mt-2">OWNER</h2>
+                    <div>
+                        {Object.entries(analyzeResult.contacts.owner[0])
+                            .filter(([, value]) => Boolean(value))
+                            .map(([key, value]) => {
+                                return (
+                                    <div
+                                        key={key}
+                                        className="flex"
+                                    >
+                                        <h3 className="capitalize font-semibold">{key}</h3>
+                                        <span>:</span>
+                                        <p className="ml-1 break-all">{value}</p>
+                                    </div>
+                                );
+                            })}
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }

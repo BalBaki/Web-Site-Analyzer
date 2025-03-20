@@ -9,7 +9,7 @@ export class AxeBuilderService {
         /^\/[a-z]{2}(-[A-Z]{2})?\//, // Matches patterns like /en/, /en-US/, /tr/, etc.
         /\/[a-z]{2}(-[A-Z]{2})?\//, // Matches patterns like /something/en/page, /page/fr-CA/
     ];
-    private excludedURLParts = ['javascript:', 'mailto:', 'tel:'];
+    private excludedURLParts = ['javascript:', 'mailto:', 'tel:', 'sms:', 'data:', 'ftp:', 'file:'];
 
     async analyze({ url, deepscan }: AnalyzePayload) {
         const browser = await playwright.chromium.launch({
@@ -34,7 +34,7 @@ export class AxeBuilderService {
                                 const { href, origin } = new URL(a.href);
 
                                 return (
-                                    !a.download &&
+                                    !a.hasAttribute('download') &&
                                     !excludedURLParts.some((urlPart) => href.startsWith(urlPart)) &&
                                     !localePatterns.some((pattern) => pattern.test(href)) &&
                                     origin === urlAsURLObject.origin

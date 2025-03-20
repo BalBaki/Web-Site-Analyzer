@@ -34,7 +34,7 @@ export default function DeepScan() {
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <div className="flex justify-center items-center space-y-0 border rounded-md shadow py-1 px-2 gap-1 h-full">
+                                <div className="flex justify-center items-center space-y-0 border rounded-md shadow py-2 px-4 gap-1 h-fit">
                                     <FormControl>
                                         <Checkbox
                                             checked={field.value}
@@ -42,9 +42,6 @@ export default function DeepScan() {
                                         />
                                     </FormControl>
                                     <FormLabel>Deep Scan</FormLabel>
-                                    <FormDescription className="sr-only">
-                                        Enable deep scan option for axe builder
-                                    </FormDescription>
                                 </div>
                             </TooltipTrigger>
                             <TooltipContent>
@@ -52,6 +49,7 @@ export default function DeepScan() {
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
+                    <FormDescription className="sr-only">Enable deep scan option for axe builder</FormDescription>
                 </FormItem>
             )}
         />

@@ -1,12 +1,13 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageSpeedInsightTab from './PageSpeedInsightTab';
-import type { PageSpeedInsightResult } from '@/types';
+import type { PageSpeedInsightResponse } from '@/types';
 
 type PageSpeedInsightProps = {
-    result: PageSpeedInsightResult;
+    analyzeResult: PageSpeedInsightResponse;
 };
 
-export default function PageSpeedInsight({ result }: PageSpeedInsightProps) {
+export default function PageSpeedInsight({ analyzeResult }: PageSpeedInsightProps) {
+    if ('error' in analyzeResult) return <div>Error at Page Speed Insight</div>;
     return (
         <Tabs defaultValue="desktop">
             <TabsList className="grid grid-cols-2">
@@ -14,10 +15,10 @@ export default function PageSpeedInsight({ result }: PageSpeedInsightProps) {
                 <TabsTrigger value="mobile">Mobile</TabsTrigger>
             </TabsList>
             <TabsContent value="desktop">
-                <PageSpeedInsightTab data={result.desktop} />
+                <PageSpeedInsightTab data={analyzeResult.desktop} />
             </TabsContent>
             <TabsContent value="mobile">
-                <PageSpeedInsightTab data={result.mobile} />
+                <PageSpeedInsightTab data={analyzeResult.mobile} />
             </TabsContent>
         </Tabs>
     );

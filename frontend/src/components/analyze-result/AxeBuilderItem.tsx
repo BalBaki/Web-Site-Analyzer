@@ -6,10 +6,10 @@ import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } f
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { calculateImpactErrors } from '@/lib/utils';
 import AxeBuilderCarousel from './AxeBuilderCarousel';
-import type { AxeBuilderResult } from '@/types';
+import type { AxeBuilderData } from '@/types';
 
 type AxeBuilderProps = {
-    axeReport: AxeBuilderResult[number];
+    axeReport: AxeBuilderData[number];
 };
 
 const chartConfig = {
@@ -41,6 +41,7 @@ const chartConfig = {
 export default function AxeBuilderItem({ axeReport: { result, url } }: AxeBuilderProps) {
     if (result.length < 0) return null;
 
+    //TODO Add useMemo
     const errorCount = calculateImpactErrors(result);
     const resultGroupedById = Object.groupBy(result, ({ id }) => id);
     const chartTickCount = Math.ceil(Object.values(errorCount).toSorted((a, b) => b - a)[1] / 5) + 1;

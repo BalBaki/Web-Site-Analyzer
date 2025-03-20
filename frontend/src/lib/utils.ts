@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import type { ImpactValue, Result } from '@/types';
+import type { ImpactValue, AccessibilityViolation } from '@/types';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -20,7 +20,7 @@ export const stringifyObjectValues = <T extends Record<string, unknown>>(payload
         ])
     ) as Record<keyof T, string>;
 
-export const calculateImpactErrors = (payload: Result[]): Record<ImpactValue | 'total', number> =>
+export const calculateImpactErrors = (payload: AccessibilityViolation[]): Record<ImpactValue | 'total', number> =>
     payload.reduce(
         (counts: Record<ImpactValue | 'total', number>, error) => {
             if (Object.keys(counts).includes(error.impact)) counts[error.impact] += error.nodes.length;

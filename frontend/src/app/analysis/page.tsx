@@ -4,6 +4,7 @@ type AnalysisPageProps = {
     searchParams: Promise<{
         url: string | undefined;
         services: string[] | undefined;
+        deepscan: string | undefined;
     }>;
 };
 

@@ -7,16 +7,20 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { cn } from '@/lib/utils';
 import AxeBuilderItem from './AxeBuilderItem';
 import { Check } from 'lucide-react';
-import type { AxeBuilderResult } from '@/types';
+import type { AxeBuilderResponse } from '@/types';
 
 type AxeBuilderProps = {
-    analyzeResult: AxeBuilderResult;
+    analyzeResult: AxeBuilderResponse;
     defaultUrl: string;
 };
 
 export default function AxeBuilder({ analyzeResult, defaultUrl }: AxeBuilderProps) {
     const [open, setOpen] = useState(false);
     const [url, setUrl] = useState(defaultUrl);
+
+    if ('error' in analyzeResult) return <div>Error at AxeBuilder</div>;
+
+    //TODO Add useMemo
     const selectedReport = analyzeResult.find((result) => result.url === url);
 
     return (

@@ -48,12 +48,12 @@ export default async function AnalyzeResult({ searchParams }: AnalyzeResultProps
                     )}
                     {analysisData.result.whois && (
                         <TabsContent value="whois">
-                            <WhoIs result={analysisData.result.whois} />
+                            <WhoIs analyzeResult={analysisData.result.whois} />
                         </TabsContent>
                     )}
                     {analysisData.result.pagespeedinsight && (
                         <TabsContent value="pagespeedinsight">
-                            <PageSpeedInsight result={analysisData.result.pagespeedinsight} />
+                            <PageSpeedInsight analyzeResult={analysisData.result.pagespeedinsight} />
                         </TabsContent>
                     )}
                 </Tabs>
