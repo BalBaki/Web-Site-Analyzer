@@ -34,7 +34,7 @@ export default function DeepScan() {
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <div className="flex justify-center items-center space-y-0 border rounded-md shadow py-2 px-4 gap-1 h-fit">
+                                <div className="flex justify-center items-center space-y-0 border rounded-md shadow-sm py-2 px-4 gap-1 h-fit">
                                     <FormControl>
                                         <Checkbox
                                             checked={field.value}

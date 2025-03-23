@@ -34,13 +34,13 @@ export default function AxeBuilder({ analyzeResult, defaultUrl }: AxeBuilderProp
                         variant="outline"
                         role="combobox"
                         aria-expanded={open}
-                        className="w-full sm:max-w-screen-sm justify-between mb-2"
+                        className="w-full sm:max-w-(--breakpoint-sm) justify-between mb-2"
                     >
                         {url ? analyzeResult.find((result) => result.url === url)?.url : 'Enter Valid URL..!'}
                         {/* <ChevronsUpDown className="opacity-50" /> */}
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="p-0 popover-content-width-same-as-its-trigger">
+                <PopoverContent className="p-0 popover-content-width-same-as-its-trigger!">
                     <Command>
                         <CommandInput
                             placeholder="Search Url"

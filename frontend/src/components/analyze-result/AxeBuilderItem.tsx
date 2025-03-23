@@ -51,7 +51,7 @@ export default function AxeBuilderItem({ axeReport: { result, url } }: AxeBuilde
             <AccordionItem
                 value={id + url}
                 key={id + url}
-                className="w-full max-w-screen-lg"
+                className="w-full max-w-(--breakpoint-lg)"
             >
                 <AccordionTrigger className="underline text-red-400">
                     {resultGroupedById[id]?.[0]?.help}
@@ -73,7 +73,7 @@ export default function AxeBuilderItem({ axeReport: { result, url } }: AxeBuilde
                 <CardContent>
                     <ChartContainer
                         config={chartConfig}
-                        className="w-full max-w-screen-sm"
+                        className="w-full max-w-(--breakpoint-sm)"
                     >
                         <BarChart
                             accessibilityLayer
