@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as z from 'zod';
-import { analyzeSearchParamsSchema } from './schemas';
-import { analyzeFormSchema } from './schemas';
+import { analyzeFormSchema, analyzeSearchParamsSchema } from './schemas';
 
 //AxeBuilder Start
 interface NodeResult {
@@ -268,11 +267,17 @@ export type AnalyzeResult =
               pagespeedinsight?: PageSpeedInsightResponse;
           };
       }
-    | { analyze: false; error: string };
+    | {
+          analyze: false;
+          error: string;
+      };
 export type AxeBuilderResponse = WithError<AxeBuilderData>;
 export type WhoIsResponse = WithError<WhoisData>;
 export type PageSpeedInsightResponse = WithError<PageSpeedInsightData>;
-export type AxeBuilderData = Array<{ url: string; result: AccessibilityViolation[] }>;
+export type AxeBuilderData = Array<{
+    url: string;
+    result: AccessibilityViolation[];
+}>;
 export interface WhoisData {
     server: string; // example: "delta"
     name: string; // example: "whoisjson.com"

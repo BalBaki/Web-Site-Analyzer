@@ -1,5 +1,6 @@
-import { clsx, type ClassValue } from 'clsx';
+import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import type { ClassValue } from 'clsx';
 import type { AccessibilityViolation, ImpactSeverity } from '@/types';
 
 export function cn(...inputs: ClassValue[]) {
@@ -13,11 +14,11 @@ export const stringifyObjectValues = <T extends Record<string, unknown>>(payload
             value === null || value === undefined
                 ? ''
                 : typeof value === 'object'
-                ? value instanceof Date
-                    ? value.toISOString()
-                    : JSON.stringify(value)
-                : String(value),
-        ])
+                  ? value instanceof Date
+                      ? value.toISOString()
+                      : JSON.stringify(value)
+                  : String(value),
+        ]),
     ) as Record<keyof T, string>;
 
 export const calculateImpactErrors = (payload: AccessibilityViolation[]): Record<ImpactSeverity | 'total', number> =>
@@ -30,5 +31,7 @@ export const calculateImpactErrors = (payload: AccessibilityViolation[]): Record
 
             return counts;
         },
-        { total: 0 } as Record<ImpactSeverity | 'total', number>
+        {
+            total: 0,
+        } as Record<ImpactSeverity | 'total', number>,
     );

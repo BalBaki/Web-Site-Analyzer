@@ -1,18 +1,12 @@
 'use client';
 
-import { AccessibilityViolation } from '@/types';
 import { Fragment, useEffect, useState } from 'react';
-import {
-    Carousel,
-    CarouselPrevious,
-    CarouselNext,
-    CarouselContent,
-    CarouselItem,
-    type CarouselApi,
-} from '../ui/carousel';
-import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { AccessibilityViolation } from '@/types';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
+import type { CarouselApi } from '../ui/carousel';
 
 type AxeBuilderCarouselProps = {
     result: AccessibilityViolation[];
@@ -37,7 +31,7 @@ export default function AxeBuilderCarousel({ result }: AxeBuilderCarouselProps) 
     return (
         <Carousel setApi={setApi}>
             {count > 1 && (
-                <div className="flex ml-auto mr-2 items-center gap-1">
+                <div className="mr-2 ml-auto flex items-center gap-1">
                     <div className="ml-auto">
                         {current} of {count}
                     </div>
@@ -91,7 +85,7 @@ export default function AxeBuilderCarousel({ result }: AxeBuilderCarouselProps) 
                                                 )}
                                             </>
                                         )}
-                                        <div className="flex items-center flex-wrap gap-2 mt-2">
+                                        <div className="mt-2 flex flex-wrap items-center gap-2">
                                             <Badge className="capitalize">{node.impact}</Badge>
                                             {err.tags.map((tag) => (
                                                 <Badge key={tag}>{tag}</Badge>

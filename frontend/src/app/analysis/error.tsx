@@ -1,6 +1,11 @@
 'use client';
 
-type AnalysisErrorProps = { error: Error & { digest?: string }; reset: () => void };
+type AnalysisErrorProps = {
+    error: Error & {
+        digest?: string;
+    };
+    reset: () => void;
+};
 
 export default function AnalysisError({ reset }: AnalysisErrorProps) {
     return (

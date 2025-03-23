@@ -1,5 +1,5 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import PageSpeedInsightTab from './PageSpeedInsightTab';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { PageSpeedInsightResponse } from '@/types';
 
 type PageSpeedInsightProps = {

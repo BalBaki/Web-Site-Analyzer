@@ -12,14 +12,16 @@ class EnvService {
 
     private constructor() {
         try {
-            this.env = envSchema.parse({ NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL });
+            this.env = envSchema.parse({
+                NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+            });
         } catch (error) {
             if (error instanceof z.ZodError) {
                 const missingVars = error.issues.map((issue) => issue.path.join('.'));
 
                 throw new Error(
                     `Invalid environment variables: ${missingVars.join(', ')}\n` +
-                        'Please check your .env file and make sure all required variables are set correctly.'
+                        'Please check your .env file and make sure all required variables are set correctly.',
                 );
             }
 

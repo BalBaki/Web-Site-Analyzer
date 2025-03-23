@@ -1,15 +1,15 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { usePathname, useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage, Form } from './ui/form';
-import { Input } from './ui/input';
+import DeepScan from './DeepScan';
 import Services from './Services';
 import { Button } from './ui/button';
-import DeepScan from './DeepScan';
-import { analyzeFormSchema } from '@/schemas';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
+import { Input } from './ui/input';
 import { stringifyObjectValues } from '@/lib/utils';
+import { analyzeFormSchema } from '@/schemas';
 import type { AnalyzeFormData } from '@/types';
 
 export default function AnalyzeForm() {
@@ -33,13 +33,13 @@ export default function AnalyzeForm() {
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="flex justify-center gap-3 max-sm:flex-col mt-2"
+                className="mt-2 flex justify-center gap-3 max-sm:flex-col"
             >
                 <FormField
                     control={form.control}
                     name="url"
                     render={({ field }) => (
-                        <FormItem className="space-y-0 sm:max-w-96 w-full">
+                        <FormItem className="w-full space-y-0 sm:max-w-96">
                             <FormLabel className="sr-only">Url</FormLabel>
                             <FormControl>
                                 <Input

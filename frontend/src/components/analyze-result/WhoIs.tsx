@@ -9,7 +9,7 @@ export default function WhoIs({ analyzeResult }: WhoIsProps) {
 
     return (
         <div>
-            <h3 className="text-2xl font-bold border-b-2">DOMAIN</h3>
+            <h3 className="border-b-2 text-2xl font-bold">DOMAIN</h3>
             <div className="flex">
                 <h3 className="font-semibold">Name</h3>
                 <span>:</span>
@@ -42,7 +42,7 @@ export default function WhoIs({ analyzeResult }: WhoIsProps) {
             </div>
             {analyzeResult.contacts.owner && analyzeResult.contacts.owner.length > 0 && (
                 <div>
-                    <h2 className="text-2xl font-bold border-b-2 mt-2">OWNER</h2>
+                    <h2 className="mt-2 border-b-2 text-2xl font-bold">OWNER</h2>
                     <div>
                         {Object.entries(analyzeResult.contacts.owner[0])
                             .filter(([, value]) => Boolean(value))
@@ -52,7 +52,7 @@ export default function WhoIs({ analyzeResult }: WhoIsProps) {
                                         key={key}
                                         className="flex"
                                     >
-                                        <h3 className="capitalize font-semibold">{key}</h3>
+                                        <h3 className="font-semibold capitalize">{key}</h3>
                                         <span>:</span>
                                         <p className="ml-1 break-all">{value}</p>
                                     </div>

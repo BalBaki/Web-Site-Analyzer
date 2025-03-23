@@ -1,5 +1,5 @@
-import { stringifyObjectValues } from '@/lib/utils';
 import { env } from './env.service';
+import { stringifyObjectValues } from '@/lib/utils';
 import type { AnalyzeFormData, AnalyzeResult } from '@/types';
 
 class Analyzer {
@@ -27,7 +27,10 @@ class Analyzer {
                     break;
             }
 
-            return { analyze: false, error };
+            return {
+                analyze: false,
+                error,
+            };
         }
 
         const result = await res.json();

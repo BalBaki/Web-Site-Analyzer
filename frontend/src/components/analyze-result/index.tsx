@@ -1,9 +1,9 @@
+import AxeBuilder from './AxeBuilder';
+import PageSpeedInsight from './PageSpeedInsight';
+import WhoIs from './WhoIs';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import analyzer from '@/services/analyzer.service';
-import WhoIs from './WhoIs';
-import PageSpeedInsight from './PageSpeedInsight';
 import type { AnalyzeResult, AnalyzeSearchParams } from '@/types';
-import AxeBuilder from './AxeBuilder';
 
 type AnalyzeResultProps = {
     searchParams: AnalyzeSearchParams;
@@ -25,7 +25,7 @@ export default async function AnalyzeResult({ searchParams }: AnalyzeResultProps
         <>
             {analysisData.analyze && (
                 <Tabs defaultValue={Object.keys(analysisData.result)[0]}>
-                    <TabsList className="flex-wrap h-auto justify-normal gap-y-1.5">
+                    <TabsList className="h-auto flex-wrap justify-normal gap-y-1.5">
                         {Object.keys(analysisData.result).map((service) => {
                             return (
                                 <TabsTrigger

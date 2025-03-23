@@ -1,11 +1,12 @@
 'use client';
 
 import { Bar, BarChart, XAxis, YAxis } from 'recharts';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { calculateImpactErrors } from '@/lib/utils';
 import AxeBuilderCarousel from './AxeBuilderCarousel';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { calculateImpactErrors } from '@/lib/utils';
+import type { ChartConfig } from '@/components/ui/chart';
 import type { AxeBuilderData } from '@/types';
 
 type AxeBuilderProps = {
@@ -53,7 +54,7 @@ export default function AxeBuilderItem({ axeReport: { result, url } }: AxeBuilde
                 key={id + url}
                 className="w-full max-w-(--breakpoint-lg)"
             >
-                <AccordionTrigger className="underline text-red-400">
+                <AccordionTrigger className="text-red-400 underline">
                     {resultGroupedById[id]?.[0]?.help}
                 </AccordionTrigger>
                 <AccordionContent>
@@ -124,7 +125,7 @@ export default function AxeBuilderItem({ axeReport: { result, url } }: AxeBuilde
                                     {
                                         length: chartTickCount,
                                     },
-                                    (_, i) => i * 5
+                                    (_, i) => i * 5,
                                 )}
                                 tickCount={chartTickCount}
                             />

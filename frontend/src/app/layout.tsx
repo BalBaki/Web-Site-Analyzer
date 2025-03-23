@@ -1,8 +1,8 @@
-import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import type { Metadata } from 'next';
 import './globals.css';
-import Header from '@/components/Header';
 import Providers from './providers';
+import Header from '@/components/Header';
 import ReactScan from '@/components/ReactScan';
 
 const geistSans = Geist({
@@ -30,9 +30,7 @@ export default function RootLayout({
             lang="en"
             suppressHydrationWarning
         >
-            <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col px-2`}
-            >
+            <body className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col px-2 antialiased`}>
                 {process.env.NODE_ENV === 'development' && <ReactScan />}
                 <Providers>
                     <Header />

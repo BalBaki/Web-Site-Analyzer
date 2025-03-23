@@ -1,20 +1,24 @@
 'use client';
 
-import { Checkbox } from './ui/checkbox';
-import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from './ui/tooltip';
-import { useController, useFormContext } from 'react-hook-form';
-import { FormField, FormItem, FormControl, FormLabel, FormDescription } from './ui/form';
-import type { AnalyzeFormData } from '@/types';
 import { useEffect } from 'react';
+import { useController, useFormContext } from 'react-hook-form';
+import { Checkbox } from './ui/checkbox';
+import { FormControl, FormDescription, FormField, FormItem, FormLabel } from './ui/form';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+import type { AnalyzeFormData } from '@/types';
 
 export default function DeepScan() {
     const form = useFormContext<AnalyzeFormData>();
     const {
         field: { value: servicesValue },
-    } = useController<AnalyzeFormData>({ name: 'services' });
+    } = useController<AnalyzeFormData>({
+        name: 'services',
+    });
     const {
         field: { onChange: handleDeepScanChange },
-    } = useController<AnalyzeFormData>({ name: 'deepscan' });
+    } = useController<AnalyzeFormData>({
+        name: 'deepscan',
+    });
     const services = servicesValue as AnalyzeFormData['services'];
 
     useEffect(() => {
@@ -34,7 +38,7 @@ export default function DeepScan() {
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <div className="flex justify-center items-center space-y-0 border rounded-md shadow-sm py-2 px-4 gap-1 h-fit">
+                                <div className="flex h-fit items-center justify-center gap-1 space-y-0 rounded-md border px-4 py-2 shadow-sm">
                                     <FormControl>
                                         <Checkbox
                                             checked={field.value}

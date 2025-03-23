@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { Check } from 'lucide-react';
+import AxeBuilderItem from './AxeBuilderItem';
 import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import AxeBuilderItem from './AxeBuilderItem';
-import { Check } from 'lucide-react';
 import type { AxeBuilderResponse } from '@/types';
 
 type AxeBuilderProps = {
@@ -34,13 +34,13 @@ export default function AxeBuilder({ analyzeResult, defaultUrl }: AxeBuilderProp
                         variant="outline"
                         role="combobox"
                         aria-expanded={open}
-                        className="w-full sm:max-w-(--breakpoint-sm) justify-between mb-2"
+                        className="mb-2 w-full justify-between sm:max-w-(--breakpoint-sm)"
                     >
                         {url ? analyzeResult.find((result) => result.url === url)?.url : 'Enter Valid URL..!'}
                         {/* <ChevronsUpDown className="opacity-50" /> */}
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="p-0 popover-content-width-same-as-its-trigger!">
+                <PopoverContent className="popover-content-width-same-as-its-trigger! p-0">
                     <Command>
                         <CommandInput
                             placeholder="Search Url"

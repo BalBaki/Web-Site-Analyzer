@@ -46,8 +46,8 @@ export default function Services() {
                                     variant="outline"
                                     role="combobox"
                                     className={cn(
-                                        'justify-between w-full sm:w-52',
-                                        !field.value && 'text-muted-foreground'
+                                        'w-full justify-between sm:w-52',
+                                        !field.value && 'text-muted-foreground',
                                     )}
                                     aria-label="Select your services"
                                 >
@@ -56,7 +56,7 @@ export default function Services() {
                             </FormControl>
                         </PopoverTrigger>
                         <PopoverContent
-                            className="p-0 popover-content-width-same-as-its-trigger!"
+                            className="popover-content-width-same-as-its-trigger! p-0"
                             side="bottom"
                         >
                             <Command>
@@ -72,7 +72,7 @@ export default function Services() {
                                                     field.onChange(
                                                         field.value.includes(value)
                                                             ? field.value.filter((data) => data !== value)
-                                                            : [...field.value, value]
+                                                            : [...field.value, value],
                                                     );
                                                 }}
                                             >

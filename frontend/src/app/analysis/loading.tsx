@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export default function AnalysisPageLoading() {
     return (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center w-fit">
+        <div className="absolute top-1/2 left-1/2 flex w-fit -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center">
             <Image
                 src="/assets/analyze.gif"
                 alt="Analyzing"
