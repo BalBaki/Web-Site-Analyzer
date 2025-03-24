@@ -19,5 +19,7 @@ export const analyzeSchema = z.object({
 });
 
 export const assistantSchema = z.object({
-    message: z.string().min(16, 'Enter minimum 16 character'),
+    type: z.enum(['acccessbility', 'normal']).default('normal'),
+    description: z.string().min(1),
+    elementHtml: z.string().optional(),
 });

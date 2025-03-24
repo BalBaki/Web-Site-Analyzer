@@ -255,6 +255,7 @@ interface UserPageLoadMetricV5 {
 //Page Speed Insight End
 
 type WithError<T> = T | { error: string };
+type QuestionType = 'acccessbility' | 'normal';
 
 export type AnalyzeSearchParams = z.infer<typeof analyzeSearchParamsSchema>;
 export type AnalyzeFormData = z.infer<typeof analyzeFormSchema>;
@@ -344,3 +345,9 @@ export type AssistantResponse =
           assistant: false;
           error: string;
       };
+
+export type AssistantPayload = {
+    type: QuestionType;
+    description: string;
+    elementHtml?: string;
+};

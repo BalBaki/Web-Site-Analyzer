@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { AccessibilityViolation } from '@/types';
+import Assistant from '../Assistant';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
 import type { CarouselApi } from '../ui/carousel';
 
@@ -85,6 +86,13 @@ export default function AxeBuilderCarousel({ result }: AxeBuilderCarouselProps) 
                                                 )}
                                             </>
                                         )}
+                                        <Assistant
+                                            data={{
+                                                type: 'acccessbility',
+                                                description: err.description,
+                                                elementHtml: node.html,
+                                            }}
+                                        />
                                         <div className="mt-2 flex flex-wrap items-center gap-2">
                                             <Badge className="capitalize">{node.impact}</Badge>
                                             {err.tags.map((tag) => (

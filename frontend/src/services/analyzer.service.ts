@@ -1,6 +1,6 @@
 import { env } from './env.service';
 import { stringifyObjectValues } from '@/lib/utils';
-import type { AnalyzeFormData, AnalyzeResult } from '@/types';
+import type { AnalyzeFormData, AnalyzeResult, AssistantPayload, AssistantResponse } from '@/types';
 
 class Analyzer {
     private readonly apiUrl = env.apiUrl;
@@ -36,6 +36,38 @@ class Analyzer {
         const result = await res.json();
 
         return result as AnalyzeResult;
+    };
+
+    assistant = async (payload: AssistantPayload): Promise<AssistantResponse> => {
+        const res = await fetch(this.apiUrl + 'assistant', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+            let error: string;
+
+            switch (res.status) {
+                case 402:
+                    error = 'Enter valid data..!';
+                    break;
+                default:
+                    error = 'Something went wrong..!';
+                    break;
+            }
+
+            return {
+                assistant: false,
+                error,
+            };
+        }
+
+        const result = await res.json();
+
+        return result as AssistantResponse;
     };
 }
 

@@ -47,7 +47,7 @@ export class AppService {
 
     async assistant(payload: AssistantPayload) {
         try {
-            const result = await this.chatgptService.ask(payload.message);
+            const result = await this.chatgptService.ask(payload);
 
             return { assistant: true, answer: result };
         } catch (error) {
