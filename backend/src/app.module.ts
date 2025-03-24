@@ -10,6 +10,7 @@ import { PageSpeedInsightService } from './services/page-speed-insight/page-spee
 import { WhoIsService } from './services/who-is/who-is.service';
 import * as z from 'zod';
 import { envSchema } from './schemas';
+import { ChatgptService } from './services/chatgpt/chatgpt.service';
 
 @Module({
     imports: [
@@ -51,6 +52,7 @@ import { envSchema } from './schemas';
         AxeBuilderService,
         PageSpeedInsightService,
         WhoIsService,
+        ChatgptService,
     ],
 })
 export class AppModule {}

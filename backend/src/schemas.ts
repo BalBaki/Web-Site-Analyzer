@@ -3,6 +3,7 @@ import * as z from 'zod';
 export const envSchema = z.object({
     PAGE_SPEED_INSIGHT_API_KEY: z.string().min(1),
     WHO_IS_API_KEY: z.string().min(1),
+    CHATGPT_API_KEY: z.string().min(1),
 });
 
 export const analyzeSchema = z.object({
@@ -15,4 +16,8 @@ export const analyzeSchema = z.object({
         .pipe(z.array(z.enum(['axebuilder', 'pagespeedinsight', 'whois'])))
         .transform((val) => [...new Set(val)]),
     deepscan: z.preprocess((val) => (val === 'true' ? true : false), z.boolean()),
+});
+
+export const assistantSchema = z.object({
+    message: z.string().min(16, 'Enter minimum 16 character'),
 });

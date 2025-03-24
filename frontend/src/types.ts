@@ -334,3 +334,13 @@ export interface PagespeedApiPagespeedResponseV5 {
     originLoadingExperience?: PagespeedApiLoadingExperienceV5;
     version?: PagespeedVersion;
 }
+
+export type AssistantResponse =
+    | {
+          assistant: true;
+          answer: string;
+      }
+    | {
+          assistant: false;
+          error: string;
+      };

@@ -12,4 +12,8 @@ export class EnvService {
     get whoIsApiKey() {
         return this.configService.get<string>('WHO_IS_API_KEY');
     }
+
+    get chatGptApiKey() {
+        return this.configService.get<string>('CHATGPT_API_KEY');
+    }
 }

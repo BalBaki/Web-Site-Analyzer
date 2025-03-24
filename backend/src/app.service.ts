@@ -3,7 +3,8 @@ import { AxeBuilderService } from './services/axe-builder/axe-builder.service';
 import { InvalidPayloadException } from './exceptions/invalid-payload.exception';
 import { PageSpeedInsightService } from './services/page-speed-insight/page-speed-insight.service';
 import { WhoIsService } from './services/who-is/who-is.service';
-import type { AnalyzePayload } from './types';
+import type { AnalyzePayload, AssistantPayload } from './types';
+import { ChatgptService } from './services/chatgpt/chatgpt.service';
 
 @Injectable()
 export class AppService {
@@ -11,6 +12,7 @@ export class AppService {
         private axeBuilderService: AxeBuilderService,
         private pageSpeedInsightService: PageSpeedInsightService,
         private whoIsService: WhoIsService,
+        private chatgptService: ChatgptService,
     ) {}
 
     async analyze(payload: AnalyzePayload) {
@@ -40,6 +42,18 @@ export class AppService {
             };
         } catch (error) {
             return { analyze: false, error: 'Something went wrong..!' };
+        }
+    }
+
+    async assistant(payload: AssistantPayload) {
+        try {
+            const result = await this.chatgptService.ask(payload.message);
+
+            return { assistant: true, answer: result };
+        } catch (error) {
+            console.error(error);
+
+            return { assistant: false, error: 'Error at ChatGpt Assissant. Check Console' };
         }
     }
 }

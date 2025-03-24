@@ -1,9 +1,9 @@
-import { Controller, Get, Query, Res, UsePipes } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Res, UsePipes } from '@nestjs/common';
 import { AppService } from './app.service';
-import { analyzeSchema } from './schemas';
+import { analyzeSchema, assistantSchema } from './schemas';
 import { ZodValidationPipe } from 'src/pipes/zod-validation.pipe';
 import type { Response } from 'express';
-import type { AnalyzePayload } from './types';
+import type { AnalyzePayload, AssistantPayload } from './types';
 
 @Controller()
 export class AppController {
@@ -15,5 +15,11 @@ export class AppController {
         const result = await this.appService.analyze(query);
 
         return res.json(result);
+    }
+
+    @Post('assistant')
+    @UsePipes(new ZodValidationPipe(assistantSchema, 'assistant'))
+    async assistant(@Body() body: AssistantPayload, @Res() res: Response) {
+        return res.json(await this.appService.assistant(body));
     }
 }
