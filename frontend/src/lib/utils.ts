@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import type { ClassValue } from 'clsx';
-import type { AccessibilityViolation, ImpactSeverity } from '@/types';
+import type { AccessibilityViolation, ImpactSeverity, ScoreStatus } from '@/types';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -35,3 +35,11 @@ export const calculateImpactErrors = (payload: AccessibilityViolation[]): Record
             total: 0,
         } as Record<ImpactSeverity | 'total', number>,
     );
+
+export const getScoreStatus = (score: number): ScoreStatus => {
+    return {
+        isPass: score >= 90 && score <= 100,
+        isAverage: score >= 50 && score <= 89,
+        isFail: score >= 0 && score <= 49,
+    };
+};

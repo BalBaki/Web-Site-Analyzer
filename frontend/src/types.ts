@@ -68,7 +68,7 @@ interface Bucket {
     proportion?: number | null;
 }
 
-interface Categories {
+export interface Categories {
     accessibility?: LighthouseCategoryV5;
     'best-practices'?: LighthouseCategoryV5;
     performance?: LighthouseCategoryV5;
@@ -109,7 +109,7 @@ interface LhrEntity {
     origins?: string[] | null;
 }
 
-interface LighthouseAuditResultV5 {
+export interface LighthouseAuditResultV5 {
     description?: string | null;
     details?: Record<string, any> | null;
     displayValue?: string | null;
@@ -125,7 +125,7 @@ interface LighthouseAuditResultV5 {
     warnings?: any | null;
 }
 
-interface LighthouseCategoryV5 {
+export interface LighthouseCategoryV5 {
     auditRefs?: AuditRefs[];
     description?: string | null;
     id?: string | null;
@@ -134,7 +134,7 @@ interface LighthouseCategoryV5 {
     title?: string | null;
 }
 
-interface LighthouseResultV5 {
+export interface LighthouseResultV5 {
     audits?: Record<string, LighthouseAuditResultV5> | null;
     categories?: Categories;
     categoryGroups?: Record<string, CategoryGroupV5> | null;
@@ -351,3 +351,9 @@ export type AssistantPayload = {
     description: string;
     elementHtml?: string;
 };
+
+export interface ScoreStatus {
+    isPass: boolean;
+    isAverage: boolean;
+    isFail: boolean;
+}
