@@ -352,8 +352,5 @@ export type AssistantPayload = {
     elementHtml?: string;
 };
 
-export interface ScoreStatus {
-    isPass: boolean;
-    isAverage: boolean;
-    isFail: boolean;
-}
+export type ScoreStatus = 'pass' | 'average' | 'fail';
+export type PageSpeedInsightStatusPriorty = Record<ScoreStatus, number>;

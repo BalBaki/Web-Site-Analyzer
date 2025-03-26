@@ -1,3 +1,5 @@
+'use client';
+
 import { cn, getScoreStatus } from '@/lib/utils';
 import ProgressCircle from '../ProgressCircle';
 import type { Categories } from '@/types';
@@ -8,7 +10,7 @@ type PageSpeedInsightPreviewProps = {
 
 export default function PageSpeedInsightPreview({ categories }: PageSpeedInsightPreviewProps) {
     return (
-        <div className="flex items-center justify-center gap-8">
+        <div className="flex flex-wrap items-center justify-center gap-8">
             {Object.values(categories).map((value) => {
                 const scoreAsPoint = value.score * 100;
                 const scoreStatus = getScoreStatus(scoreAsPoint);
@@ -23,16 +25,16 @@ export default function PageSpeedInsightPreview({ categories }: PageSpeedInsight
                             config={{
                                 svg: {
                                     className: cn({
-                                        'bg-score-pass/60': scoreStatus.isPass,
-                                        'bg-score-avarage/60': scoreStatus.isAverage,
-                                        'bg-score-fail/60': scoreStatus.isFail,
+                                        'bg-score-pass/60': scoreStatus === 'pass',
+                                        'bg-score-avarage/60': scoreStatus === 'average',
+                                        'bg-score-fail/60': scoreStatus === 'fail',
                                     }),
                                 },
                                 progressStick: {
                                     className: cn({
-                                        'text-score-pass': scoreStatus.isPass,
-                                        'text-score-avarage': scoreStatus.isAverage,
-                                        'text-score-fail': scoreStatus.isFail,
+                                        'text-score-pass': scoreStatus === 'pass',
+                                        'text-score-avarage': scoreStatus === 'average',
+                                        'text-score-fail': scoreStatus === 'fail',
                                     }),
                                 },
                             }}

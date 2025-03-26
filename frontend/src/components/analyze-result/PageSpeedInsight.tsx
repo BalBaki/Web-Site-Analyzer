@@ -1,3 +1,5 @@
+'use client';
+
 import PageSpeedInsightTab from './PageSpeedInsightTab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import type { PageSpeedInsightResponse } from '@/types';
@@ -8,6 +10,7 @@ type PageSpeedInsightProps = {
 
 export default function PageSpeedInsight({ analyzeResult }: PageSpeedInsightProps) {
     if ('error' in analyzeResult) return <div>Error at Page Speed Insight</div>;
+
     return (
         <Tabs defaultValue="desktop">
             <TabsList className="grid grid-cols-2">
@@ -15,13 +18,17 @@ export default function PageSpeedInsight({ analyzeResult }: PageSpeedInsightProp
                 <TabsTrigger value="mobile">Mobile</TabsTrigger>
             </TabsList>
             <TabsContent value="desktop">
-                <PageSpeedInsightTab data={analyzeResult.desktop} />
+                <PageSpeedInsightTab
+                    key="desktop"
+                    data={analyzeResult.desktop}
+                />
             </TabsContent>
             <TabsContent value="mobile">
-                <PageSpeedInsightTab data={analyzeResult.mobile} />
+                <PageSpeedInsightTab
+                    key="mobile"
+                    data={analyzeResult.mobile}
+                />
             </TabsContent>
         </Tabs>
     );
-
-    // return <div>{result.desktop.lighthouseResult?.audits?.['document-title'].description}</div>;
 }

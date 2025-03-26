@@ -37,9 +37,12 @@ export const calculateImpactErrors = (payload: AccessibilityViolation[]): Record
     );
 
 export const getScoreStatus = (score: number): ScoreStatus => {
-    return {
-        isPass: score >= 90 && score <= 100,
-        isAverage: score >= 50 && score <= 89,
-        isFail: score >= 0 && score <= 49,
-    };
+    if (score < 0 || score > 100) {
+        return 'fail';
+    }
+
+    if (score >= 90) return 'pass';
+    if (score >= 50) return 'average';
+
+    return 'fail';
 };

@@ -4,12 +4,7 @@ import { EnvService } from '../env/env.service';
 @Injectable()
 export class PageSpeedInsightService {
     private baseUrl: string = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?';
-    private categories = [
-        // 'ACCESSIBILITY',
-        'BEST_PRACTICES',
-        'PERFORMANCE',
-        'SEO',
-    ];
+    private categories = ['ACCESSIBILITY', 'BEST_PRACTICES', 'PERFORMANCE', 'SEO'];
     private strategies = ['desktop', 'mobile'];
 
     constructor(private readonly envService: EnvService) {}
