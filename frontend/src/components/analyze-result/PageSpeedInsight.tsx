@@ -2,6 +2,7 @@
 
 import PageSpeedInsightTab from './PageSpeedInsightTab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { transformPageSpeedData } from '@/lib/utils';
 import type { PageSpeedInsightResponse } from '@/types';
 
 type PageSpeedInsightProps = {
@@ -10,6 +11,8 @@ type PageSpeedInsightProps = {
 
 export default function PageSpeedInsight({ analyzeResult }: PageSpeedInsightProps) {
     if ('error' in analyzeResult) return <div>Error at Page Speed Insight</div>;
+
+    const transformedData = transformPageSpeedData(analyzeResult);
 
     return (
         <Tabs defaultValue="desktop">
@@ -20,13 +23,13 @@ export default function PageSpeedInsight({ analyzeResult }: PageSpeedInsightProp
             <TabsContent value="desktop">
                 <PageSpeedInsightTab
                     key="desktop"
-                    data={analyzeResult.desktop}
+                    data={transformedData.desktop}
                 />
             </TabsContent>
             <TabsContent value="mobile">
                 <PageSpeedInsightTab
                     key="mobile"
-                    data={analyzeResult.mobile}
+                    data={transformedData.mobile}
                 />
             </TabsContent>
         </Tabs>

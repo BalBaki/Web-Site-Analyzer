@@ -354,3 +354,12 @@ export type AssistantPayload = {
 
 export type ScoreStatus = 'pass' | 'average' | 'fail';
 export type PageSpeedInsightStatusPriorty = Record<ScoreStatus, number>;
+
+export interface TransformedPageSpeedData {
+    audits: Array<{
+        category: LighthouseCategoryV5;
+        results: LighthouseAuditResultV5[];
+    }>;
+    categories: Categories;
+}
+export type PageSpeedResultsMap = Record<string, TransformedPageSpeedData>;
