@@ -12,7 +12,7 @@ export default function PageSpeedInsightPreview({ categories }: PageSpeedInsight
     return (
         <div className="flex flex-wrap items-center justify-center gap-8">
             {Object.values(categories).map((value) => {
-                const scoreAsPoint = value.score * 100;
+                const scoreAsPoint = Number((value.score * 100).toFixed(0));
                 const scoreStatus = getScoreStatus(scoreAsPoint);
 
                 return (
