@@ -308,31 +308,22 @@ export default function PageSpeedInsightAudit({ audit }: PageSpeedInsightAuditPr
 
     const content = (
         <dl>
-            {audit.displayValue && (
-                <div className="flex">
-                    <dt className="shrink-0">Value</dt>
-                    <span className="mx-px">:</span>
-                    <dd>{audit.displayValue}</dd>
-                </div>
+            {audit.displayValue && <PageSpeedInsightDetailsItem data={{ name: 'Value', value: audit.displayValue }} />}
+            {audit.description && (
+                <PageSpeedInsightDetailsItem data={{ name: 'Description', value: audit.description }} />
             )}
-            <div className="flex">
-                <dt className="shrink-0">Description</dt>
-                <span className="mx-px">:</span>
-                <dd>{audit.description}</dd>
-            </div>
-            <div className="flex">
-                <dt className="shrink-0">Score</dt>
-                <span className="mx-px">:</span>
-                <dd
-                    className={cn({
-                        'text-score-pass': isPass,
-                        'text-score-avarage': isAverage,
-                        'text-score-fail': isFail,
-                    })}
-                >
-                    {audit.score}
-                </dd>
-            </div>
+            <PageSpeedInsightDetailsItem
+                data={{ name: 'Score', value: audit.score }}
+                config={{
+                    value: {
+                        className: cn({
+                            'text-score-pass': isPass,
+                            'text-score-avarage': isAverage,
+                            'text-score-fail': isFail,
+                        }),
+                    },
+                }}
+            />
             {audit.details && (
                 <div>
                     <h4 className="text-2xl font-semibold underline">Details</h4>
