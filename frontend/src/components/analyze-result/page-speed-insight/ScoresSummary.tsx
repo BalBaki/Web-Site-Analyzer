@@ -1,14 +1,14 @@
 'use client';
 
 import { cn, getScoreStatus } from '@/lib/utils';
-import ProgressCircle from '../ProgressCircle';
+import ProgressCircle from '../../ProgressCircle';
 import type { Categories } from '@/types';
 
-type PageSpeedInsightPreviewProps = {
+type ScoresSummaryProps = {
     categories: Categories;
 };
 
-export default function PageSpeedInsightPreview({ categories }: PageSpeedInsightPreviewProps) {
+export default function ScoresSummary({ categories }: ScoresSummaryProps) {
     return (
         <div className="flex flex-wrap items-center justify-center gap-8">
             {Object.values(categories).map((value) => {

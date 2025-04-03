@@ -1,7 +1,7 @@
 'use client';
 
 import { Bar, BarChart, XAxis, YAxis } from 'recharts';
-import AxeBuilderCarousel from './AxeBuilderCarousel';
+import ItemCarousel from './ItemCarousel';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
@@ -9,7 +9,7 @@ import { calculateImpactErrors } from '@/lib/utils';
 import type { ChartConfig } from '@/components/ui/chart';
 import type { AxeBuilderData } from '@/types';
 
-type AxeBuilderProps = {
+type ItemProps = {
     axeReport: AxeBuilderData[number];
 };
 
@@ -39,7 +39,7 @@ const chartConfig = {
     },
 } satisfies ChartConfig;
 
-export default function AxeBuilderItem({ axeReport: { result, url } }: AxeBuilderProps) {
+export default function Item({ axeReport: { result, url } }: ItemProps) {
     if (result.length < 0) return null;
 
     //TODO Add useMemo
@@ -58,7 +58,7 @@ export default function AxeBuilderItem({ axeReport: { result, url } }: AxeBuilde
                     {resultGroupedById[id]?.[0]?.help}
                 </AccordionTrigger>
                 <AccordionContent>
-                    {resultGroupedById[id] && <AxeBuilderCarousel result={resultGroupedById[id]} />}
+                    {resultGroupedById[id] && <ItemCarousel result={resultGroupedById[id]} />}
                 </AccordionContent>
             </AccordionItem>
         );

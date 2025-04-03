@@ -4,16 +4,16 @@ import { Fragment, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { AccessibilityViolation } from '@/types';
-import Assistant from '../Assistant';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
-import type { CarouselApi } from '../ui/carousel';
+import Assistant from '../../Assistant';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../../ui/carousel';
+import type { AccessibilityViolation } from '@/types';
+import type { CarouselApi } from '../../ui/carousel';
 
-type AxeBuilderCarouselProps = {
+type ItemCarouselProps = {
     result: AccessibilityViolation[];
 };
 
-export default function AxeBuilderCarousel({ result }: AxeBuilderCarouselProps) {
+export default function ItemCarousel({ result }: ItemCarouselProps) {
     const [api, setApi] = useState<CarouselApi>();
     const [current, setCurrent] = useState(0);
     const [count, setCount] = useState(0);

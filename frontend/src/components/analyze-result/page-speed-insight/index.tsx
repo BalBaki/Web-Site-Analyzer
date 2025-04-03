@@ -1,6 +1,6 @@
 'use client';
 
-import PageSpeedInsightTab from './PageSpeedInsightTab';
+import Tab from './Tab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { transformPageSpeedData } from '@/lib/utils';
 import type { PageSpeedInsightResponse } from '@/types';
@@ -21,13 +21,13 @@ export default function PageSpeedInsight({ analyzeResult }: PageSpeedInsightProp
                 <TabsTrigger value="mobile">Mobile</TabsTrigger>
             </TabsList>
             <TabsContent value="desktop">
-                <PageSpeedInsightTab
+                <Tab
                     key="desktop"
                     data={transformedData.desktop}
                 />
             </TabsContent>
             <TabsContent value="mobile">
-                <PageSpeedInsightTab
+                <Tab
                     key="mobile"
                     data={transformedData.mobile}
                 />

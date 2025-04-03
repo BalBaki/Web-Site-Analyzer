@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Check } from 'lucide-react';
-import AxeBuilderItem from './AxeBuilderItem';
+import Item from './Item';
 import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -72,7 +72,7 @@ export default function AxeBuilder({ analyzeResult, defaultUrl }: AxeBuilderProp
                     </Command>
                 </PopoverContent>
             </Popover>
-            {selectedReport && <AxeBuilderItem axeReport={selectedReport} />}
+            {selectedReport && <Item axeReport={selectedReport} />}
         </section>
     );
 }

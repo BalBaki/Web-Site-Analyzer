@@ -11,7 +11,7 @@ type BaseConfigProps = {
     value?: ComponentPropsWithRef<'dd'>;
 };
 
-type PageSpeedInsightDetailsItemProps =
+type DetailsItemProps =
     | {
           data: ItemData;
           isLink?: false;
@@ -23,11 +23,11 @@ type PageSpeedInsightDetailsItemProps =
           config?: BaseConfigProps & { link?: Omit<ComponentPropsWithRef<typeof Link>, 'href'> };
       };
 
-export default function PageSpeedInsightDetailsItem({
+export default function DetailsItem({
     data: { name, value, seperator = ':' },
     isLink = false,
     config = {},
-}: PageSpeedInsightDetailsItemProps) {
+}: DetailsItemProps) {
     const stringifiedValue = stringifyValue(value);
     const { className: wrapperClassName, ...otherWrapperProps } = config.wrapper || {};
     const { className: nameClassName, ...otherNameProps } = config.name || {};

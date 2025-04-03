@@ -182,12 +182,12 @@
 'use client';
 
 import { useMemo } from 'react';
-import PageSpeedInsightDetailsItem from './PageSpeedInsightDetailsItem';
+import DetailsItem from './DetailsItem';
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { cn, detectDataType, getScoreStatus, renderAnyObject } from '@/lib/utils';
 import type { LighthouseAuditResultV5, RenderConfig } from '@/types';
 
-type PageSpeedInsightAuditProps = {
+type AuditProps = {
     audit: LighthouseAuditResultV5;
 };
 
@@ -204,7 +204,7 @@ const createStandardRenderConfig = ({
     key,
     render(value) {
         return (
-            <PageSpeedInsightDetailsItem
+            <DetailsItem
                 key={this.key}
                 data={{ name: this.name, value }}
                 isLink={isLink}
@@ -276,7 +276,7 @@ const detailsRenderConfig: RenderConfig[] = [
     },
 ];
 
-export default function PageSpeedInsightAudit({ audit }: PageSpeedInsightAuditProps) {
+export default function Audit({ audit }: AuditProps) {
     const scoreStatus = getScoreStatus(audit.score * 100);
     const isFail = scoreStatus === 'fail';
     const isAverage = scoreStatus === 'average';
@@ -308,11 +308,9 @@ export default function PageSpeedInsightAudit({ audit }: PageSpeedInsightAuditPr
 
     const content = (
         <dl>
-            {audit.displayValue && <PageSpeedInsightDetailsItem data={{ name: 'Value', value: audit.displayValue }} />}
-            {audit.description && (
-                <PageSpeedInsightDetailsItem data={{ name: 'Description', value: audit.description }} />
-            )}
-            <PageSpeedInsightDetailsItem
+            {audit.displayValue && <DetailsItem data={{ name: 'Value', value: audit.displayValue }} />}
+            {audit.description && <DetailsItem data={{ name: 'Description', value: audit.description }} />}
+            <DetailsItem
                 data={{ name: 'Score', value: audit.score }}
                 config={{
                     value: {

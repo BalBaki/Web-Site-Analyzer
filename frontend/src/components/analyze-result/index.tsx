@@ -1,5 +1,5 @@
-import AxeBuilder from './AxeBuilder';
-import PageSpeedInsight from './PageSpeedInsight';
+import AxeBuilder from './axe-builder';
+import PageSpeedInsight from './page-speed-insight';
 import WhoIs from './WhoIs';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import analyzer from '@/services/analyzer.service';
