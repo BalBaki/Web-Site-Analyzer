@@ -397,3 +397,5 @@ type DetectedDataResult<T extends DataType> = {
 export type AnyDetectedDataResult = {
     [T in DataType]: DetectedDataResult<T>;
 }[DataType];
+
+export type ErrorCount = Record<ImpactSeverity | 'total', number>;

@@ -1,78 +1,55 @@
 'use client';
 
-import { useState } from 'react';
-import { Check } from 'lucide-react';
-import Item from './Item';
-import { Button } from '@/components/ui/button';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
-import type { AxeBuilderResponse } from '@/types';
+import { createContext, use, useMemo, useState } from 'react';
+import ReportChart from './ReportChart';
+import ReportList from './ReportList';
+import UrlDropDown from './UrlDropdown';
+import type { AxeBuilderData, AxeBuilderResponse } from '@/types';
 
 type AxeBuilderProps = {
     analyzeResult: AxeBuilderResponse;
     defaultUrl: string;
 };
+type AxeBuilderContextType = {
+    url: string;
+    setUrl: (url: string) => void;
+    selectedReport?: AxeBuilderData[number];
+    result: AxeBuilderData;
+};
+
+const AxeBuilderContext = createContext<AxeBuilderContextType | null>(null);
+
+export const useAxeBuilderContext = () => {
+    const axeBuilderContext = use(AxeBuilderContext);
+
+    if (!axeBuilderContext) throw new Error('Wrap compoment with AxeBuilder');
+
+    return axeBuilderContext;
+};
 
 export default function AxeBuilder({ analyzeResult, defaultUrl }: AxeBuilderProps) {
-    const [open, setOpen] = useState(false);
-    const [url, setUrl] = useState(defaultUrl);
+    const [selectedUrl, setSelectedUrl] = useState(defaultUrl);
+    const isErrorExists = 'error' in analyzeResult;
+    const selectedReport = useMemo(
+        () => (isErrorExists ? undefined : analyzeResult.find((result) => result.url === selectedUrl)),
+        [selectedUrl, analyzeResult, isErrorExists],
+    );
 
-    if ('error' in analyzeResult) return <div>Error at AxeBuilder</div>;
+    const setUrl = (url: string) => {
+        if (selectedUrl === url) return;
 
-    //TODO Add useMemo
-    const selectedReport = analyzeResult.find((result) => result.url === url);
+        setSelectedUrl(url);
+    };
+
+    if (isErrorExists) return <div>Error at AxeBuilder</div>;
 
     return (
-        <section>
-            <Popover
-                open={open}
-                onOpenChange={setOpen}
-            >
-                <PopoverTrigger asChild>
-                    <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={open}
-                        className="mb-2 w-full justify-between sm:max-w-(--breakpoint-sm)"
-                    >
-                        {url ? analyzeResult.find((result) => result.url === url)?.url : 'Enter Valid URL..!'}
-                        {/* <ChevronsUpDown className="opacity-50" /> */}
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="popover-content-width-same-as-its-trigger! p-0">
-                    <Command>
-                        <CommandInput
-                            placeholder="Search Url"
-                            className="h-9"
-                        />
-                        <CommandList>
-                            <CommandEmpty>No Url found.</CommandEmpty>
-                            <CommandGroup>
-                                {analyzeResult.map((result) => (
-                                    <CommandItem
-                                        key={result.url}
-                                        value={result.url}
-                                        disabled={result.url === url}
-                                        onSelect={(currentValue) => {
-                                            if (currentValue === url) return;
-
-                                            setUrl(currentValue);
-                                            setOpen(false);
-                                        }}
-                                    >
-                                        {result.url}
-                                        <Check
-                                            className={cn('ml-auto', url === result.url ? 'opacity-100' : 'opacity-0')}
-                                        />
-                                    </CommandItem>
-                                ))}
-                            </CommandGroup>
-                        </CommandList>
-                    </Command>
-                </PopoverContent>
-            </Popover>
-            {selectedReport && <Item axeReport={selectedReport} />}
-        </section>
+        <AxeBuilderContext value={{ url: selectedUrl, setUrl, selectedReport, result: analyzeResult }}>
+            <section aria-label="Accessibility Axe Builder Analysis Report">
+                <UrlDropDown />
+                <ReportChart />
+                <ReportList />
+            </section>
+        </AxeBuilderContext>
     );
 }

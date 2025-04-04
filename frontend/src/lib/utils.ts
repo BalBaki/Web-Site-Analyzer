@@ -7,7 +7,7 @@ import type { ClassValue } from 'clsx';
 import type {
     AccessibilityViolation,
     AnyDetectedDataResult,
-    ImpactSeverity,
+    ErrorCount,
     LighthouseAuditResultV5,
     LighthouseCategoryV5,
     PagespeedApiPagespeedResponseV5,
@@ -37,9 +37,9 @@ export const stringifyObjectValues = <T extends Record<string, unknown>>(payload
         string
     >;
 
-export const calculateImpactErrors = (payload: AccessibilityViolation[]): Record<ImpactSeverity | 'total', number> =>
+export const calculateImpactErrors = (payload: AccessibilityViolation[]): ErrorCount =>
     payload.reduce(
-        (counts: Record<ImpactSeverity | 'total', number>, error) => {
+        (counts: ErrorCount, error) => {
             if (Object.keys(counts).includes(error.impact)) counts[error.impact] += error.nodes.length;
             else counts[error.impact] = error.nodes.length;
 
@@ -49,7 +49,12 @@ export const calculateImpactErrors = (payload: AccessibilityViolation[]): Record
         },
         {
             total: 0,
-        } as Record<ImpactSeverity | 'total', number>,
+            critical: 0,
+            minor: 0,
+            moderate: 0,
+            serious: 0,
+            trivial: 0,
+        },
     );
 
 export const getScoreStatus = (score: number): ScoreStatus => {
