@@ -389,7 +389,7 @@ type DataTypeToTSType = {
     unknown: unknown;
 };
 
-type DetectedDataResult<T extends DataType> = {
+export type DetectedDataResult<T extends DataType> = {
     type: T;
     data: DataTypeToTSType[T];
 };
