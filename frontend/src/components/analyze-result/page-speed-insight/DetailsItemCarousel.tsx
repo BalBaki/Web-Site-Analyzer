@@ -1,14 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { renderAnyObject } from '@/lib/utils';
-import { DetectedDataResult, RenderConfig } from '@/types';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../../ui/carousel';
+import type { ReactNode } from 'react';
 import type { CarouselApi } from '../../ui/carousel';
 
-type DetailsItemCarouselProps = { data: Array<DetectedDataResult<'object'>>; config: RenderConfig[] };
+type DetailsItemCarouselProps = { renderedData: ReactNode[] };
 
-export default function DetailsItemCarousel({ data, config }: DetailsItemCarouselProps) {
+export default function DetailsItemCarousel({ renderedData }: DetailsItemCarouselProps) {
     const [api, setApi] = useState<CarouselApi>();
     const [current, setCurrent] = useState(0);
     const [count, setCount] = useState(0);
@@ -34,9 +33,9 @@ export default function DetailsItemCarousel({ data, config }: DetailsItemCarouse
                 <CarouselNext className="static translate-x-0 translate-y-0" />
             </div>
             <CarouselContent>
-                {data.map((value, index) => {
-                    return <CarouselItem key={index}>{renderAnyObject(config, value)}</CarouselItem>;
-                })}
+                {renderedData.map((value, index) => (
+                    <CarouselItem key={index}>{value}</CarouselItem>
+                ))}
             </CarouselContent>
         </Carousel>
     );

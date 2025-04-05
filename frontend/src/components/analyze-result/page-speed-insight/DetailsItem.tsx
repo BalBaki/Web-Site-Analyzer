@@ -37,7 +37,7 @@ export default function DetailsItem({
 
     return (
         <div
-            className={cn('flex', wrapperClassName)}
+            className={cn('flex break-all', wrapperClassName)}
             {...otherWrapperProps}
         >
             <dt

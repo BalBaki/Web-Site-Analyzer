@@ -5,6 +5,7 @@ import DetailsItem from './DetailsItem';
 import DetailsItemCarousel from './DetailsItemCarousel';
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { cn, detectDataType, getScoreStatus, renderAnyObject } from '@/lib/utils';
+import type { ReactNode } from 'react';
 import type { LighthouseAuditResultV5, RenderConfig } from '@/types';
 
 type AuditProps = {
@@ -59,11 +60,11 @@ const detailsRenderConfig: RenderConfig[] = [
                     createStandardRenderConfig({ name: 'Element', key: 'snippet' }),
                 ],
                 render: function (value) {
-                    const { type, data: validatedValue } = detectDataType(value);
+                    const { type, data: validatedData } = detectDataType(value);
 
                     if (type !== 'object' || !this.subItems) return null;
 
-                    return renderAnyObject(this.subItems, validatedValue);
+                    return renderAnyObject(this.subItems, validatedData);
                 },
             },
             createStandardRenderConfig({ name: 'Wasted Ms', key: 'wastedMs' }),
@@ -76,29 +77,35 @@ const detailsRenderConfig: RenderConfig[] = [
         render(value) {
             const { type, data: validatedValues } = detectDataType(value);
 
-            if (type !== 'array' || validatedValues.length < 1 || !this.subItems) return null;
+            if (type !== 'array' || !validatedValues.length || !this.subItems) return null;
+
+            const renderedValues = validatedValues.reduce((result: ReactNode[], value) => {
+                const { type, data } = detectDataType(value);
+
+                if (type === 'object' && Object.keys(data).length > 0 && this.subItems) {
+                    const renderedObject = renderAnyObject(this.subItems, value);
+
+                    if (renderedObject && renderedObject.length) {
+                        result.push(renderedObject);
+                    }
+                }
+
+                return result;
+            }, []);
 
             return (
-                <div key={this.key}>
-                    <h4 className="text-xl font-semibold">{this.name}</h4>
-                    <div className="space-y-4 pl-4">
-                        {validatedValues.length > 1 ? (
-                            <DetailsItemCarousel
-                                data={validatedValues.reduce((result, value) => {
-                                    const { type, data } = detectDataType(value);
-
-                                    if (type === 'object' && this.subItems && Object.keys(data).length)
-                                        result.push(data);
-
-                                    return result;
-                                }, [])}
-                                config={this.subItems}
-                            />
-                        ) : (
-                            <div>{renderAnyObject(this.subItems, validatedValues[0])}</div>
-                        )}
+                !!renderedValues.length && (
+                    <div key={this.key}>
+                        <h4 className="text-xl font-semibold">{this.name}</h4>
+                        <div className="space-y-4 pl-4">
+                            {renderedValues.length > 1 ? (
+                                <DetailsItemCarousel renderedData={renderedValues} />
+                            ) : (
+                                <div>{renderedValues}</div>
+                            )}
+                        </div>
                     </div>
-                </div>
+                )
             );
         },
     },

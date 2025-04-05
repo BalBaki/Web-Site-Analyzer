@@ -126,10 +126,14 @@ export const detectDataType = (data: any): AnyDetectedDataResult => {
     );
 };
 
-export const renderAnyObject = (configs: RenderConfig[], value: Record<string, unknown>): ReactNode[] => {
-    return Object.entries(value).map(([key, value]) => {
+export const renderAnyObject = (configs: RenderConfig[], value: Record<string, unknown>) => {
+    if (!Object.keys(value).length || !configs.length) return null;
+
+    return Object.entries(value).reduce((result: ReactNode[], [key, value]) => {
         const renderConfig = configs.find((config) => config.key === key);
 
-        return renderConfig ? renderConfig.render(value) : null;
-    });
+        if (renderConfig) result.push(renderConfig.render(value));
+
+        return result;
+    }, []);
 };
