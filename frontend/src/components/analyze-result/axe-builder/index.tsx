@@ -31,7 +31,10 @@ export default function AxeBuilder({ analyzeResult, defaultUrl }: AxeBuilderProp
     const [selectedUrl, setSelectedUrl] = useState(defaultUrl);
     const isErrorExists = 'error' in analyzeResult;
     const selectedReport = useMemo(
-        () => (isErrorExists ? undefined : analyzeResult.find((result) => result.url === selectedUrl)),
+        () =>
+            isErrorExists
+                ? undefined
+                : analyzeResult.find((result) => result.url === selectedUrl || result.url === selectedUrl + '/'),
         [selectedUrl, analyzeResult, isErrorExists],
     );
 
