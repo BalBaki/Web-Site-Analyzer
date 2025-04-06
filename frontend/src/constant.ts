@@ -18,7 +18,7 @@ export const DATA_TYPES_WITH_SCHEMAS: DataTypeWithSchema[] = [
     },
     {
         type: 'string',
-        schema: z.undefined(),
+        schema: z.string(),
     },
     {
         type: 'number',
