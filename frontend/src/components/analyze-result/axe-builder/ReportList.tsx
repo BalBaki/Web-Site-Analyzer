@@ -5,6 +5,8 @@ import ViolationDetailCarousel from './ViolationDetailCarousel';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { AccessibilityViolation } from '@/types';
 
+const COLUMN_COUNT = 2;
+
 export default function ReportList() {
     const { selectedReport } = useAxeBuilderContext();
 
@@ -32,7 +34,6 @@ export default function ReportList() {
             <AccordionItem
                 value={id + selectedReport?.url}
                 key={id}
-                className="w-full max-w-(--breakpoint-lg)"
             >
                 <AccordionTrigger className="text-red-400 underline">{violation.help}</AccordionTrigger>
                 <AccordionContent>
@@ -46,5 +47,32 @@ export default function ReportList() {
         );
     });
 
-    return <Accordion type="multiple">{renderedResult}</Accordion>;
+    if (!renderedResult || !renderedResult.length) return 'No Analyze Result..!';
+
+    const itemCountPerColumn = Math.round(renderedResult.length / COLUMN_COUNT);
+    const widthPercantage = Number(100 / COLUMN_COUNT).toFixed(2);
+
+    return (
+        <Accordion
+            type="multiple"
+            className="md:flex md:gap-x-2"
+        >
+            {Array.from({ length: COLUMN_COUNT }, (_, index) => {
+                return (
+                    <div
+                        key={index}
+                        style={{
+                            width: `${widthPercantage}%`,
+                        }}
+                        className="flex flex-col max-md:w-full!"
+                    >
+                        {renderedResult.slice(
+                            index * itemCountPerColumn,
+                            Math.min((index + 1) * itemCountPerColumn, renderedResult.length),
+                        )}
+                    </div>
+                );
+            })}
+        </Accordion>
+    );
 }
