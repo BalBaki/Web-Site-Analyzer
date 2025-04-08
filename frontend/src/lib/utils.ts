@@ -126,14 +126,44 @@ export const detectDataType = (data: any): AnyDetectedDataResult => {
     );
 };
 
-export const renderAnyObject = (configs: RenderConfig[], value: Record<string, unknown>) => {
-    if (!Object.keys(value).length || !configs.length) return null;
+export const renderNestedData = (configs: RenderConfig[], value: any): ReactNode[] | null => {
+    if (configs.length < 1 || !value) return null;
 
-    return Object.entries(value).reduce((result: ReactNode[], [key, value]) => {
-        const renderConfig = configs.find((config) => config.key === key);
+    const { type, data: validatedValue } = detectDataType(value);
 
-        if (renderConfig) result.push(renderConfig.render(value));
+    switch (type) {
+        case 'array':
+            if (validatedValue.length < 1) return null;
 
-        return result;
-    }, []);
+            return validatedValue.reduce((result: ReactNode[], value) => {
+                const renderedData = renderNestedData(configs, value);
+
+                if (renderedData && renderedData.length > 0) {
+                    result.push(renderedData);
+                }
+
+                return result;
+            }, []);
+
+        case 'object':
+            if (Object.keys(validatedValue).length < 1) return null;
+
+            return configs.reduce((result: ReactNode[], config) => {
+                if (validatedValue.hasOwnProperty(config.key)) {
+                    const renderedData = config.render(validatedValue[config.key]);
+
+                    if (renderedData) result.push(renderedData);
+                }
+
+                return result;
+            }, []);
+
+        case 'date':
+        case 'string':
+        case 'number':
+            return [stringifyValue(validatedValue)];
+
+        default:
+            return null;
+    }
 };

@@ -2,6 +2,7 @@
 
 import * as z from 'zod';
 import { analyzeFormSchema, analyzeSearchParamsSchema } from './schemas';
+import type { ReactNode } from 'react';
 
 //AxeBuilder Start
 interface NodeResult {
@@ -366,8 +367,14 @@ export type PageSpeedResultsMap = Record<string, TransformedPageSpeedData>;
 export type RenderConfig = {
     name: string;
     key: string;
-    render: (value: any, index?: number) => React.ReactNode;
-    subItems?: RenderConfig[];
+    render: (value: any, index?: number) => ReactNode;
+    container?: (children: ReactNode) => ReactNode;
+    childConfigs?: RenderConfig[];
+};
+
+export type SimpleRenderConfig = Omit<RenderConfig, 'render' | 'childConfigs'> & {
+    isLink?: boolean;
+    childConfigs?: SimpleRenderConfig[];
 };
 
 export type DataType = 'null' | 'undefined' | 'string' | 'number' | 'boolean' | 'date' | 'array' | 'object' | 'unknown';

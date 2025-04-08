@@ -11,19 +11,19 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
-  }
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
 }
 
 @layer utilities {
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-  }
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+    }
 }
 
 @layer base {
@@ -47,11 +47,11 @@
         --border: 240 5.9% 90%;
         --input: 240 5.9% 90%;
         --ring: 240 10% 3.9%;
-        --chart-1: 347 77% 50%;
-        --chart-2: 349 77% 62%;
-        --chart-3: 350 80% 72%;
-        --chart-4: 351 83% 82%;
-        --chart-5: 352 83% 91%;
+        --chart-1: 0 100% 64%;
+        --chart-2: 36 91% 43%;
+        --chart-3: 48 92% 46%;
+        --chart-4: 217 91% 60%;
+        --chart-5: 220 9% 66%;
         --radius: 0.5rem;
     }
     .dark {
@@ -74,11 +74,11 @@
         --border: 240 3.7% 15.9%;
         --input: 240 3.7% 15.9%;
         --ring: 240 4.9% 83.9%;
-        --chart-1: 347 77% 50%;
-        --chart-2: 349 77% 62%;
-        --chart-3: 350 80% 72%;
-        --chart-4: 351 83% 82%;
-        --chart-5: 352 83% 91%;
+        --chart-1: 0 100% 64%;
+        --chart-2: 36 91% 43%;
+        --chart-3: 48 92% 46%;
+        --chart-4: 217 91% 60%;
+        --chart-5: 220 9% 66%;
     }
 }
 

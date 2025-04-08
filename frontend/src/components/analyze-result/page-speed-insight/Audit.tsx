@@ -4,112 +4,137 @@ import { useMemo } from 'react';
 import DetailsItem from './DetailsItem';
 import DetailsItemCarousel from './DetailsItemCarousel';
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { cn, detectDataType, getScoreStatus, renderAnyObject } from '@/lib/utils';
-import type { ReactNode } from 'react';
-import type { LighthouseAuditResultV5, RenderConfig } from '@/types';
+import { cn, detectDataType, getScoreStatus, renderNestedData } from '@/lib/utils';
+import type { JSX } from 'react';
+import type { LighthouseAuditResultV5, RenderConfig, SimpleRenderConfig } from '@/types';
 
 type AuditProps = {
     audit: LighthouseAuditResultV5;
 };
 
-const createStandardRenderConfig = ({
-    name,
-    key,
-    isLink = false,
-}: {
-    name: string;
-    key: string;
-    isLink?: boolean;
-}): RenderConfig => ({
-    name,
-    key,
-    render(value) {
-        return (
-            <DetailsItem
-                key={this.key}
-                data={{ name: this.name, value }}
-                isLink={isLink}
-            />
-        );
-    },
-});
+const builderRenderConfigTree = (configs: SimpleRenderConfig[]): RenderConfig[] => {
+    if (!configs.length) return [];
 
-const detailsRenderConfig: RenderConfig[] = [
-    createStandardRenderConfig({ name: 'Overall Saving Bytes', key: 'overallSavingsBytes' }),
-    createStandardRenderConfig({ name: 'Overall Saving Ms', key: 'overallSavingsMs' }),
-    createStandardRenderConfig({ name: 'Type', key: 'type' }),
+    return configs.map((config) => {
+        const { isLink, childConfigs = [], ...rest } = config;
+        const transformedChildConfigs = builderRenderConfigTree(childConfigs);
+
+        return {
+            ...rest,
+            childConfigs: transformedChildConfigs,
+            render: (value) => {
+                const { type } = detectDataType(value);
+                let result: JSX.Element | null;
+                const { key, name, container } = rest;
+
+                if (!transformedChildConfigs.length) {
+                    result = (
+                        <DetailsItem
+                            key={key}
+                            data={{ name, value }}
+                            isLink={isLink}
+                        />
+                    );
+                } else {
+                    const renderedNestedData = renderNestedData(transformedChildConfigs, value);
+
+                    if (!renderedNestedData || renderedNestedData.length < 1) return null;
+
+                    result =
+                        renderedNestedData.length > 1 && type === 'array' ? (
+                            <DetailsItemCarousel
+                                key={key}
+                                renderedData={renderedNestedData}
+                            />
+                        ) : (
+                            <div key={key}>{renderedNestedData}</div>
+                        );
+                }
+
+                return result && (container ? container.call(this, result) : result);
+            },
+        };
+    });
+};
+
+const renderConfigTree = builderRenderConfigTree([
+    { name: 'Overall Saving Bytes', key: 'overallSavingsBytes' },
+    { name: 'Overall Saving Ms', key: 'overallSavingsMs' },
+    { name: 'Type', key: 'type' },
     {
         name: 'Items',
         key: 'items',
-        subItems: [
-            createStandardRenderConfig({ name: 'Total Bytes', key: 'totalBytes' }),
-            createStandardRenderConfig({ name: 'Wasted Bytes', key: 'wastedBytes' }),
-            createStandardRenderConfig({ name: 'Wasted Percent', key: 'wastedPercent' }),
-            createStandardRenderConfig({ name: 'Cache Hit Probability', key: 'cacheHitProbability' }),
-            createStandardRenderConfig({ name: 'Cache Life Time Ms', key: 'cacheLifetimeMs' }),
-            createStandardRenderConfig({ name: 'URL', key: 'url', isLink: true }),
+        childConfigs: [
+            { name: 'Total Bytes', key: 'totalBytes' },
+            { name: 'Wasted Bytes', key: 'wastedBytes' },
+            { name: 'Wasted Percent', key: 'wastedPercent' },
+            { name: 'Cache Hit Probability', key: 'cacheHitProbability' },
+            { name: 'Cache Life Time Ms', key: 'cacheLifetimeMs' },
+            { name: 'URL', key: 'url', isLink: true },
+            { name: 'Href', key: 'href', isLink: true },
+            { name: 'Script URL', key: 'scriptUrl', isLink: true },
+            { name: 'Wasted Ms', key: 'wastedMs' },
+            { name: 'Blocking Time', key: 'blockingTime' },
+            { name: 'Entity', key: 'entity' },
+            { name: 'Main Thread Time', key: 'mainThreadTime' },
+            { name: 'Tbt Impact', key: 'tbtImpact' },
+            { name: 'Transfer Size', key: 'transferSize' },
             {
                 name: 'Node',
                 key: 'node',
-                subItems: [
-                    createStandardRenderConfig({ name: 'Selector', key: 'selector' }),
-                    createStandardRenderConfig({ name: 'lhId', key: 'lhId' }),
-                    createStandardRenderConfig({ name: 'Node Label', key: 'nodeLabel' }),
-                    createStandardRenderConfig({ name: 'Path', key: 'path' }),
-                    createStandardRenderConfig({ name: 'Explanation', key: 'explanation' }),
-                    createStandardRenderConfig({ name: 'Element', key: 'snippet' }),
+                childConfigs: [
+                    { name: 'Selector', key: 'selector' },
+                    { name: 'lhId', key: 'lhId' },
+                    { name: 'Node Label', key: 'nodeLabel' },
+                    { name: 'Path', key: 'path' },
+                    { name: 'Explanation', key: 'explanation' },
+                    { name: 'Element', key: 'snippet' },
                 ],
-                render: function (value) {
-                    const { type, data: validatedData } = detectDataType(value);
-
-                    if (type !== 'object' || !this.subItems) return null;
-
-                    return renderAnyObject(this.subItems, validatedData);
-                },
             },
-            createStandardRenderConfig({ name: 'Wasted Ms', key: 'wastedMs' }),
-            createStandardRenderConfig({ name: 'Blocking Time', key: 'blockingTime' }),
-            createStandardRenderConfig({ name: 'Entity', key: 'entity' }),
-            createStandardRenderConfig({ name: 'Main Thread Time', key: 'mainThreadTime' }),
-            createStandardRenderConfig({ name: 'Tbt Impact', key: 'tbtImpact' }),
-            createStandardRenderConfig({ name: 'Transfer Size', key: 'transferSize' }),
+            {
+                name: 'Items',
+                key: 'items',
+                childConfigs: [
+                    { name: 'Score', key: 'score' },
+                    {
+                        name: 'Node',
+                        key: 'node',
+                        childConfigs: [
+                            { name: 'Selector', key: 'selector' },
+                            { name: 'lhId', key: 'lhId' },
+                            { name: 'Node Label', key: 'nodeLabel' },
+                            { name: 'Path', key: 'path' },
+                            { name: 'Explanation', key: 'explanation' },
+                            { name: 'Element', key: 'snippet' },
+                        ],
+                    },
+                ],
+            },
+            {
+                name: 'Sub Items',
+                key: 'subItems',
+                childConfigs: [
+                    {
+                        name: 'Items',
+                        key: 'items',
+                        childConfigs: [
+                            { name: 'Signal', key: 'signal' },
+                            {
+                                name: 'Location',
+                                key: 'location',
+                                childConfigs: [
+                                    { key: 'column', name: 'Column' },
+                                    { key: 'line', name: 'Line' },
+                                    { key: 'url', name: 'URL', isLink: true },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
         ],
-        render(value) {
-            const { type, data: validatedValues } = detectDataType(value);
-
-            if (type !== 'array' || !validatedValues.length || !this.subItems) return null;
-
-            const renderedValues = validatedValues.reduce((result: ReactNode[], value) => {
-                const { type, data } = detectDataType(value);
-
-                if (type === 'object' && Object.keys(data).length > 0 && this.subItems) {
-                    const renderedObject = renderAnyObject(this.subItems, value);
-
-                    if (renderedObject && renderedObject.length) {
-                        result.push(renderedObject);
-                    }
-                }
-
-                return result;
-            }, []);
-
-            return (
-                !!renderedValues.length && (
-                    <div key={this.key}>
-                        <h4 className="text-xl font-semibold">{this.name}</h4>
-                        <div className="space-y-4 pl-4">
-                            {renderedValues.length > 1 ? (
-                                <DetailsItemCarousel renderedData={renderedValues} />
-                            ) : (
-                                <div>{renderedValues}</div>
-                            )}
-                        </div>
-                    </div>
-                )
-            );
-        },
     },
-];
+]);
 
 export default function Audit({ audit }: AuditProps) {
     const scoreStatus = getScoreStatus(audit.score * 100);
@@ -120,7 +145,7 @@ export default function Audit({ audit }: AuditProps) {
     const renderedDetails = useMemo(() => {
         if (!audit.details) return null;
 
-        return renderAnyObject(detailsRenderConfig, audit.details);
+        return renderNestedData(renderConfigTree, audit.details);
     }, [audit.details]);
 
     const scoreIcon = (
