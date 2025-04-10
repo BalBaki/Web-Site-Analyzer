@@ -1,99 +1,165 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# WEB ANALYZER BACK-END API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This is a RESTful API built with NestJS framework.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- [Description](#description)
+- [Installation](#installation)
+- [Running the app](#running-the-app)
+- [Test](#test)
+- [Environment Variables](#environment-variables)
+    - [Variable Details](#variable-details)
+- [API Routes](#api-routes)
+    - [Analyze](#analyze)
+    - [Assistant](#assistant)
+        - [Type Descriptions](#type-descriptions)
+- [License](#license)
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This API project is built using NestJS, a progressive Node.js framework for building efficient and scalable server-side applications.
 
-## Project setup
+## Installation
 
 ```bash
-$ npm install
+# Install dependencies
+npm install
+npx playwright install  # Required for running e2e tests involving browser automation
 ```
 
-## Compile and run the project
+## Running the app
 
 ```bash
 # development
-$ npm run start
+npm run start
 
 # watch mode
-$ npm run start:dev
+npm run start:dev
 
 # production mode
-$ npm run start:prod
+npm run start:prod
 ```
 
-## Run tests
+## Test
 
 ```bash
 # unit tests
-$ npm run test
+npm run test
 
 # e2e tests
-$ npm run test:e2e
+npm run test:e2e
 
 # test coverage
-$ npm run test:cov
+npm run test:cov
 ```
 
-## Deployment
+## Environment Variables
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Create a `.env` file in the root directory and add the following variables:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g mau
-$ mau deploy
+```
+PAGE_SPEED_INSIGHT_API_KEY=your_api_key  # Google PageSpeed Insights API key
+WHO_IS_API_KEY=your_api_key              # Whois lookup service API key
+CHATGPT_API_KEY=your_api_key             # OpenAI ChatGPT API key
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Variable Details
 
-## Resources
+- **`PAGE_SPEED_INSIGHT_API_KEY`**  
+  API key for accessing [Google PageSpeed Insights](https://developers.google.com/speed/docs/insights/v5/get-started).
 
-Check out a few resources that may come in handy when working with NestJS:
+- **`WHO_IS_API_KEY`**  
+  API key for accessing [WhoIs API](https://whoisjson.com/).
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- **`CHATGPT_API_KEY`**  
+  API key for accessing [OpenAI ChatGPT API](https://platform.openai.com/account/api-keys).
 
-## Support
+## API Routes
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Analyze
 
-## Stay in touch
+- **GET** `/analyze`
+- **Request Query:**
+    ```json
+    {
+        "url": "string",
+        "services": "array",
+        "deepscan": "boolean"
+    }
+    ```
+- **Response:**
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+    ```json
+    {
+        "analyze": true,
+        "result": {
+            "axebuilder": {},
+            "pagespeedinsight": {},
+            "whois": {}
+        }
+    }
+    ```
+
+    or
+
+    ```json
+    {
+        "analyze": false,
+        "error"?: "string"
+    }
+    ```
+
+### Assistant
+
+- **POST** `/assistant`
+- **Request Body:**
+
+    ```json
+    {
+        "type": "accessibility | performance | seo | best-practice | normal",
+        "description": "string",
+        "elementHtml": "string (optional)"
+    }
+    ```
+
+- **Response:**
+    ```json
+    {
+        "assistant": true,
+        "answer": "string"
+    }
+    ```
+    or
+    ```json
+    {
+        "assistant": false,
+        "error": "string"
+    }
+    ```
+
+#### Type Descriptions
+
+Each `type` value tells the assistant what kind of analysis or guidance you want:
+
+- **`accessibility`**  
+  Provides suggestions to improve accessibility for users with disabilities.  
+  _Example: Identifies missing alt attributes, low color contrast, or missing ARIA labels._
+
+- **`performance`**  
+  Focuses on speed and load optimization for better user experience.  
+  _Example: Recommends image compression, lazy loading, reducing unused CSS/JS._
+
+- **`seo`**  
+  Offers improvements to boost visibility on search engines.  
+  _Example: Checks for meta tags, heading structure, crawlability, and link health._
+
+- **`best-practice`**  
+  Reviews general web development standards and best practices.  
+  _Example: Ensures HTTPS usage, modern JS features, and secure coding patterns._
+
+- **`normal`**  
+  Provides general advice based on your description. Best for open-ended or uncategorized questions.  
+  _Example: "How can I improve the layout of this section?"_
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is [MIT licensed](LICENSE).
