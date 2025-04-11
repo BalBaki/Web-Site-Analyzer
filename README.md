@@ -16,6 +16,3 @@ This project empowers developers, designers, and website owners to streamline th
 ![Shadcn/UI](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge&logo=shadcnui&logoColor=white)
 ![Zod](https://img.shields.io/badge/Zod-000000?style=for-the-badge&logo=zod&logoColor=3068B7)
 ![Playwright](https://img.shields.io/badge/Playwright-45ba4b?style=for-the-badge&logo=Playwright&logoColor=white)
-
-![image](https://github.com/user-attachments/assets/73c1513c-5106-4baf-b275-d1ba3a3842ae)
-![image](https://github.com/user-attachments/assets/26acb344-8bda-4e5f-b2fc-75585d31c3a3)
