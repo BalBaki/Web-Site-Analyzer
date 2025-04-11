@@ -1,14 +1,8 @@
-# WEB ANALYZER
+# WEB SITE ANALYZER FRONT-END
 
-- [Description](#description)
 - [Installation](#installation)
 - [Running the app](#running-the-app)
 - [Environment Variables](#environment-variables)
-- [License](#license)
-
-## Description
-
-This API project is built using NestJS, a progressive Node.js framework for building efficient and scalable server-side applications.
 
 ## Installation
 
@@ -39,7 +33,3 @@ Create a `.env` file in the root directory and add the following variables:
 ```
 NEXT_PUBLIC_API_URL=your_api_url  # Back-end Api URL
 ```
-
-## License
-
-This project is [MIT licensed](LICENSE).

@@ -1,8 +1,5 @@
-# WEB ANALYZER BACK-END API
+# WEB SITE ANALYZER BACK-END API
 
-This is a RESTful API built with NestJS framework.
-
-- [Description](#description)
 - [Installation](#installation)
 - [Running the app](#running-the-app)
 - [Test](#test)
@@ -12,11 +9,6 @@ This is a RESTful API built with NestJS framework.
     - [Analyze](#analyze)
     - [Assistant](#assistant)
         - [Type Descriptions](#type-descriptions)
-- [License](#license)
-
-## Description
-
-This API project is built using NestJS, a progressive Node.js framework for building efficient and scalable server-side applications.
 
 ## Installation
 
@@ -92,9 +84,9 @@ CHATGPT_API_KEY=your_api_key             # OpenAI ChatGPT API key
     {
         "analyze": true,
         "result": {
-            "axebuilder": {},
-            "pagespeedinsight": {},
-            "whois": {}
+            "axebuilder"?: {},
+            "pagespeedinsight"?: {},
+            "whois"?: {}
         }
     }
     ```
@@ -104,7 +96,7 @@ CHATGPT_API_KEY=your_api_key             # OpenAI ChatGPT API key
     ```json
     {
         "analyze": false,
-        "error"?: "string"
+        "error": "string"
     }
     ```
 
@@ -159,7 +151,3 @@ Each `type` value tells the assistant what kind of analysis or guidance you want
 - **`normal`**  
   Provides general advice based on your description. Best for open-ended or uncategorized questions.  
   _Example: "How can I improve the layout of this section?"_
-
-## License
-
-This project is [MIT licensed](LICENSE).
