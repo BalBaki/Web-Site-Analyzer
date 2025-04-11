@@ -278,7 +278,7 @@ export type WhoIsResponse = WithError<WhoisData>;
 export type PageSpeedInsightResponse = WithError<PageSpeedInsightData>;
 export type AxeBuilderData = Array<{
     url: string;
-    result: AccessibilityViolation[];
+    result: WithError<AccessibilityViolation[]>;
 }>;
 export interface WhoisData {
     server: string; // example: "delta"

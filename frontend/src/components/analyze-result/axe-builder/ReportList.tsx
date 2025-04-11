@@ -12,7 +12,7 @@ export default function ReportList() {
 
     //Maybe delete useMemo
     const resultGroupedById = useMemo(() => {
-        return !selectedReport || selectedReport.result.length < 0
+        return !selectedReport || 'error' in selectedReport.result || selectedReport.result.length < 0
             ? null
             : selectedReport.result.reduce((acc: Record<string, AccessibilityViolation>, item) => {
                   if (!acc[item.id]) {
@@ -25,6 +25,7 @@ export default function ReportList() {
               }, {});
     }, [selectedReport]);
 
+    if (selectedReport && 'error' in selectedReport.result) return <div>Error at Analyzing Page</div>;
     if (!resultGroupedById) return null;
 
     const renderedResult = Object.entries(resultGroupedById).map(([id, violation]) => {

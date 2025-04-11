@@ -37,7 +37,12 @@ export default function ReportChart() {
 
     //Maybe delete useMemo
     const chartData = useMemo(() => {
-        if (!selectedReport || !selectedReport.result || selectedReport.result.length <= 0) {
+        if (
+            !selectedReport ||
+            !selectedReport.result ||
+            'error' in selectedReport.result ||
+            selectedReport.result.length <= 0
+        ) {
             return null;
         }
 

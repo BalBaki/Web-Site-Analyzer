@@ -57,13 +57,17 @@ export class AxeBuilderService {
             const results = [];
 
             for (const url of urls) {
-                if (url !== urlAsURLObject.href) {
-                    await page.goto(url, {
-                        waitUntil: 'networkidle',
-                    });
-                }
+                try {
+                    if (url !== urlAsURLObject.href) {
+                        await page.goto(url, {
+                            waitUntil: 'networkidle',
+                        });
+                    }
 
-                results.push({ url: url, result: this.parseResult(await new AxeBuilder({ page }).analyze()) });
+                    results.push({ url: url, result: this.parseResult(await new AxeBuilder({ page }).analyze()) });
+                } catch (error) {
+                    results.push({ url: url, error: 'Page Crashed..!' });
+                }
             }
 
             return results;
