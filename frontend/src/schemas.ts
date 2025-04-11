@@ -25,3 +25,10 @@ export const analyzeFormSchema = z.object({
         .transform((val) => [...new Set(val)]),
     deepscan: z.boolean().default(false),
 });
+
+export const envSchema = z.object({
+    NEXT_PUBLIC_API_URL: z
+        .string()
+        .url()
+        .transform((value) => (value.endsWith('/') ? value : `${value}/`)),
+});

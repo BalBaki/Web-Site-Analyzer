@@ -1,10 +1,6 @@
-import * as z from 'zod';
-
-const envSchema = z.object({
-    NEXT_PUBLIC_API_URL: z.string().min(1),
-});
-
-type Env = z.infer<typeof envSchema>;
+import { z } from 'zod';
+import { envSchema } from '@/schemas';
+import type { Env } from '@/types';
 
 class EnvService {
     private static instance: EnvService;

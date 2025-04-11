@@ -37,14 +37,7 @@ export default function ReportChart() {
 
     //Maybe delete useMemo
     const chartData = useMemo(() => {
-        if (
-            !selectedReport ||
-            !selectedReport.result ||
-            'error' in selectedReport.result ||
-            selectedReport.result.length <= 0
-        ) {
-            return null;
-        }
+        if (!selectedReport || 'error' in selectedReport || selectedReport.result.length <= 0) return null;
 
         const counts = calculateImpactErrors(selectedReport.result);
         const chartTickCount = Math.ceil(Object.values(counts).toSorted((a, b) => b - a)[1] / 5) + 1;

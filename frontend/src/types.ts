@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as z from 'zod';
-import { analyzeFormSchema, analyzeSearchParamsSchema } from './schemas';
+import { analyzeFormSchema, analyzeSearchParamsSchema, envSchema } from './schemas';
 import type { ReactNode } from 'react';
 
 //AxeBuilder Start
@@ -276,10 +276,11 @@ export type AnalyzeResult =
 export type AxeBuilderResponse = WithError<AxeBuilderData>;
 export type WhoIsResponse = WithError<WhoisData>;
 export type PageSpeedInsightResponse = WithError<PageSpeedInsightData>;
-export type AxeBuilderData = Array<{
-    url: string;
-    result: WithError<AccessibilityViolation[]>;
-}>;
+export type AxeBuilderData = Array<
+    {
+        url: string;
+    } & WithError<{ result: AccessibilityViolation[] }>
+>;
 export interface WhoisData {
     server: string; // example: "delta"
     name: string; // example: "whoisjson.com"
@@ -406,3 +407,4 @@ export type AnyDetectedDataResult = {
 }[DataType];
 
 export type ErrorCount = Record<ImpactSeverity | 'total', number>;
+export type Env = z.infer<typeof envSchema>;

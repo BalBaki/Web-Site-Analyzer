@@ -9,23 +9,24 @@ const COLUMN_COUNT = 2;
 
 export default function ReportList() {
     const { selectedReport } = useAxeBuilderContext();
+    const isErrorExists = selectedReport && 'error' in selectedReport;
 
     //Maybe delete useMemo
     const resultGroupedById = useMemo(() => {
-        return !selectedReport || 'error' in selectedReport.result || selectedReport.result.length < 0
-            ? null
-            : selectedReport.result.reduce((acc: Record<string, AccessibilityViolation>, item) => {
-                  if (!acc[item.id]) {
-                      acc[item.id] = { ...item, nodes: [...item.nodes] };
-                  } else {
-                      acc[item.id].nodes.push(...item.nodes);
-                  }
+        if (!selectedReport || isErrorExists || selectedReport.result.length < 0) return null;
 
-                  return acc;
-              }, {});
-    }, [selectedReport]);
+        return selectedReport.result.reduce((acc: Record<string, AccessibilityViolation>, item) => {
+            if (!acc[item.id]) {
+                acc[item.id] = { ...item, nodes: [...item.nodes] };
+            } else {
+                acc[item.id].nodes.push(...item.nodes);
+            }
 
-    if (selectedReport && 'error' in selectedReport.result) return <div>Error at Analyzing Page</div>;
+            return acc;
+        }, {});
+    }, [isErrorExists, selectedReport]);
+
+    if (isErrorExists) return <div>Error at Analyzing Page</div>;
     if (!resultGroupedById) return null;
 
     const renderedResult = Object.entries(resultGroupedById).map(([id, violation]) => {
