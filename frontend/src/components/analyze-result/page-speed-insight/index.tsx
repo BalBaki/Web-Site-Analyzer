@@ -10,7 +10,7 @@ type PageSpeedInsightProps = {
 };
 
 export default function PageSpeedInsight({ analyzeResult }: PageSpeedInsightProps) {
-    if ('error' in analyzeResult) return <div>Error at Page Speed Insight</div>;
+    if ('error' in analyzeResult) return <div>Error at Page Speed Insight Service</div>;
 
     const transformedData = transformPageSpeedData(analyzeResult);
 

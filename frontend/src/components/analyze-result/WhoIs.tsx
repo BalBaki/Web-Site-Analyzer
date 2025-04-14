@@ -6,7 +6,7 @@ type WhoIsProps = {
 };
 
 export default function WhoIs({ analyzeResult }: WhoIsProps) {
-    if ('error' in analyzeResult) return <div>Error at Who Is</div>;
+    if ('error' in analyzeResult) return <div>Error at Who Is Service</div>;
 
     return (
         <dl>

@@ -44,7 +44,7 @@ export default function AxeBuilder({ analyzeResult, defaultUrl }: AxeBuilderProp
         setSelectedUrl(url);
     };
 
-    if (isErrorExists) return <div>Error at AxeBuilder</div>;
+    if (isErrorExists) return <div>Error at AxeBuilder Service</div>;
 
     return (
         <AxeBuilderContext value={{ url: selectedUrl, setUrl, selectedReport, result: analyzeResult }}>
