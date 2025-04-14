@@ -1,10 +1,10 @@
 'use client';
 
 import { useMemo } from 'react';
-import DetailsItem from './DetailsItem';
 import DetailsItemCarousel from './DetailsItemCarousel';
 import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { cn, detectDataType, getScoreStatus, renderNestedData } from '@/lib/utils';
+import DetailsItem from '../../DetailsItem';
 import type { JSX } from 'react';
 import type { LighthouseAuditResultV5, RenderConfig, SimpleRenderConfig } from '@/types';
 

@@ -53,12 +53,12 @@ export default function ReportChart() {
     const { counts, tickCount } = chartData;
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Error Count</CardTitle>
+        <Card className="p-2 md:p-4">
+            <CardHeader className="p-0">
+                <CardTitle className="sr-only">Error Count</CardTitle>
                 <CardDescription className="sr-only">This card shows count of errors</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
                 <ChartContainer
                     config={chartConfig}
                     className="w-full max-w-(--breakpoint-sm)"
@@ -100,6 +100,7 @@ export default function ReportChart() {
                         <YAxis
                             dataKey="impact"
                             type="category"
+                            width={70}
                             tickLine={false}
                             tickMargin={10}
                             axisLine={false}
@@ -128,7 +129,7 @@ export default function ReportChart() {
                     </BarChart>
                 </ChartContainer>
             </CardContent>
-            <CardFooter className="flex-col items-start gap-2 text-sm"></CardFooter>
+            <CardFooter className="flex-col items-start gap-2 p-0 text-sm"></CardFooter>
         </Card>
     );
 }

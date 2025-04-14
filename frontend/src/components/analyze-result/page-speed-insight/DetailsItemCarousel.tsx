@@ -24,7 +24,10 @@ export default function DetailsItemCarousel({ renderedData }: DetailsItemCarouse
     }, [api]);
 
     return (
-        <Carousel setApi={setApi}>
+        <Carousel
+            setApi={setApi}
+            className="px-2"
+        >
             <div className="mr-2 ml-auto flex items-center gap-1">
                 <div className="ml-auto">
                     {current} of {count}

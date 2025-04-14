@@ -41,13 +41,13 @@ export default function DetailsItem({
             {...otherWrapperProps}
         >
             <dt
-                className={cn('shrink-0', nameClassName)}
+                className={cn('shrink-0 font-semibold capitalize', nameClassName)}
                 {...otherNameProps}
             >
                 {name}
             </dt>
             <span
-                className={cn('mx-1', seperatorClassName)}
+                className={cn('mx-1 font-semibold', seperatorClassName)}
                 {...otherSeperatorProps}
             >
                 {seperator}
@@ -64,7 +64,9 @@ export default function DetailsItem({
                         className={cn(linkClassName)}
                         {...otherLinkProps}
                     >
-                        {stringifiedValue}
+                        {stringifiedValue.length > 100
+                            ? stringifiedValue.slice(0, 90) + '...' + stringifiedValue.slice(-5)
+                            : stringifiedValue}
                     </Link>
                 ) : (
                     stringifiedValue
