@@ -53,83 +53,91 @@ export default function ReportChart() {
     const { counts, tickCount } = chartData;
 
     return (
-        <Card className="p-2 md:p-4">
-            <CardHeader className="p-0">
-                <CardTitle className="sr-only">Error Count</CardTitle>
-                <CardDescription className="sr-only">This card shows count of errors</CardDescription>
-            </CardHeader>
-            <CardContent className="p-0">
-                <ChartContainer
-                    config={chartConfig}
-                    className="w-full max-w-(--breakpoint-sm)"
-                >
-                    <BarChart
-                        accessibilityLayer
-                        data={[
-                            {
-                                impact: 'critical',
-                                count: counts.critical,
-                                fill: 'var(--color-critical)',
-                            },
-                            {
-                                impact: 'serious',
-                                count: counts.serious,
-                                fill: 'var(--color-serious)',
-                            },
-                            {
-                                impact: 'moderate',
-                                count: counts.moderate,
-                                fill: 'var(--color-moderate)',
-                            },
-                            {
-                                impact: 'minor',
-                                count: counts.minor,
-                                fill: 'var(--color-minor)',
-                            },
-                            {
-                                impact: 'trivial',
-                                count: counts.trivial,
-                                fill: 'var(--color-trivial)',
-                            },
-                        ]}
-                        layout="vertical"
-                        margin={{
-                            left: 0,
-                        }}
+        <section aria-describedby="error-count-chart">
+            <h3
+                id="error-count-chart"
+                className="sr-only"
+            >
+                Error Count Chart
+            </h3>
+            <Card className="p-2 md:p-4">
+                <CardHeader className="p-0">
+                    <CardTitle className="sr-only">Error Count</CardTitle>
+                    <CardDescription className="sr-only">This card shows count of errors</CardDescription>
+                </CardHeader>
+                <CardContent className="p-0">
+                    <ChartContainer
+                        config={chartConfig}
+                        className="w-full max-w-(--breakpoint-sm)"
                     >
-                        <YAxis
-                            dataKey="impact"
-                            type="category"
-                            width={70}
-                            tickLine={false}
-                            tickMargin={10}
-                            axisLine={false}
-                            tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label}
-                        />
-                        <XAxis
-                            dataKey="count"
-                            type="number"
-                            ticks={Array.from(
+                        <BarChart
+                            accessibilityLayer
+                            data={[
                                 {
-                                    length: tickCount,
+                                    impact: 'critical',
+                                    count: counts.critical,
+                                    fill: 'var(--color-critical)',
                                 },
-                                (_, i) => i * 5,
-                            )}
-                            tickCount={tickCount}
-                        />
-                        <ChartTooltip
-                            cursor={false}
-                            content={<ChartTooltipContent hideLabel />}
-                        />
-                        <Bar
-                            dataKey="count"
+                                {
+                                    impact: 'serious',
+                                    count: counts.serious,
+                                    fill: 'var(--color-serious)',
+                                },
+                                {
+                                    impact: 'moderate',
+                                    count: counts.moderate,
+                                    fill: 'var(--color-moderate)',
+                                },
+                                {
+                                    impact: 'minor',
+                                    count: counts.minor,
+                                    fill: 'var(--color-minor)',
+                                },
+                                {
+                                    impact: 'trivial',
+                                    count: counts.trivial,
+                                    fill: 'var(--color-trivial)',
+                                },
+                            ]}
                             layout="vertical"
-                            radius={5}
-                        />
-                    </BarChart>
-                </ChartContainer>
-            </CardContent>
-            <CardFooter className="flex-col items-start gap-2 p-0 text-sm"></CardFooter>
-        </Card>
+                            margin={{
+                                left: 0,
+                            }}
+                        >
+                            <YAxis
+                                dataKey="impact"
+                                type="category"
+                                width={70}
+                                tickLine={false}
+                                tickMargin={10}
+                                axisLine={false}
+                                tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label}
+                            />
+                            <XAxis
+                                dataKey="count"
+                                type="number"
+                                ticks={Array.from(
+                                    {
+                                        length: tickCount,
+                                    },
+                                    (_, i) => i * 5,
+                                )}
+                                tickCount={tickCount}
+                            />
+                            <ChartTooltip
+                                cursor={false}
+                                content={<ChartTooltipContent hideLabel />}
+                            />
+                            <Bar
+                                dataKey="count"
+                                layout="vertical"
+                                radius={5}
+                            />
+                        </BarChart>
+                    </ChartContainer>
+                </CardContent>
+                <CardFooter className="flex-col items-start gap-2 p-0 text-sm"></CardFooter>
+            </Card>
+        </section>
     );
 }

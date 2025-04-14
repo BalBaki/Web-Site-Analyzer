@@ -15,23 +15,31 @@ export default function PageSpeedInsight({ analyzeResult }: PageSpeedInsightProp
     const transformedData = transformPageSpeedData(analyzeResult);
 
     return (
-        <Tabs defaultValue="desktop">
-            <TabsList className="grid grid-cols-2">
-                <TabsTrigger value="desktop">Desktop</TabsTrigger>
-                <TabsTrigger value="mobile">Mobile</TabsTrigger>
-            </TabsList>
-            <TabsContent value="desktop">
-                <Tab
-                    key="desktop"
-                    data={transformedData.desktop}
-                />
-            </TabsContent>
-            <TabsContent value="mobile">
-                <Tab
-                    key="mobile"
-                    data={transformedData.mobile}
-                />
-            </TabsContent>
-        </Tabs>
+        <>
+            <h2
+                id="psi-result"
+                className="sr-only"
+            >
+                Page Speed Insight Analyze Result
+            </h2>
+            <Tabs defaultValue="desktop">
+                <TabsList className="grid grid-cols-2">
+                    <TabsTrigger value="desktop">Desktop</TabsTrigger>
+                    <TabsTrigger value="mobile">Mobile</TabsTrigger>
+                </TabsList>
+                <TabsContent value="desktop">
+                    <Tab
+                        key="desktop"
+                        data={transformedData.desktop}
+                    />
+                </TabsContent>
+                <TabsContent value="mobile">
+                    <Tab
+                        key="mobile"
+                        data={transformedData.mobile}
+                    />
+                </TabsContent>
+            </Tabs>
+        </>
     );
 }

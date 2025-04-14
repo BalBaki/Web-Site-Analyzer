@@ -15,9 +15,5 @@ export default function Analyze({ searchParams }: AnalyzeProps) {
 
     if (!validatedSearchParams.success) return notFound();
 
-    return (
-        <section aria-label="Analyze Result">
-            <AnalyzeResult searchParams={validatedSearchParams.data} />
-        </section>
-    );
+    return <AnalyzeResult searchParams={validatedSearchParams.data} />;
 }

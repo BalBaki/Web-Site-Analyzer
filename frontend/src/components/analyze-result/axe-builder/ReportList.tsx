@@ -33,19 +33,18 @@ export default function ReportList() {
         if (!violation.nodes.length) return null;
 
         return (
-            <AccordionItem
-                value={id + selectedReport?.url}
-                key={id}
-            >
-                <AccordionTrigger className="text-red-400 underline">{violation.help}</AccordionTrigger>
-                <AccordionContent>
-                    {violation.nodes.length > 1 ? (
-                        <ViolationDetailCarousel violation={violation} />
-                    ) : (
-                        <ViolationDetail data={{ node: violation.nodes[0], violation }} />
-                    )}
-                </AccordionContent>
-            </AccordionItem>
+            <article key={id}>
+                <AccordionItem value={id + selectedReport?.url}>
+                    <AccordionTrigger className="text-red-400 underline">{violation.help}</AccordionTrigger>
+                    <AccordionContent>
+                        {violation.nodes.length > 1 ? (
+                            <ViolationDetailCarousel violation={violation} />
+                        ) : (
+                            <ViolationDetail data={{ node: violation.nodes[0], violation }} />
+                        )}
+                    </AccordionContent>
+                </AccordionItem>
+            </article>
         );
     });
 
@@ -55,26 +54,34 @@ export default function ReportList() {
     const widthPercantage = Number(100 / COLUMN_COUNT).toFixed(2);
 
     return (
-        <Accordion
-            type="multiple"
-            className="md:flex md:gap-x-2"
-        >
-            {Array.from({ length: COLUMN_COUNT }, (_, index) => {
-                return (
-                    <div
-                        key={index}
-                        style={{
-                            width: `${widthPercantage}%`,
-                        }}
-                        className="flex flex-col max-md:w-full!"
-                    >
-                        {renderedResult.slice(
-                            index * itemCountPerColumn,
-                            Math.min((index + 1) * itemCountPerColumn, renderedResult.length),
-                        )}
-                    </div>
-                );
-            })}
-        </Accordion>
+        <section aria-describedby="violations-list">
+            <h3
+                id="violations-list"
+                className="sr-only"
+            >
+                Violations List
+            </h3>
+            <Accordion
+                type="multiple"
+                className="md:flex md:gap-x-2"
+            >
+                {Array.from({ length: COLUMN_COUNT }, (_, index) => {
+                    return (
+                        <div
+                            key={index}
+                            style={{
+                                width: `${widthPercantage}%`,
+                            }}
+                            className="flex flex-col max-md:w-full!"
+                        >
+                            {renderedResult.slice(
+                                index * itemCountPerColumn,
+                                Math.min((index + 1) * itemCountPerColumn, renderedResult.length),
+                            )}
+                        </div>
+                    );
+                })}
+            </Accordion>
+        </section>
     );
 }

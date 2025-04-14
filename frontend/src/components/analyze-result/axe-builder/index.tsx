@@ -48,11 +48,10 @@ export default function AxeBuilder({ analyzeResult, defaultUrl }: AxeBuilderProp
 
     return (
         <AxeBuilderContext value={{ url: selectedUrl, setUrl, selectedReport, result: analyzeResult }}>
-            <section aria-label="Accessibility Axe Builder Analysis Report">
-                <UrlDropDown />
-                <ReportChart />
-                <ReportList />
-            </section>
+            <h2 className="sr-only">Axe Builder Analyze Result</h2>
+            <UrlDropDown />
+            <ReportChart />
+            <ReportList />
         </AxeBuilderContext>
     );
 }

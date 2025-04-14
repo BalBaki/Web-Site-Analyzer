@@ -159,13 +159,6 @@ export default function Audit({ audit }: AuditProps) {
         />
     );
 
-    const title = (
-        <h3 className="flex items-center gap-2 text-xl font-medium">
-            {scoreIcon}
-            {audit.title}
-        </h3>
-    );
-
     const content = (
         <dl>
             {audit.displayValue && <DetailsItem data={{ name: 'Value', value: audit.displayValue }} />}
@@ -194,7 +187,10 @@ export default function Audit({ audit }: AuditProps) {
     if (!audit.details) {
         return (
             <div className="mt-1 space-y-2 border-b-2 break-all">
-                {title}
+                <h5 className="flex items-center gap-2 text-xl font-medium">
+                    {scoreIcon}
+                    {audit.title}
+                </h5>
                 <div>{content}</div>
             </div>
         );
@@ -202,7 +198,10 @@ export default function Audit({ audit }: AuditProps) {
 
     return (
         <AccordionItem value={audit.id || ''}>
-            <AccordionTrigger className="cursor-pointer justify-normal space-x-2 text-xl">{title}</AccordionTrigger>
+            <AccordionTrigger className="cursor-pointer justify-normal space-x-2 text-xl">
+                {scoreIcon}
+                {audit.title}
+            </AccordionTrigger>
             <AccordionContent>{content}</AccordionContent>
         </AccordionItem>
     );

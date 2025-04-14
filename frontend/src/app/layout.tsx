@@ -37,7 +37,14 @@ export default function RootLayout({
                     <main
                         role="main"
                         className="flex-1"
+                        aria-describedby="web-site-analyzer"
                     >
+                        <h1
+                            id="web-site-analyzer"
+                            className="sr-only"
+                        >
+                            Web Site Analyzer
+                        </h1>
                         {children}
                     </main>
                 </Providers>
