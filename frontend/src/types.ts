@@ -33,6 +33,14 @@ interface RelatedNode {
 }
 
 type UnlabelledFrameSelector = string[];
+
+interface HeadingElement {
+    level: string;
+    text: string;
+    outerHTML: string;
+    srOnly: boolean;
+}
+
 //AxeBuilder End
 
 //WhoIs Start
@@ -279,7 +287,7 @@ export type PageSpeedInsightResponse = WithError<PageSpeedInsightData>;
 export type AxeBuilderData = Array<
     {
         url: string;
-    } & WithError<{ result: AccessibilityViolation[] }>
+    } & WithError<{ result: AccessibilityViolation[]; headingTree: HeadingElement[] }>
 >;
 export interface WhoisData {
     server: string; // example: "delta"

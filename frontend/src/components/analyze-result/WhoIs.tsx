@@ -22,7 +22,7 @@ export default function WhoIs({ analyzeResult }: WhoIsProps) {
                     <DetailsItem data={{ name: 'Name', value: analyzeResult.idnName }} />
                     <DetailsItem data={{ name: 'Created At', value: analyzeResult.created }} />
                     <DetailsItem data={{ name: 'Changed At', value: analyzeResult.changed }} />
-                    <DetailsItem data={{ name: 'Expires At At', value: analyzeResult.expires }} />
+                    <DetailsItem data={{ name: 'Expires At', value: analyzeResult.expires }} />
                     <DetailsItem data={{ name: 'IPs', value: analyzeResult.ips }} />
                     <DetailsItem data={{ name: 'Servers', value: analyzeResult.nameserver.join(', ') }} />
                 </section>

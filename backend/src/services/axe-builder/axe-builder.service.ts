@@ -1,12 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { AxeBuilder } from '@axe-core/playwright';
 import * as playwright from 'playwright';
-import type { AnalyzePayload, AxePageScanResult, AxeResult } from 'src/types';
+import type { AnalyzePayload, AxePageScanResult, AxeResult, HeadingElementData } from 'src/types';
 @Injectable()
 export class AxeBuilderService {
     private localePatterns: RegExp[] = [/^\/[a-z]{2}(-[A-Z]{2})?\//, /\/[a-z]{2}(-[A-Z]{2})?\//];
     private excludedURLParts = ['javascript:', 'mailto:', 'tel:', 'sms:', 'data:', 'ftp:', 'file:'];
     private pageGoToOptions: Parameters<playwright.Page['goto']>[1] = { waitUntil: 'networkidle' };
+    private possibleSrOnlyCssOption: Partial<Record<keyof CSSStyleDeclaration, string[]>> = {
+        position: ['absolute'],
+        width: ['1px'],
+        height: ['1px'],
+        overflow: ['hidden'],
+        clip: ['rect(0px, 0px, 0px, 0px)', 'rect(0, 0, 0, 0)'],
+        whiteSpace: ['nowrap'],
+    };
 
     async analyze({ url, deepscan }: AnalyzePayload) {
         const browser = await playwright.chromium.launch({ headless: true });
@@ -59,7 +67,7 @@ export class AxeBuilderService {
         );
     }
     private async scan(page: playwright.Page, urls: string[]): Promise<AxePageScanResult[]> {
-        const results = [];
+        const results: AxePageScanResult[] = [];
 
         for (const url of urls) {
             try {
@@ -68,7 +76,11 @@ export class AxeBuilderService {
                 if (!isLinkDownloadable) {
                     await page.goto(url, this.pageGoToOptions);
 
-                    results.push({ url, result: this.formatResult(await new AxeBuilder({ page }).analyze()) });
+                    results.push({
+                        url,
+                        result: this.formatResult(await new AxeBuilder({ page }).analyze()),
+                        headingTree: await this.extractHeadingTree(page),
+                    });
                 }
             } catch (error) {
                 results.push({ url, error: 'Page Crashed..!' });
@@ -115,5 +127,33 @@ export class AxeBuilderService {
 
                 return result;
             });
+    }
+    private async extractHeadingTree(page: playwright.Page) {
+        return await page.evaluate(
+            async ({ srCssOption }) => {
+                let headings: HeadingElementData[] = [];
+                const headingElements: NodeListOf<HTMLHeadingElement> = document.querySelectorAll(
+                    Array.from({ length: 6 }, (_, i) => `h${i + 1}`).join(','),
+                );
+
+                if (headingElements.length > 0) {
+                    headingElements.forEach((element) => {
+                        const elementStyle = window.getComputedStyle(element);
+
+                        headings.push({
+                            level: element.tagName,
+                            text: element.textContent,
+                            outerHTML: element.outerHTML,
+                            srOnly:
+                                element.classList.contains('sr-only') ||
+                                Object.entries(srCssOption).every(([key, value]) => value.includes(elementStyle[key])),
+                        });
+                    });
+                }
+
+                return headings;
+            },
+            { srCssOption: this.possibleSrOnlyCssOption },
+        );
     }
 }

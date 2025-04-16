@@ -167,3 +167,5 @@ export const renderNestedData = (configs: RenderConfig[], value: any): ReactNode
             return null;
     }
 };
+
+export const extractHeadingLevel = (tag: string): number => Number(tag.toLocaleLowerCase().replaceAll('h', '')) || 0;

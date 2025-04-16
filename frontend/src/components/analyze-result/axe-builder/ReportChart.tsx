@@ -60,7 +60,10 @@ export default function ReportChart() {
             >
                 Error Count Chart
             </h3>
-            <Card className="p-2 md:p-4">
+            <Card
+                id="chart"
+                className="shadow-background border-0 p-2 md:p-4"
+            >
                 <CardHeader className="p-0">
                     <CardTitle className="sr-only">Error Count</CardTitle>
                     <CardDescription className="sr-only">This card shows count of errors</CardDescription>

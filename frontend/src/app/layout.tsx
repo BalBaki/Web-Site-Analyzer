@@ -30,7 +30,9 @@ export default function RootLayout({
             lang="en"
             suppressHydrationWarning
         >
-            <body className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col px-2 antialiased`}>
+            <body
+                className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col px-2! antialiased`}
+            >
                 {process.env.NODE_ENV === 'development' && <ReactScan />}
                 <Providers>
                     <Header />
