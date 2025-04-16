@@ -6,7 +6,7 @@ import type { AnalyzePayload, AxePageScanResult, AxeResult, HeadingElementData }
 export class AxeBuilderService {
     private localePatterns: RegExp[] = [/^\/[a-z]{2}(-[A-Z]{2})?\//, /\/[a-z]{2}(-[A-Z]{2})?\//];
     private excludedURLParts = ['javascript:', 'mailto:', 'tel:', 'sms:', 'data:', 'ftp:', 'file:'];
-    private pageGoToOptions: Parameters<playwright.Page['goto']>[1] = { waitUntil: 'networkidle' };
+    private pageGoToOptions: Parameters<playwright.Page['goto']>[1] = { waitUntil: 'load' };
     private possibleSrOnlyCssOption: Partial<Record<keyof CSSStyleDeclaration, string[]>> = {
         position: ['absolute'],
         width: ['1px'],
