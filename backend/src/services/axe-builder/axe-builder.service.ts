@@ -25,7 +25,7 @@ export class AxeBuilderService {
             const page = await context.newPage();
             let urls = [mainUrlAsURL.href];
 
-            await page.goto(mainUrlAsURL.href, this.pageGoToOptions);
+            await page.goto(mainUrlAsURL.href, { ...this.pageGoToOptions, waitUntil: 'networkidle' });
 
             if (deepscan) {
                 const validLinks = await this.extractLinks(page, mainUrlAsURL);
