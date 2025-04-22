@@ -31,5 +31,5 @@ npm run scan
 Create a `.env` file in the root directory and add the following variables:
 
 ```
-NEXT_PUBLIC_API_URL=your_api_url  # Back-end Api URL
+API_URL=your_api_url  # Back-end Api URL
 ```
