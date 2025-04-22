@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as z from 'zod';
-import { analyzeFormSchema, analyzeSearchParamsSchema, envSchema } from './schemas';
+import { analyzeFormSchema, analyzeSearchParamsSchema, assistantSchema, envSchema } from './schemas';
 import type { ReactNode } from 'react';
 
 //AxeBuilder Start
@@ -264,7 +264,6 @@ interface UserPageLoadMetricV5 {
 //Page Speed Insight End
 
 type WithError<T> = T | { error: string };
-type QuestionType = 'acccessbility' | 'normal';
 
 export type AnalyzeSearchParams = z.infer<typeof analyzeSearchParamsSchema>;
 export type AnalyzeFormData = z.infer<typeof analyzeFormSchema>;
@@ -294,7 +293,7 @@ export interface WhoisData {
     name: string; // example: "whoisjson.com"
     idnName: string; // example: "whoisjson.com"
     status: string[]; // example: ["clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited"]
-    nameserver: string[]; // example: ["dns200.anycast.me"]
+    nameserver?: string[]; // example: ["dns200.anycast.me"]
     ips: string; // example: "62.210.113.88"
     created: string; // example: "2016-12-01 09:28:12"
     changed: string; // example: "2021-12-02 00:13:57"
@@ -356,11 +355,7 @@ export type AssistantResponse =
           error: string;
       };
 
-export type AssistantPayload = {
-    type: QuestionType;
-    description: string;
-    elementHtml?: string;
-};
+export type AssistantPayload = z.infer<typeof assistantSchema>;
 
 export type ScoreStatus = 'pass' | 'average' | 'fail';
 export type PageSpeedInsightStatusPriorty = Record<ScoreStatus, number>;

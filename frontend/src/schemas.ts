@@ -27,8 +27,14 @@ export const analyzeFormSchema = z.object({
 });
 
 export const envSchema = z.object({
-    NEXT_PUBLIC_API_URL: z
+    API_URL: z
         .string()
         .url()
         .transform((value) => (value.endsWith('/') ? value : `${value}/`)),
+});
+
+export const assistantSchema = z.object({
+    type: z.enum(['acccessbility', 'performance', 'seo', 'best-practice', 'normal']).default('normal'),
+    description: z.string().min(1),
+    elementHtml: z.string().optional(),
 });

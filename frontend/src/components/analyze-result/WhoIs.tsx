@@ -24,7 +24,9 @@ export default function WhoIs({ analyzeResult }: WhoIsProps) {
                     <DetailsItem data={{ name: 'Changed At', value: analyzeResult.changed }} />
                     <DetailsItem data={{ name: 'Expires At', value: analyzeResult.expires }} />
                     <DetailsItem data={{ name: 'IPs', value: analyzeResult.ips }} />
-                    <DetailsItem data={{ name: 'Servers', value: analyzeResult.nameserver.join(', ') }} />
+                    {analyzeResult.nameserver?.length && (
+                        <DetailsItem data={{ name: 'Servers', value: analyzeResult.nameserver.join(', ') }} />
+                    )}
                 </section>
                 {analyzeResult.contacts.owner && analyzeResult.contacts.owner.length > 0 && (
                     <section aria-describedby="owner">

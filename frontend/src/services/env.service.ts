@@ -1,3 +1,4 @@
+import 'server-only';
 import { z } from 'zod';
 import { envSchema } from '@/schemas';
 import type { Env } from '@/types';
@@ -8,9 +9,7 @@ class EnvService {
 
     private constructor() {
         try {
-            this.env = envSchema.parse({
-                NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-            });
+            this.env = envSchema.parse(process.env);
         } catch (error) {
             if (error instanceof z.ZodError) {
                 const missingVars = error.issues.map((issue) => issue.path.join('.'));
@@ -36,7 +35,7 @@ class EnvService {
     }
 
     get apiUrl() {
-        return this.get('NEXT_PUBLIC_API_URL');
+        return this.get('API_URL');
     }
 }
 

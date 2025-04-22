@@ -19,7 +19,7 @@ export const analyzeSchema = z.object({
 });
 
 export const assistantSchema = z.object({
-    type: z.enum(['acccessbility', 'normal']).default('normal'),
+    type: z.enum(['acccessbility', 'performance', 'seo', 'best-practice', 'normal']).default('normal'),
     description: z.string().min(1),
     elementHtml: z.string().optional(),
 });

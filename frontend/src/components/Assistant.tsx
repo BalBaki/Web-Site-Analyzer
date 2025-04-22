@@ -2,8 +2,7 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { Button } from './ui/button';
-import analyzer from '@/services/analyzer.service';
-import type { AssistantPayload } from '@/types';
+import type { AssistantPayload, AssistantResponse } from '@/types';
 
 type AssistantProps = {
     data: AssistantPayload;
@@ -16,7 +15,19 @@ export default function Assistant({ data }: AssistantProps) {
         isPending,
         mutate: ask,
     } = useMutation({
-        mutationFn: analyzer.assistant,
+        mutationFn: async (payload: AssistantPayload): Promise<AssistantResponse> => {
+            const response = await fetch('api/assistant', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) return { assistant: false, error: 'Something went wrong..!' };
+
+            return (await response.json()) as AssistantResponse;
+        },
     });
     const handleAskClick = () => {
         ask(data);

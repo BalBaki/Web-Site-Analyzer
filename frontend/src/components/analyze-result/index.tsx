@@ -19,7 +19,7 @@ export default async function AnalyzeResult({ searchParams }: AnalyzeResultProps
     const analysisData = await analyzer.analyze(searchParams);
 
     if (!analysisData.analyze && analysisData.error)
-        return <div>Error: {analysisData.error || 'Something went wrong..!'}</div>;
+        return <div>{analysisData.error || 'Something went wrong..!'}</div>;
 
     return (
         <>
