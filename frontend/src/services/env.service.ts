@@ -5,11 +5,11 @@ import type { Env } from '@/types';
 
 class EnvService {
     private static instance: EnvService;
-    private env: Env;
+    private env: Readonly<Env>;
 
     private constructor() {
         try {
-            this.env = envSchema.parse(process.env);
+            this.env = Object.freeze(envSchema.parse(process.env));
         } catch (error) {
             if (error instanceof z.ZodError) {
                 const missingVars = error.issues.map((issue) => issue.path.join('.'));
@@ -36,6 +36,18 @@ class EnvService {
 
     get apiUrl() {
         return this.get('API_URL');
+    }
+
+    get isDevelopment() {
+        return this.get('NODE_ENV') === 'development';
+    }
+
+    get isProduction() {
+        return this.get('NODE_ENV') === 'production';
+    }
+
+    get isTest() {
+        return this.get('NODE_ENV') === 'test';
     }
 }
 

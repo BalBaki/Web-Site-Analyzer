@@ -31,6 +31,7 @@ export const envSchema = z.object({
         .string()
         .url()
         .transform((value) => (value.endsWith('/') ? value : `${value}/`)),
+    NODE_ENV: z.enum(['production', 'development', 'test']).default('development'),
 });
 
 export const assistantSchema = z.object({

@@ -4,6 +4,7 @@ import './globals.css';
 import Providers from './providers';
 import Header from '@/components/Header';
 import ReactScan from '@/components/ReactScan';
+import { env } from '@/services/env.service';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -33,7 +34,7 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col px-2! antialiased`}
             >
-                {process.env.NODE_ENV === 'development' && <ReactScan />}
+                {env.isDevelopment && <ReactScan />}
                 <Providers>
                     <Header />
                     <main
