@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { EnvService } from '../env/env.service';
+import { EnvService } from '../../../env/env.service';
+import { AnalyzerTool } from '../../analyzer-tool.interface';
+import type { AnalyzePayload } from 'src/types';
 
 @Injectable()
-export class PageSpeedInsightService {
+export class PageSpeedInsightService implements AnalyzerTool {
     private baseUrl: string = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed?';
     private categories = ['ACCESSIBILITY', 'BEST_PRACTICES', 'PERFORMANCE', 'SEO'];
     private strategies = ['desktop', 'mobile'];
 
     constructor(private readonly envService: EnvService) {}
-    async analyze(url: string) {
+
+    async analyze({ url }: AnalyzePayload) {
         try {
             const searchParams = new URLSearchParams({
                 key: this.envService.pageSpeedInsightApiKey,

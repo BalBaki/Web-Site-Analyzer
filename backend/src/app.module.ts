@@ -3,14 +3,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { AxeBuilderService } from './services/axe-builder/axe-builder.service';
-import { EnvService } from './services/env/env.service';
 import { ConfigModule } from '@nestjs/config';
-import { PageSpeedInsightService } from './services/page-speed-insight/page-speed-insight.service';
-import { WhoIsService } from './services/who-is/who-is.service';
 import * as z from 'zod';
 import { envSchema } from './schemas';
-import { ChatgptService } from './services/chatgpt/chatgpt.service';
+import { AnalyzeModule } from './modules/analyze/analyze.module';
+import { AssistantModule } from './modules/assistant/assistant.module';
+import { EnvModule } from './modules/env/env.module';
 
 @Module({
     imports: [
@@ -40,6 +38,9 @@ import { ChatgptService } from './services/chatgpt/chatgpt.service';
                 }
             },
         }),
+        AnalyzeModule,
+        AssistantModule,
+        EnvModule,
     ],
     controllers: [AppController],
     providers: [
@@ -48,11 +49,6 @@ import { ChatgptService } from './services/chatgpt/chatgpt.service';
             useClass: ThrottlerGuard,
         },
         AppService,
-        EnvService,
-        AxeBuilderService,
-        PageSpeedInsightService,
-        WhoIsService,
-        ChatgptService,
     ],
 })
 export class AppModule {}

@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import OpenAI from 'openai';
-import { EnvService } from '../env/env.service';
+import { EnvService } from 'src/modules/env/env.service';
 import type { AssistantPayload } from 'src/types';
+import { AssissantTool } from '../../assistant-tool.interface';
 
 @Injectable()
-export class ChatgptService {
+export class ChatgptService implements AssissantTool {
     private client: OpenAI;
     constructor(private envService: EnvService) {
         this.client = new OpenAI({ apiKey: this.envService.chatGptApiKey });

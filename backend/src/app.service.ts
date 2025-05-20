@@ -1,35 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { AxeBuilderService } from './services/axe-builder/axe-builder.service';
-import { InvalidPayloadException } from './exceptions/invalid-payload.exception';
-import { PageSpeedInsightService } from './services/page-speed-insight/page-speed-insight.service';
-import { WhoIsService } from './services/who-is/who-is.service';
 import type { AnalyzePayload, AssistantPayload } from './types';
-import { ChatgptService } from './services/chatgpt/chatgpt.service';
+import { AnalyzeService } from './modules/analyze/analyze.service';
+import { AssissantService } from './modules/assistant/assistant.service';
 
 @Injectable()
 export class AppService {
     constructor(
-        private axeBuilderService: AxeBuilderService,
-        private pageSpeedInsightService: PageSpeedInsightService,
-        private whoIsService: WhoIsService,
-        private chatgptService: ChatgptService,
+        private analyzeService: AnalyzeService,
+        private assistantService: AssissantService,
     ) {}
 
     async analyze(payload: AnalyzePayload) {
         try {
             const analyzeResults = await Promise.all(
-                payload.services.map((service) => {
-                    switch (service) {
-                        case 'axebuilder':
-                            return this.axeBuilderService.analyze(payload);
-                        case 'pagespeedinsight':
-                            return this.pageSpeedInsightService.analyze(payload.url);
-                        case 'whois':
-                            return this.whoIsService.analyze(payload.url);
-                        default:
-                            throw new InvalidPayloadException();
-                    }
-                }),
+                payload.services.map((toolName) => this.analyzeService.getTool(toolName).analyze(payload)),
             );
 
             return {
@@ -47,7 +31,7 @@ export class AppService {
 
     async assistant(payload: AssistantPayload) {
         try {
-            const result = await this.chatgptService.ask(payload);
+            const result = await this.assistantService.getTool(payload.tool).ask(payload);
 
             return { assistant: true, answer: result };
         } catch (error) {

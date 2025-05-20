@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { AxeBuilder } from '@axe-core/playwright';
 import * as playwright from 'playwright';
 import type { AnalyzePayload, AxePageScanResult, AxeResult, HeadingElementData } from 'src/types';
+import type { AnalyzerTool } from '../../analyzer-tool.interface';
+
 @Injectable()
-export class AxeBuilderService {
+export class AxeBuilderService implements AnalyzerTool {
     private localePatterns: RegExp[] = [/^\/[a-z]{2}(-[A-Z]{2})?\//, /\/[a-z]{2}(-[A-Z]{2})?\//];
     private excludedURLParts = ['javascript:', 'mailto:', 'tel:', 'sms:', 'data:', 'ftp:', 'file:'];
     private pageGoToOptions: Parameters<playwright.Page['goto']>[1] = { waitUntil: 'load' };

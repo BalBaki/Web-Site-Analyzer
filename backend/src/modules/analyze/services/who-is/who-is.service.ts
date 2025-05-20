@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { EnvService } from '../env/env.service';
+import { EnvService } from '../../../env/env.service';
+import { AnalyzerTool } from '../../analyzer-tool.interface';
+import type { AnalyzePayload } from 'src/types';
 
 @Injectable()
-export class WhoIsService {
+export class WhoIsService implements AnalyzerTool {
     private baseUrl: string = 'https://whoisjson.com/api/v1/whois?';
 
     constructor(private readonly envService: EnvService) {}
-    async analyze(url: string) {
+    async analyze({ url }: AnalyzePayload) {
         try {
             const response = await fetch(
                 this.baseUrl +

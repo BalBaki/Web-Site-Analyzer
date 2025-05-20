@@ -53,6 +53,7 @@ export default function ViolationDetail({ data: { violation, node } }: Violation
                     type: 'acccessbility',
                     description: violation.description,
                     elementHtml: node.html,
+                    tool: 'chatgpt',
                 }}
             />
             <div className="mt-2 flex flex-wrap items-center gap-2">
