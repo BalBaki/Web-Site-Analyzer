@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { DEFAULT_LOCAL_URL } from './constants';
 
 export const analyzeSearchParamsSchema = z.object({
     url: z.string().url(),
@@ -26,13 +27,31 @@ export const analyzeFormSchema = z.object({
     deepscan: z.boolean().default(false),
 });
 
-export const envSchema = z.object({
-    API_URL: z
-        .string()
-        .url()
-        .transform((value) => (value.endsWith('/') ? value : `${value}/`)),
-    NODE_ENV: z.enum(['production', 'development', 'test']).default('development'),
-});
+export const envSchema = z
+    .object({
+        API_URL: z
+            .string()
+            .url()
+            .transform((value) => (value.endsWith('/') ? value : `${value}/`)),
+        NODE_ENV: z.enum(['production', 'development', 'test']).default('development'),
+        SITE_URL: z
+            .string()
+            .url()
+            .optional()
+            .default(DEFAULT_LOCAL_URL)
+            .transform((value) => (value.endsWith('/') ? value : `${value}/`)),
+    })
+    .refine(
+        ({ NODE_ENV, SITE_URL }) => {
+            if (NODE_ENV === 'production') return SITE_URL !== DEFAULT_LOCAL_URL;
+
+            return true;
+        },
+        {
+            message: 'A valid SITE_URL must be provided in production environment',
+            path: ['SITE_URL'],
+        },
+    );
 
 export const assistantSchema = z.object({
     type: z.enum(['acccessbility', 'performance', 'seo', 'best-practice', 'normal']).default('normal'),

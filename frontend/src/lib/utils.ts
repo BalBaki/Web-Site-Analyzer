@@ -2,7 +2,7 @@
 import { ReactNode } from 'react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { DATA_TYPES_WITH_SCHEMAS, PAGE_SPEED_INSIGHT_STATUS_PRIORTY } from '@/constant';
+import { DATA_TYPES_WITH_SCHEMAS, PAGE_SPEED_INSIGHT_STATUS_PRIORTY } from '@/constants';
 import type { ClassValue } from 'clsx';
 import type {
     AccessibilityViolation,

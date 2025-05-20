@@ -1,5 +1,6 @@
 import 'server-only';
 import { z } from 'zod';
+import { DEFAULT_LOCAL_URL } from '@/constants';
 import { envSchema } from '@/schemas';
 import type { Env } from '@/types';
 
@@ -48,6 +49,10 @@ class EnvService {
 
     get isTest() {
         return this.get('NODE_ENV') === 'test';
+    }
+
+    get siteURL() {
+        return this.isProduction ? this.get('SITE_URL') : DEFAULT_LOCAL_URL;
     }
 }
 

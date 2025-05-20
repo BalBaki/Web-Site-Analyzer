@@ -41,3 +41,5 @@ export const DATA_TYPES_WITH_SCHEMAS: DataTypeWithSchema[] = [
         schema: z.record(z.any()),
     },
 ];
+
+export const DEFAULT_LOCAL_URL = 'http://localhost:3001/';

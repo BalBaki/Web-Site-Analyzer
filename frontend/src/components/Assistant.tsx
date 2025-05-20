@@ -38,7 +38,7 @@ export default function Assistant({ data }: AssistantProps) {
             <div>
                 <span>Something went wrong..!</span>
                 <Button
-                    className="my-2"
+                    className="my-2 ml-1"
                     disabled={isPending}
                     aria-label={isPending ? 'Asking again' : 'Try Again'}
                     onClick={handleAskClick}
