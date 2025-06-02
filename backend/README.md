@@ -109,7 +109,7 @@ CHATGPT_API_KEY=your_api_key             # OpenAI ChatGPT API key
     {
         "type": "accessibility | performance | seo | best-practice | normal",
         "description": "string",
-        "elementHtml": "string (optional)"
+        "elementHtml"?: "string"
     }
     ```
 

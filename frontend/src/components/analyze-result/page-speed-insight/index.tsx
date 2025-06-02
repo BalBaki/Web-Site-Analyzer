@@ -23,7 +23,7 @@ export default function PageSpeedInsight({ analyzeResult }: PageSpeedInsightProp
                 Page Speed Insight Analyze Result
             </h2>
             <Tabs defaultValue="desktop">
-                <TabsList className="grid grid-cols-2">
+                <TabsList className="w-auto">
                     <TabsTrigger value="desktop">Desktop</TabsTrigger>
                     <TabsTrigger value="mobile">Mobile</TabsTrigger>
                 </TabsList>

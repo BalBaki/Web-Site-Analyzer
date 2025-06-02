@@ -53,7 +53,10 @@ export default function ReportChart() {
     const { counts, tickCount } = chartData;
 
     return (
-        <section aria-describedby="error-count-chart">
+        <section
+            aria-describedby="error-count-chart"
+            className="pb-1"
+        >
             <h3
                 id="error-count-chart"
                 className="sr-only"

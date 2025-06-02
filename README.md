@@ -1,12 +1,18 @@
-# WEB SITE ANALYZER
+# WEB SITE ANALYZER: YOUR ALL-IN-ONE OPTIMIZATION TOOL
 
 ## About The Project
 
-Web Site Analyzer is a powerful tool designed to identify and resolve issues during the web development process. By leveraging the Playwright's Axe Builder, it detects accessibility problems on websites, while integrating the Google PageSpeed Insights API to analyze and address performance, accessibility, SEO, and other critical aspects. The tool also includes Whois API integration, providing real-time information about a website's domain and its owner.
+The Web Site Analyzer is a comprehensive tool designed to streamline the web development process by identifying and resolving key issues. It empowers developers, designers, and website owners to enhance their websites' accessibility, performance, and SEO with actionable insights and AI-powered support.
 
-In addition to these features, users can benefit from AI-powered support to help them solve issues. Whether it's fixing technical flaws or improving overall web performance, the Web Site Analyzer assists users with actionable insights and automated solutions to optimize their sites effectively. The development of the tool is ongoing, with continuous updates aimed at enhancing its functionality and offering a comprehensive web analysis experience.
+### 🚀 Key Features
 
-This project empowers developers, designers, and website owners to streamline their optimization process, ensuring their websites are not only accessible and high-performing but also compliant with the latest best practices in web development.
+A powerful suite of tools to analyze, debug, and optimize your web projects.
+
+-   **♿ Accessibility Testing:** Utilizes **Playwright's Axe Builder** to detect and help fix accessibility problems, ensuring your website is usable by everyone.
+-   **⚡ Performance Analysis:** Integrates with the **Google PageSpeed Insights API** to provide detailed reports on your site's performance, offering concrete steps for improvement across mobile and desktop platforms.
+-   **📈 SEO & Best Practices:** Analyzes your website to ensure it meets the latest SEO standards and web development best practices, helping to improve your search engine ranking.
+-   **🌐 Domain Information:** Includes **Whois API integration** to deliver real-time data about a website's domain registration and ownership.
+-   **🤖 AI-Powered Support:** Offers intelligent assistance to help you troubleshoot technical issues and implement optimization strategies effectively. Whether it's fixing technical flaws or improving overall web performance, the AI assistant provides actionable insights and automated solutions.
 
 ## Built With
 
@@ -17,14 +23,9 @@ This project empowers developers, designers, and website owners to streamline th
 ![Zod](https://img.shields.io/badge/Zod-000000?style=for-the-badge&logo=zod&logoColor=3068B7)
 ![Playwright](https://img.shields.io/badge/Playwright-45ba4b?style=for-the-badge&logo=Playwright&logoColor=white)
 
-![image](https://github.com/user-attachments/assets/44e287e0-d486-4359-84ce-230d52970a10)
-![image](https://github.com/user-attachments/assets/5e331c56-7aec-4a2c-abfe-f8a73fcde1b7)
-![image](https://github.com/user-attachments/assets/264c1b03-496f-4969-a2eb-0a5456f352df)
-![image](https://github.com/user-attachments/assets/011dc5f6-880d-4445-8dfa-fd13c2d7e41d)
-![image](https://github.com/user-attachments/assets/5a69774b-ea8b-4313-9f66-e674d071b3a8)
-
-![image](https://github.com/user-attachments/assets/8b636aec-b535-4cb2-8d8d-50780bf4e181)
-![image](https://github.com/user-attachments/assets/5e022fd9-01fc-4f75-93e4-bacea3817424)
-![image](https://github.com/user-attachments/assets/26a80737-3274-4920-80e3-22c77d74426a)
-![image](https://github.com/user-attachments/assets/f8339936-2b00-4dbe-bb7b-8f37e0220419)
-![image](https://github.com/user-attachments/assets/dd1ac99d-8d84-4987-933a-bb60ed360ca1)
+![d1](https://github.com/user-attachments/assets/8fdfb321-438d-4e31-80f9-188702edc847)
+![d2](https://github.com/user-attachments/assets/a800a328-c2b7-40d5-b751-d8177af00b0d)
+![d3](https://github.com/user-attachments/assets/b532979f-815e-4a13-b9d0-9c77a18acbc8)
+![mo1](https://github.com/user-attachments/assets/89600a2e-9c4b-4fb4-8c90-d5a57f86ca9d)
+![mo2](https://github.com/user-attachments/assets/15583f66-1791-436f-b3f6-1731b2440029)
+![mo3](https://github.com/user-attachments/assets/a26fe1a5-8e50-484d-a037-2c8c12907ffd)

@@ -85,7 +85,7 @@ export default function RootLayout({
                     <Header />
                     <main
                         role="main"
-                        className="flex-1"
+                        className="mt-1 flex-1"
                         aria-describedby="web-site-analyzer"
                     >
                         <h1

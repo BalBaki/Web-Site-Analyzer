@@ -283,10 +283,23 @@ export type AnalyzeResult =
 export type AxeBuilderResponse = WithError<AxeBuilderData>;
 export type WhoIsResponse = WithError<WhoisData>;
 export type PageSpeedInsightResponse = WithError<PageSpeedInsightData>;
+export interface TabbableElementInfo {
+    elementType: string;
+    tabIndex: number;
+    text: string;
+    ariaLabel: string | null;
+    title: string | null;
+    name: string | null;
+    disabled: boolean;
+}
 export type AxeBuilderData = Array<
     {
         url: string;
-    } & WithError<{ result: AccessibilityViolation[]; headingTree: HeadingElement[] }>
+    } & WithError<{
+        result: AccessibilityViolation[];
+        headingTree: HeadingElement[];
+        tabNavigationOrder: TabbableElementInfo[];
+    }>
 >;
 export interface WhoisData {
     server: string; // example: "delta"

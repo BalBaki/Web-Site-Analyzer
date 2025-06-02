@@ -1,6 +1,6 @@
 'use client';
 
-import { useAxeBuilderContext } from '.';
+import { useAxeBuilderContext } from '..';
 import Image from 'next/image';
 import { FaEyeLowVision } from 'react-icons/fa6';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -14,7 +14,7 @@ export default function HeadingStructure() {
     return (
         <section
             aria-labelledby="heading-structure"
-            className="max-h-96 overflow-y-auto"
+            className="overflow-y-auto"
         >
             <h3
                 id="heading-structure"

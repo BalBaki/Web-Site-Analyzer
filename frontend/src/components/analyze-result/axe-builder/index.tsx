@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, use, useMemo, useState } from 'react';
-import HeadingStructure from './HeadingStructure';
+import ExtraInfo from './extra-info';
 import ReportChart from './ReportChart';
 import ReportList from './ReportList';
 import UrlDropDown from './UrlDropdown';
@@ -51,9 +51,9 @@ export default function AxeBuilder({ analyzeResult, defaultUrl }: AxeBuilderProp
         <AxeBuilderContext value={{ url: selectedUrl, setUrl, selectedReport, result: analyzeResult }}>
             <h2 className="sr-only">Axe Builder Analyze Result</h2>
             <UrlDropDown />
-            <div className="divide mb-2 grid grid-cols-1 gap-2 divide-y-2 rounded-md border shadow-sm md:grid-cols-2 md:divide-x-2 md:divide-y-0">
+            <div className="mb-2 grid grid-cols-1 gap-y-2 rounded-md border-2 shadow-sm md:grid-cols-2 md:divide-x-2">
                 <ReportChart />
-                <HeadingStructure />
+                <ExtraInfo />
             </div>
             <ReportList />
         </AxeBuilderContext>

@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { AxeBuilder } from '@axe-core/playwright';
 import * as playwright from 'playwright';
-import type { AnalyzePayload, AxePageScanResult, AxeResult, HeadingElementData } from 'src/types';
+import type { AnalyzePayload, AxePageScanResult, AxeResult, HeadingElementData, TabbableElementInfo } from 'src/types';
 import type { AnalyzerTool } from '../../analyzer-tool.interface';
 
 @Injectable()
 export class AxeBuilderService implements AnalyzerTool {
-    private localePatterns: RegExp[] = [/^\/[a-z]{2}(-[A-Z]{2})?\//, /\/[a-z]{2}(-[A-Z]{2})?\//];
-    private excludedURLParts = ['javascript:', 'mailto:', 'tel:', 'sms:', 'data:', 'ftp:', 'file:'];
+    private readonly localePatterns: RegExp[] = [/^\/[a-z]{2}(-[A-Z]{2})?\//, /\/[a-z]{2}(-[A-Z]{2})?\//];
+    private readonly excludedURLParts = ['javascript:', 'mailto:', 'tel:', 'sms:', 'data:', 'ftp:', 'file:'];
     private pageGoToOptions: Parameters<playwright.Page['goto']>[1] = { waitUntil: 'load' };
-    private possibleSrOnlyCssOption: Partial<Record<keyof CSSStyleDeclaration, string[]>> = {
+    private readonly possibleSrOnlyCssOption: Partial<Record<keyof CSSStyleDeclaration, string[]>> = {
         position: ['absolute'],
         width: ['1px'],
         height: ['1px'],
@@ -17,6 +17,22 @@ export class AxeBuilderService implements AnalyzerTool {
         clip: ['rect(0px, 0px, 0px, 0px)', 'rect(0, 0, 0, 0)'],
         whiteSpace: ['nowrap'],
     };
+    private readonly tabbableSelectors = [
+        'a[href]',
+        'area[href]',
+        'input:not([type="hidden"])',
+        'select',
+        'textarea',
+        'button',
+        'iframe',
+        'object',
+        'embed',
+        '[tabindex]:not([tabindex="-1"])',
+        '[contenteditable="true"]',
+        'audio[controls]',
+        'video[controls]',
+        'details summary',
+    ];
 
     async analyze({ url, deepscan }: AnalyzePayload) {
         const browser = await playwright.chromium.launch({ headless: true });
@@ -78,10 +94,17 @@ export class AxeBuilderService implements AnalyzerTool {
                 if (!isLinkDownloadable) {
                     await page.goto(url, this.pageGoToOptions);
 
+                    const [result, headingTree, tabNavigationOrder] = await Promise.all([
+                        new AxeBuilder({ page }).analyze(),
+                        this.extractHeadingTree(page),
+                        this.extractTabNavigationOrder(page),
+                    ]);
+
                     results.push({
                         url,
-                        result: this.formatResult(await new AxeBuilder({ page }).analyze()),
-                        headingTree: await this.extractHeadingTree(page),
+                        result: this.formatResult(result),
+                        headingTree,
+                        tabNavigationOrder,
                     });
                 }
             } catch (error) {
@@ -156,6 +179,37 @@ export class AxeBuilderService implements AnalyzerTool {
                 return headings;
             },
             { srCssOption: this.possibleSrOnlyCssOption },
+        );
+    }
+    private async extractTabNavigationOrder(page: playwright.Page): Promise<TabbableElementInfo[]> {
+        return await page.evaluate(
+            async ({ tabbableSelectors }) => {
+                return Array.from(document.querySelectorAll(tabbableSelectors.join(','))).reduce(
+                    (result: TabbableElementInfo[], elem) => {
+                        const tabIndex = parseInt(elem.getAttribute('tabIndex')) || 0;
+                        const isVisible = elem.checkVisibility({ checkVisibilityCSS: true });
+
+                        if (tabIndex > -1 && isVisible) {
+                            const childImage = elem.querySelector('img');
+
+                            result.push({
+                                elementType: elem.localName === 'a' ? 'link' : elem.localName,
+                                tabIndex,
+                                text: !!childImage ? `Image (Alt: ${childImage.alt})` : elem.textContent,
+                                ariaLabel: elem.ariaLabel,
+                                title: elem.getAttribute('title'),
+                                name: elem.getAttribute('name'),
+                                // @ts-expect-errors
+                                disabled: elem.disabled ?? false,
+                            });
+                        }
+
+                        return result;
+                    },
+                    [],
+                );
+            },
+            { tabbableSelectors: this.tabbableSelectors },
         );
     }
 }
