@@ -1,5 +1,5 @@
-import type { AnalyzePayload } from 'src/types';
+import type { AnalyzePayload, AsyncResult, Result } from 'src/types';
 
 export interface AnalyzerTool {
-    analyze(payload: AnalyzePayload): Promise<any>;
+    analyze(payload: AnalyzePayload): Result<any, string> | AsyncResult<any, string>;
 }

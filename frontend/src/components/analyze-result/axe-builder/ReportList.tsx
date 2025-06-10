@@ -3,19 +3,20 @@ import { useAxeBuilderContext } from '.';
 import ViolationDetail from './ViolationDetail';
 import ViolationDetailCarousel from './ViolationDetailCarousel';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { AccessibilityViolation } from '@/types';
+import { Status } from '@/enums';
+import type { AccessibilityViolation } from '@/types';
 
 const COLUMN_COUNT = 2;
 
 export default function ReportList() {
     const { selectedReport } = useAxeBuilderContext();
-    const isErrorExists = selectedReport && 'error' in selectedReport;
+    const isErrorExists = selectedReport && selectedReport.status === Status.Err;
 
     //Maybe delete useMemo
     const resultGroupedById = useMemo(() => {
-        if (!selectedReport || isErrorExists || selectedReport.result.length < 0) return null;
+        if (!selectedReport || isErrorExists || selectedReport.data.result.length < 0) return null;
 
-        return selectedReport.result.reduce((acc: Record<string, AccessibilityViolation>, item) => {
+        return selectedReport.data.result.reduce((acc: Record<string, AccessibilityViolation>, item) => {
             if (!acc[item.id]) {
                 acc[item.id] = { ...item, nodes: [...item.nodes] };
             } else {

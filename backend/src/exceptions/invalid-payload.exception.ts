@@ -1,10 +1,11 @@
 import { HttpException } from '@nestjs/common';
+import { Status } from 'src/enums';
 
 export class InvalidPayloadException extends HttpException {
-    constructor(action?: string) {
+    constructor() {
         super(
             {
-                ...(action && { [action]: false }),
+                status: Status.Err,
                 error: 'Enter valid data..!',
             },
             402,

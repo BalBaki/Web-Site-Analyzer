@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { EnvService } from '../../../env/env.service';
 import { AnalyzerTool } from '../../analyzer-tool.interface';
-import type { AnalyzePayload } from 'src/types';
+import { Status } from 'src/enums';
+import type { AnalyzePayload, PageSpeedInsightResult } from 'src/types';
 
 @Injectable()
 export class PageSpeedInsightService implements AnalyzerTool {
@@ -11,7 +12,8 @@ export class PageSpeedInsightService implements AnalyzerTool {
 
     constructor(private readonly envService: EnvService) {}
 
-    async analyze({ url }: AnalyzePayload) {
+    // TODO : Fix "any" return type
+    async analyze({ url }: AnalyzePayload): PageSpeedInsightResult {
         try {
             const searchParams = new URLSearchParams({
                 key: this.envService.pageSpeedInsightApiKey,
@@ -29,21 +31,26 @@ export class PageSpeedInsightService implements AnalyzerTool {
 
             if (responses.find((res) => !res.ok))
                 return {
-                    error: `Error at PageSpeed Insight.`,
+                    status: Status.Err,
+                    err: `Error at PageSpeed Insight.`,
                 };
 
             const results = await Promise.all(responses.map((response) => response.json()));
 
-            return this.strategies.reduce((result, strategy, index) => {
-                result[strategy] = results[index];
+            return {
+                status: Status.Ok,
+                data: this.strategies.reduce((result, strategy, index) => {
+                    result[strategy] = results[index];
 
-                return result;
-            }, {});
+                    return result;
+                }, {}),
+            };
         } catch (error) {
             console.error(error);
 
             return {
-                error: `Error at PageSpeed Insight Analzyer..! Check the server console.`,
+                status: Status.Err,
+                err: `Error at PageSpeed Insight Analzyer..! Check the server console.`,
             };
         }
     }

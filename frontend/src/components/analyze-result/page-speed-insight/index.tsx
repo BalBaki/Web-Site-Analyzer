@@ -2,17 +2,18 @@
 
 import Tab from './Tab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Status } from '@/enums';
 import { transformPageSpeedData } from '@/lib/utils';
-import type { PageSpeedInsightResponse } from '@/types';
+import type { PageSpeedInsightResult } from '@/types';
 
 type PageSpeedInsightProps = {
-    analyzeResult: PageSpeedInsightResponse;
+    analyzeResult: PageSpeedInsightResult;
 };
 
 export default function PageSpeedInsight({ analyzeResult }: PageSpeedInsightProps) {
-    if ('error' in analyzeResult) return <div>Error at Page Speed Insight Service</div>;
+    if (analyzeResult.status === Status.Err) return <div>Error at Page Speed Insight Service</div>;
 
-    const transformedData = transformPageSpeedData(analyzeResult);
+    const transformedData = transformPageSpeedData(analyzeResult.data);
 
     return (
         <>

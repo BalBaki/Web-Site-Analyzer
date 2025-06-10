@@ -1,20 +1,54 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as z from 'zod';
-import { analyzeFormSchema, analyzeSearchParamsSchema, assistantSchema, envSchema } from './schemas';
+import { Status } from './enums';
+import { analyzeFormSchema, analyzeSearchParamsSchema, askSchema, envSchema } from './schemas';
 import type { ReactNode } from 'react';
 
-//AxeBuilder Start
-interface NodeResult {
-    html: string;
-    impact?: ImpactSeverity;
-    target: UnlabelledFrameSelector;
-    xpath?: string[];
-    ancestry?: UnlabelledFrameSelector;
-    all: CheckResult[];
-    failureSummary?: string;
-    element?: HTMLElement;
-}
+// =============================================================================
+// UTILITY TYPES
+// =============================================================================
+
+export type Result<Ok, Err> = { status: Status.Ok; data: Ok } | { status: Status.Err; err: Err };
+export type AsyncResult<Ok, Err> = Promise<Result<Ok, Err>>;
+type BaseError = string;
+
+export type DataType = 'null' | 'undefined' | 'string' | 'number' | 'boolean' | 'date' | 'array' | 'object' | 'unknown';
+
+export type DataTypeWithSchema = {
+    type: DataType;
+    schema: Zod.ZodSchema<any>;
+};
+
+type DataTypeToTSType = {
+    null: null;
+    undefined: undefined;
+    string: string;
+    number: number;
+    boolean: boolean;
+    date: Date;
+    array: any[];
+    object: Record<string, any>;
+    unknown: unknown;
+};
+
+export type DetectedDataResult<T extends DataType> = {
+    type: T;
+    data: DataTypeToTSType[T];
+};
+
+export type AnyDetectedDataResult = {
+    [T in DataType]: DetectedDataResult<T>;
+}[DataType];
+
+export type ScoreStatus = 'pass' | 'average' | 'fail';
+export type PageSpeedInsightStatusPriorty = Record<ScoreStatus, number>;
+
+// =============================================================================
+// ACCESSIBILITY & AXE BUILDER TYPES
+// =============================================================================
+
+export type ImpactSeverity = 'trivial' | 'minor' | 'moderate' | 'serious' | 'critical';
 
 interface CheckResult {
     id: string;
@@ -34,6 +68,17 @@ interface RelatedNode {
 
 type UnlabelledFrameSelector = string[];
 
+interface NodeResult {
+    html: string;
+    impact?: ImpactSeverity;
+    target: UnlabelledFrameSelector;
+    xpath?: string[];
+    ancestry?: UnlabelledFrameSelector;
+    all: CheckResult[];
+    failureSummary?: string;
+    element?: HTMLElement;
+}
+
 interface HeadingElement {
     level: string;
     text: string;
@@ -41,9 +86,42 @@ interface HeadingElement {
     srOnly: boolean;
 }
 
-//AxeBuilder End
+export interface TabbableElementInfo {
+    elementType: string;
+    tabIndex: number;
+    text: string;
+    ariaLabel: string | null;
+    title: string | null;
+    name: string | null;
+    disabled: boolean;
+}
 
-//WhoIs Start
+export interface AccessibilityViolation {
+    description: string;
+    help: string;
+    helpUrl: string;
+    id: string;
+    impact: ImpactSeverity;
+    tags: string[];
+    nodes: NodeResult[];
+}
+
+export type ErrorCount = Record<ImpactSeverity | 'total', number>;
+
+export type AxePageScan = {
+    result: AccessibilityViolation[];
+    headingTree: HeadingElement[];
+    tabNavigationOrder: TabbableElementInfo[];
+};
+
+export type AxePageScanError = BaseError;
+export type AxePageScanResult = { url: string } & Result<AxePageScan, AxePageScanError>;
+export type AxeResultError = string;
+
+// =============================================================================
+// WHOIS TYPES
+// =============================================================================
+
 interface Contact {
     handle: string;
     type: string;
@@ -60,9 +138,44 @@ interface Contact {
     created: string;
     changed: string;
 }
-//WhoIs End
 
-//Page Speed Insight Start
+export interface WhoisData {
+    server: string; // example: "delta"
+    name: string; // example: "whoisjson.com"
+    idnName: string; // example: "whoisjson.com"
+    status: string[]; // example: ["clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited"]
+    nameserver?: string[]; // example: ["dns200.anycast.me"]
+    ips: string; // example: "62.210.113.88"
+    created: string; // example: "2016-12-01 09:28:12"
+    changed: string; // example: "2021-12-02 00:13:57"
+    expires: string; // example: "2022-12-01 10:28:12"
+    registered: boolean; // example: true
+    dnssec: string; // example: "signedDelegation"
+    whoisserver: string; // example: "whois.ovh.com"
+    contacts: {
+        owner?: Contact[];
+        admin?: Contact[];
+        tech?: Contact[];
+    };
+    registrar: {
+        id: string; // example: "433"
+        name: string; // example: "OVH, SAS"
+        email: string; // example: "abuse@ovh.net"
+        url: string; // example: "https://www.ovh.com"
+        phone: string; // example: "33.972101007"
+    };
+    rawdata: string[];
+    network: string;
+    exception: string;
+    parsedContacts: boolean; // example: true
+    template: Record<string, string>;
+    ask_whois: string; // example: "whois.ovh.com"
+}
+
+// =============================================================================
+// PAGE SPEED INSIGHT TYPES
+// =============================================================================
+
 interface AuditRefs {
     acronym?: string | null;
     group?: string | null;
@@ -261,92 +374,12 @@ interface UserPageLoadMetricV5 {
     metricId?: string | null;
     percentile?: number | null;
 }
-//Page Speed Insight End
 
-type WithError<T> = T | { error: string };
-
-export type AnalyzeSearchParams = z.infer<typeof analyzeSearchParamsSchema>;
-export type AnalyzeFormData = z.infer<typeof analyzeFormSchema>;
-export type AnalyzeResult =
-    | {
-          analyze: true;
-          result: {
-              axebuilder?: AxeBuilderResponse;
-              whois?: WhoIsResponse;
-              pagespeedinsight?: PageSpeedInsightResponse;
-          };
-      }
-    | {
-          analyze: false;
-          error: string;
-      };
-export type AxeBuilderResponse = WithError<AxeBuilderData>;
-export type WhoIsResponse = WithError<WhoisData>;
-export type PageSpeedInsightResponse = WithError<PageSpeedInsightData>;
-export interface TabbableElementInfo {
-    elementType: string;
-    tabIndex: number;
-    text: string;
-    ariaLabel: string | null;
-    title: string | null;
-    name: string | null;
-    disabled: boolean;
-}
-export type AxeBuilderData = Array<
-    {
-        url: string;
-    } & WithError<{
-        result: AccessibilityViolation[];
-        headingTree: HeadingElement[];
-        tabNavigationOrder: TabbableElementInfo[];
-    }>
->;
-export interface WhoisData {
-    server: string; // example: "delta"
-    name: string; // example: "whoisjson.com"
-    idnName: string; // example: "whoisjson.com"
-    status: string[]; // example: ["clientDeleteProhibited https://icann.org/epp#clientDeleteProhibited"]
-    nameserver?: string[]; // example: ["dns200.anycast.me"]
-    ips: string; // example: "62.210.113.88"
-    created: string; // example: "2016-12-01 09:28:12"
-    changed: string; // example: "2021-12-02 00:13:57"
-    expires: string; // example: "2022-12-01 10:28:12"
-    registered: boolean; // example: true
-    dnssec: string; // example: "signedDelegation"
-    whoisserver: string; // example: "whois.ovh.com"
-    contacts: {
-        owner?: Contact[];
-        admin?: Contact[];
-        tech?: Contact[];
-    };
-    registrar: {
-        id: string; // example: "433"
-        name: string; // example: "OVH, SAS"
-        email: string; // example: "abuse@ovh.net"
-        url: string; // example: "https://www.ovh.com"
-        phone: string; // example: "33.972101007"
-    };
-    rawdata: string[];
-    network: string;
-    exception: string;
-    parsedContacts: boolean; // example: true
-    template: Record<string, string>;
-    ask_whois: string; // example: "whois.ovh.com"
-}
 export interface PageSpeedInsightData {
     desktop: PagespeedApiPagespeedResponseV5;
     mobile: PagespeedApiPagespeedResponseV5;
 }
-export type ImpactSeverity = 'trivial' | 'minor' | 'moderate' | 'serious' | 'critical';
-export interface AccessibilityViolation {
-    description: string;
-    help: string;
-    helpUrl: string;
-    id: string;
-    impact: ImpactSeverity;
-    tags: string[];
-    nodes: NodeResult[];
-}
+
 export interface PagespeedApiPagespeedResponseV5 {
     analysisUTCTimestamp?: string | null;
     captchaResult?: string | null;
@@ -358,21 +391,6 @@ export interface PagespeedApiPagespeedResponseV5 {
     version?: PagespeedVersion;
 }
 
-export type AssistantResponse =
-    | {
-          assistant: true;
-          answer: string;
-      }
-    | {
-          assistant: false;
-          error: string;
-      };
-
-export type AssistantPayload = z.infer<typeof assistantSchema>;
-
-export type ScoreStatus = 'pass' | 'average' | 'fail';
-export type PageSpeedInsightStatusPriorty = Record<ScoreStatus, number>;
-
 export interface TransformedPageSpeedData {
     audits: Array<{
         category: LighthouseCategoryV5;
@@ -380,7 +398,24 @@ export interface TransformedPageSpeedData {
     }>;
     categories: Categories;
 }
+
 export type PageSpeedResultsMap = Record<string, TransformedPageSpeedData>;
+
+// =============================================================================
+// ASSISTANT-ASK TYPES
+// =============================================================================
+export type AskPayload = z.infer<typeof askSchema>;
+
+type Ask = {
+    answer: string;
+};
+
+type AskError = BaseError;
+
+// =============================================================================
+// RENDER & CONFIG TYPES
+// =============================================================================
+
 export type RenderConfig = {
     name: string;
     key: string;
@@ -394,33 +429,29 @@ export type SimpleRenderConfig = Omit<RenderConfig, 'render' | 'childConfigs'> &
     childConfigs?: SimpleRenderConfig[];
 };
 
-export type DataType = 'null' | 'undefined' | 'string' | 'number' | 'boolean' | 'date' | 'array' | 'object' | 'unknown';
+// =============================================================================
+// ANALYZE & RESPONSE TYPES
+// =============================================================================
 
-export type DataTypeWithSchema = {
-    type: DataType;
-    schema: Zod.ZodSchema<any>;
-};
+export type AnalyzeSearchParams = z.infer<typeof analyzeSearchParamsSchema>;
+export type AnalyzeFormData = z.infer<typeof analyzeFormSchema>;
 
-type DataTypeToTSType = {
-    null: null;
-    undefined: undefined;
-    string: string;
-    number: number;
-    boolean: boolean;
-    date: Date;
-    array: any[];
-    object: Record<string, any>;
-    unknown: unknown;
-};
+export type AxeResult = Result<AxePageScanResult[], AxeResultError>;
+export type WhoIsResult = Result<WhoisData, string>;
+export type PageSpeedInsightResult = Result<PageSpeedInsightData, string>;
+export type AskResult = AsyncResult<Ask, AskError>;
 
-export type DetectedDataResult<T extends DataType> = {
-    type: T;
-    data: DataTypeToTSType[T];
-};
+export type AnalyzeResult = AsyncResult<
+    Partial<{
+        axebuilder: AxeResult;
+        whois: WhoIsResult;
+        pagespeedinsight: PageSpeedInsightResult;
+    }>,
+    string
+>;
 
-export type AnyDetectedDataResult = {
-    [T in DataType]: DetectedDataResult<T>;
-}[DataType];
+// =============================================================================
+// ENVIRONMENT TYPES
+// =============================================================================
 
-export type ErrorCount = Record<ImpactSeverity | 'total', number>;
 export type Env = z.infer<typeof envSchema>;

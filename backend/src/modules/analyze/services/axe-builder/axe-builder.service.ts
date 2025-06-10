@@ -1,8 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { AxeBuilder } from '@axe-core/playwright';
 import * as playwright from 'playwright';
-import type { AnalyzePayload, AxePageScanResult, AxeResult, HeadingElementData, TabbableElementInfo } from 'src/types';
 import type { AnalyzerTool } from '../../analyzer-tool.interface';
+import { Status } from 'src/enums';
+import type {
+    AxeResult,
+    AnalyzePayload,
+    AxePageScanResult,
+    AxeViolations,
+    HeadingElementData,
+    TabbableElementInfo,
+} from 'src/types';
 
 @Injectable()
 export class AxeBuilderService implements AnalyzerTool {
@@ -34,7 +42,7 @@ export class AxeBuilderService implements AnalyzerTool {
         'details summary',
     ];
 
-    async analyze({ url, deepscan }: AnalyzePayload) {
+    async analyze({ url, deepscan }: AnalyzePayload): AxeResult {
         const browser = await playwright.chromium.launch({ headless: true });
 
         try {
@@ -51,11 +59,11 @@ export class AxeBuilderService implements AnalyzerTool {
                 urls = [...new Set(urls.concat(validLinks))];
             }
 
-            return await this.scan(page, urls);
+            return { status: Status.Ok, data: await this.scan(page, urls) };
         } catch (error) {
             console.error(error);
 
-            return { error: `Error at AxeBuilder Analyzer..! Check the server console.` };
+            return { status: Status.Err, err: `Error at AxeBuilder Analyzer..! Check the server console.` };
         } finally {
             await browser.close();
         }
@@ -101,14 +109,17 @@ export class AxeBuilderService implements AnalyzerTool {
                     ]);
 
                     results.push({
+                        status: Status.Ok,
                         url,
-                        result: this.formatResult(result),
-                        headingTree,
-                        tabNavigationOrder,
+                        data: {
+                            result: this.formatResult(result),
+                            headingTree,
+                            tabNavigationOrder,
+                        },
                     });
                 }
             } catch (error) {
-                results.push({ url, error: 'Page Crashed..!' });
+                results.push({ status: Status.Err, url, err: 'Page Crashed..!' });
             }
         }
 
@@ -135,7 +146,7 @@ export class AxeBuilderService implements AnalyzerTool {
             return true;
         }
     }
-    private formatResult(result: Awaited<ReturnType<AxeBuilder['analyze']>>): AxeResult {
+    private formatResult(result: Awaited<ReturnType<AxeBuilder['analyze']>>): AxeViolations {
         return result.incomplete
             .concat(result.violations, result.inapplicable)
             .filter((result) => result.nodes.length > 0)

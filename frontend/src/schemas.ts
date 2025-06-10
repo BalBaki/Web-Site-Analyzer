@@ -15,7 +15,7 @@ export const analyzeSearchParamsSchema = z.object({
         })
         .pipe(z.array(z.enum(['axebuilder', 'pagespeedinsight', 'whois'])))
         .transform((val) => [...new Set(val)]),
-    deepscan: z.preprocess((val) => (val === 'true' ? true : false), z.boolean()),
+    deepscan: z.preprocess((val) => val === 'true', z.boolean()),
 });
 
 export const analyzeFormSchema = z.object({
@@ -53,7 +53,7 @@ export const envSchema = z
         },
     );
 
-export const assistantSchema = z.object({
+export const askSchema = z.object({
     type: z.enum(['acccessbility', 'performance', 'seo', 'best-practice', 'normal']).default('normal'),
     tool: z.enum(['chatgpt']).default('chatgpt'),
     description: z.string().min(1),

@@ -1,12 +1,13 @@
 'use client';
 
 import { useAxeBuilderContext } from '..';
+import { Status } from '@/enums';
 import { cn } from '@/lib/utils';
 
 export default function TabNavigationOrder() {
     const { selectedReport } = useAxeBuilderContext();
 
-    if (!selectedReport || 'error' in selectedReport) return null;
+    if (!selectedReport || selectedReport.status === Status.Err) return null;
 
     return (
         <section
@@ -24,8 +25,8 @@ export default function TabNavigationOrder() {
                 role="list"
                 aria-label="Tabbeable Element List"
             >
-                {selectedReport.tabNavigationOrder.length > 0 ? (
-                    selectedReport.tabNavigationOrder
+                {selectedReport.data.tabNavigationOrder.length > 0 ? (
+                    selectedReport.data.tabNavigationOrder
                         .toSorted((a, b) => b.tabIndex - a.tabIndex)
                         .map((elem, index) => {
                             return (

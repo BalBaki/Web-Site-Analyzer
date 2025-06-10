@@ -3,10 +3,7 @@ import { InvalidPayloadException } from 'src/exceptions/invalid-payload.exceptio
 import { ZodSchema } from 'zod';
 
 export class ZodValidationPipe implements PipeTransform {
-    constructor(
-        private schema: ZodSchema,
-        private action?: string,
-    ) {}
+    constructor(private schema: ZodSchema) {}
 
     transform(value: unknown, metadata: ArgumentMetadata) {
         try {
@@ -14,7 +11,7 @@ export class ZodValidationPipe implements PipeTransform {
 
             return parsedValue;
         } catch (error) {
-            throw new InvalidPayloadException(this.action);
+            throw new InvalidPayloadException();
         }
     }
 }

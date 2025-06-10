@@ -10,15 +10,13 @@ export class AppController {
     constructor(private readonly appService: AppService) {}
 
     @Get('analyze')
-    @UsePipes(new ZodValidationPipe(analyzeSchema, 'analyze'))
+    @UsePipes(new ZodValidationPipe(analyzeSchema))
     async analyze(@Query() query: AnalyzePayload, @Res() res: Response) {
-        const result = await this.appService.analyze(query);
-
-        return res.json(result);
+        return res.json(await this.appService.analyze(query));
     }
 
     @Post('assistant')
-    @UsePipes(new ZodValidationPipe(assistantSchema, 'assistant'))
+    @UsePipes(new ZodValidationPipe(assistantSchema))
     async assistant(@Body() body: AssistantPayload, @Res() res: Response) {
         return res.json(await this.appService.assistant(body));
     }

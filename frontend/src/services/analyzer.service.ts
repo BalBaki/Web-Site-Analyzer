@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import 'server-only';
 import { env } from './env.service';
+import { Status } from '@/enums';
 import { stringifyObjectValues } from '@/lib/utils';
-import type { AnalyzeFormData, AnalyzeResult, AssistantPayload, AssistantResponse } from '@/types';
+import type { AnalyzeFormData, AnalyzeResult, AskPayload, AskResult } from '@/types';
 
 class Analyzer {
     private readonly apiUrl = env.apiUrl;
 
     constructor() {}
 
-    analyze = async (params: AnalyzeFormData): Promise<AnalyzeResult> => {
+    analyze = async (params: AnalyzeFormData): AnalyzeResult => {
         try {
             const res = await fetch(this.apiUrl + 'analyze?' + new URLSearchParams(stringifyObjectValues(params)));
 
@@ -31,23 +32,21 @@ class Analyzer {
                 }
 
                 return {
-                    analyze: false,
-                    error,
+                    status: Status.Err,
+                    err: error,
                 };
             }
 
-            const result = await res.json();
-
-            return result as AnalyzeResult;
+            return (await res.json()) as AnalyzeResult;
         } catch (error) {
             return {
-                analyze: false,
-                error: 'Something went wrong..!',
+                status: Status.Err,
+                err: 'Something went wrong..!',
             };
         }
     };
 
-    assistant = async (payload: AssistantPayload): Promise<AssistantResponse> => {
+    assistant = async (payload: AskPayload): AskResult => {
         try {
             const res = await fetch(this.apiUrl + 'assistant', {
                 method: 'POST',
@@ -70,18 +69,16 @@ class Analyzer {
                 }
 
                 return {
-                    assistant: false,
-                    error,
+                    status: Status.Err,
+                    err: error,
                 };
             }
 
-            const result = await res.json();
-
-            return result as AssistantResponse;
+            return (await res.json()) as AskResult;
         } catch (error) {
             return {
-                assistant: false,
-                error: 'Something went wrong..!',
+                status: Status.Err,
+                err: 'Something went wrong..!',
             };
         }
     };

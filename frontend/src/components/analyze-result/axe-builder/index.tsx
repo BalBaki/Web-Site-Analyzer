@@ -5,17 +5,18 @@ import ExtraInfo from './extra-info';
 import ReportChart from './ReportChart';
 import ReportList from './ReportList';
 import UrlDropDown from './UrlDropdown';
-import type { AxeBuilderData, AxeBuilderResponse } from '@/types';
+import { Status } from '@/enums';
+import type { AxePageScanResult, AxeResult } from '@/types';
 
 type AxeBuilderProps = {
-    analyzeResult: AxeBuilderResponse;
+    analyzeResult: AxeResult;
     defaultUrl: string;
 };
 type AxeBuilderContextType = {
     url: string;
     setUrl: (url: string) => void;
-    selectedReport?: AxeBuilderData[number];
-    result: AxeBuilderData;
+    selectedReport?: AxePageScanResult;
+    result: AxeResult;
 };
 
 const AxeBuilderContext = createContext<AxeBuilderContextType | null>(null);
@@ -30,12 +31,12 @@ export const useAxeBuilderContext = () => {
 
 export default function AxeBuilder({ analyzeResult, defaultUrl }: AxeBuilderProps) {
     const [selectedUrl, setSelectedUrl] = useState(defaultUrl);
-    const isErrorExists = 'error' in analyzeResult;
+    const isErrorExists = analyzeResult.status === Status.Err;
     const selectedReport = useMemo(
         () =>
             isErrorExists
                 ? undefined
-                : analyzeResult.find((result) => result.url === selectedUrl || result.url === selectedUrl + '/'),
+                : analyzeResult.data.find((result) => result.url === selectedUrl || result.url === selectedUrl + '/'),
         [selectedUrl, analyzeResult, isErrorExists],
     );
 

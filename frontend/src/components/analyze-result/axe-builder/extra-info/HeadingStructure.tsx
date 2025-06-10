@@ -4,12 +4,13 @@ import { useAxeBuilderContext } from '..';
 import Image from 'next/image';
 import { FaEyeLowVision } from 'react-icons/fa6';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Status } from '@/enums';
 import { extractHeadingLevel } from '@/lib/utils';
 
 export default function HeadingStructure() {
     const { selectedReport } = useAxeBuilderContext();
 
-    if (!selectedReport || 'error' in selectedReport) return null;
+    if (!selectedReport || selectedReport.status === Status.Err) return null;
 
     return (
         <section
@@ -27,8 +28,8 @@ export default function HeadingStructure() {
                 role="list"
                 aria-label="Document heading hierarchy"
             >
-                {selectedReport.headingTree.length > 0 ? (
-                    selectedReport.headingTree.map((heading, index, arr) => {
+                {selectedReport.data.headingTree.length > 0 ? (
+                    selectedReport.data.headingTree.map((heading, index, arr) => {
                         const headingLevelAsNumber = extractHeadingLevel(heading.level);
 
                         return (

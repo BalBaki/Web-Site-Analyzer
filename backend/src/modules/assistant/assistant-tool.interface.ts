@@ -1,5 +1,5 @@
-import type { AssistantPayload } from 'src/types';
+import type { AskResult, AssistantPayload } from 'src/types';
 
 export interface AssissantTool {
-    ask(payload: AssistantPayload): Promise<any>;
+    ask(payload: AssistantPayload): AskResult;
 }

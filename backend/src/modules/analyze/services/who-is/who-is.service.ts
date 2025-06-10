@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { EnvService } from '../../../env/env.service';
 import { AnalyzerTool } from '../../analyzer-tool.interface';
-import type { AnalyzePayload } from 'src/types';
+import { Status } from 'src/enums';
+import type { AnalyzePayload, WhoIsResult } from 'src/types';
 
 @Injectable()
 export class WhoIsService implements AnalyzerTool {
     private baseUrl: string = 'https://whoisjson.com/api/v1/whois?';
 
     constructor(private readonly envService: EnvService) {}
-    async analyze({ url }: AnalyzePayload) {
+
+    // TODO : Fix "any" return type
+    async analyze({ url }: AnalyzePayload): WhoIsResult {
         try {
             const response = await fetch(
                 this.baseUrl +
@@ -25,17 +28,20 @@ export class WhoIsService implements AnalyzerTool {
 
             if (!response.ok)
                 return {
-                    error: `Error at WhoIs. Status:${response.status}`,
+                    status: Status.Err,
+                    err: `Error at WhoIs. Status:${response.status}`,
                 };
 
-            const result = await response.json();
-
-            return result;
+            return {
+                status: Status.Ok,
+                data: await response.json(),
+            };
         } catch (error) {
             console.error(error);
 
             return {
-                error: `Error at WhoIs Analzyer..! Check the server console.`,
+                status: Status.Err,
+                err: `Error at WhoIs Analzyer..! Check the server console.`,
             };
         }
     }
