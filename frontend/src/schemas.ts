@@ -53,7 +53,7 @@ export const envSchema = z
         },
     );
 
-export const assistantSchema = z.object({
+export const askSchema = z.object({
     type: z.enum(['acccessbility', 'performance', 'seo', 'best-practice', 'normal']).default('normal'),
     tool: z.enum(['chatgpt']).default('chatgpt'),
     description: z.string().min(1),

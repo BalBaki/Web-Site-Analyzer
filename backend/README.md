@@ -82,8 +82,8 @@ CHATGPT_API_KEY=your_api_key             # OpenAI ChatGPT API key
 
     ```json
     {
-        "analyze": true,
-        "result": {
+        "status": "ok",
+        "data": {
             "axebuilder"?: {},
             "pagespeedinsight"?: {},
             "whois"?: {}
@@ -95,8 +95,8 @@ CHATGPT_API_KEY=your_api_key             # OpenAI ChatGPT API key
 
     ```json
     {
-        "analyze": false,
-        "error": "string"
+        "status": "err",
+        "err": "string"
     }
     ```
 
@@ -108,6 +108,7 @@ CHATGPT_API_KEY=your_api_key             # OpenAI ChatGPT API key
     ```json
     {
         "type": "accessibility | performance | seo | best-practice | normal",
+        "tool": "chatgpt",
         "description": "string",
         "elementHtml"?: "string"
     }
@@ -116,15 +117,17 @@ CHATGPT_API_KEY=your_api_key             # OpenAI ChatGPT API key
 - **Response:**
     ```json
     {
-        "assistant": true,
-        "answer": "string"
+        "status": "ok",
+        "data": {
+            "answer": "string"
+        }
     }
     ```
     or
     ```json
     {
-        "assistant": false,
-        "error": "string"
+        "status": "err",
+        "err": "string"
     }
     ```
 

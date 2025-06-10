@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import OpenAI from 'openai';
 import { EnvService } from 'src/modules/env/env.service';
-import type { AssistantPayload } from 'src/types';
 import { AssissantTool } from '../../assistant-tool.interface';
+import { Status } from 'src/enums';
+import type { AskResult, AssistantPayload } from 'src/types';
 
 @Injectable()
 export class ChatgptService implements AssissantTool {
@@ -11,34 +12,40 @@ export class ChatgptService implements AssissantTool {
         this.client = new OpenAI({ apiKey: this.envService.chatGptApiKey });
     }
 
-    async ask({ type, elementHtml, description }: AssistantPayload) {
-        let question: string;
+    async ask({ type, elementHtml, description }: AssistantPayload): AskResult {
+        try {
+            let question: string;
 
-        switch (type) {
-            case 'acccessbility':
-                question = `I'am taking this error: ${description} at this element html:${elementHtml}\n                              
+            switch (type) {
+                case 'acccessbility':
+                    question = `I'am taking this error: ${description} at this element html:${elementHtml}\n                              
                 How can i fix it?`;
 
-                break;
+                    break;
 
-            case 'normal':
-            default:
-                question = `I'am taking this error ${description}\n                              
+                case 'normal':
+                default:
+                    question = `I'am taking this error ${description}\n                              
                 How can i fix it?`;
 
-                break;
+                    break;
+            }
+
+            const completion = await this.client.chat.completions.create({
+                model: 'gpt-4',
+                messages: [
+                    {
+                        role: 'user',
+                        content: question,
+                    },
+                ],
+            });
+
+            return { status: Status.Ok, data: { answer: completion.choices[0].message.content } };
+        } catch (error) {
+            console.error(error);
+
+            return { status: Status.Err, err: 'Error at asking to ChatGPT' };
         }
-
-        const completion = await this.client.chat.completions.create({
-            model: 'gpt-3.5-turbo',
-            messages: [
-                {
-                    role: 'user',
-                    content: question,
-                },
-            ],
-        });
-
-        return completion.choices[0].message.content;
     }
 }

@@ -3,6 +3,7 @@ import { useAxeBuilderContext } from '.';
 import { Bar, BarChart, XAxis, YAxis } from 'recharts';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { Status } from '@/enums';
 import { calculateImpactErrors } from '@/lib/utils';
 import type { ChartConfig } from '@/components/ui/chart';
 
@@ -37,9 +38,10 @@ export default function ReportChart() {
 
     //Maybe delete useMemo
     const chartData = useMemo(() => {
-        if (!selectedReport || 'error' in selectedReport || selectedReport.result.length <= 0) return null;
+        if (!selectedReport || selectedReport.status === Status.Err || selectedReport.data.result.length <= 0)
+            return null;
 
-        const counts = calculateImpactErrors(selectedReport.result);
+        const counts = calculateImpactErrors(selectedReport.data.result);
         const chartTickCount = Math.ceil(Object.values(counts).toSorted((a, b) => b - a)[1] / 5) + 1;
 
         return {

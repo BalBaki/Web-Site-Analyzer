@@ -15,7 +15,7 @@ export const analyzeSchema = z.object({
         })
         .pipe(z.array(z.enum(['axebuilder', 'pagespeedinsight', 'whois'])))
         .transform((val) => [...new Set(val)]),
-    deepscan: z.preprocess((val) => (val === 'true' ? true : false), z.boolean()),
+    deepscan: z.preprocess((val) => val === 'true', z.boolean()),
 });
 
 export const assistantSchema = z.object({

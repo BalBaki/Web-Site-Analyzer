@@ -4,11 +4,14 @@ import { Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Status } from '@/enums';
 import { cn } from '@/lib/utils';
 
 export default function UrlDropDown() {
     const { url, setUrl, selectedReport, result: analyzeResult } = useAxeBuilderContext();
     const [open, setOpen] = useState(false);
+
+    if (analyzeResult.status === Status.Err) return <div>Something went wrong...!</div>;
 
     return (
         <section aria-describedby="analyzed-url-list">
@@ -42,7 +45,7 @@ export default function UrlDropDown() {
                         <CommandList>
                             <CommandEmpty>No Url found.</CommandEmpty>
                             <CommandGroup>
-                                {analyzeResult.map((result) => (
+                                {analyzeResult.data.map((result) => (
                                     <CommandItem
                                         key={result.url}
                                         value={result.url}

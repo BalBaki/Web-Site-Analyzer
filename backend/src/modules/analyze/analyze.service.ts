@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { AxeBuilderService } from './services/axe-builder/axe-builder.service';
 import { PageSpeedInsightService } from './services/page-speed-insight/page-speed-insight.service';
 import { WhoIsService } from './services/who-is/who-is.service';
-import { AnalyzePayload } from 'src/types';
+import { Service } from 'src/types';
 import { InvalidPayloadException } from 'src/exceptions/invalid-payload.exception';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class AnalyzeService {
         private whoIsService: WhoIsService,
     ) {}
 
-    getTool(toolName: AnalyzePayload['services'][number]) {
+    getTool(toolName: Service) {
         switch (toolName) {
             case 'axebuilder':
                 return this.axeBuilderService;

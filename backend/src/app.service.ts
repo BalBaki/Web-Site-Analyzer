@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import type { AnalyzePayload, AssistantPayload } from './types';
 import { AnalyzeService } from './modules/analyze/analyze.service';
 import { AssissantService } from './modules/assistant/assistant.service';
+import { Status } from './enums';
+import type { Analyze, AskResult, AnalyzePayload, AnalyzeResult, AssistantPayload } from './types';
 
 @Injectable()
 export class AppService {
@@ -10,34 +11,32 @@ export class AppService {
         private assistantService: AssissantService,
     ) {}
 
-    async analyze(payload: AnalyzePayload) {
+    async analyze(payload: AnalyzePayload): AnalyzeResult {
         try {
             const analyzeResults = await Promise.all(
                 payload.services.map((toolName) => this.analyzeService.getTool(toolName).analyze(payload)),
             );
 
             return {
-                analyze: true,
-                result: payload.services.reduce((result, service, index) => {
+                status: Status.Ok,
+                data: payload.services.reduce((result: Analyze, service, index) => {
                     result[service] = analyzeResults[index];
 
                     return result;
                 }, {}),
             };
         } catch (error) {
-            return { analyze: false, error: 'Something went wrong..!' };
+            return { status: Status.Err, err: 'Something went wrong..!' };
         }
     }
 
-    async assistant(payload: AssistantPayload) {
+    async assistant(payload: AssistantPayload): AskResult {
         try {
-            const result = await this.assistantService.getTool(payload.tool).ask(payload);
-
-            return { assistant: true, answer: result };
+            return await this.assistantService.getTool(payload.tool).ask(payload);
         } catch (error) {
             console.error(error);
 
-            return { assistant: false, error: 'Error at ChatGpt Assissant. Check Console' };
+            return { status: Status.Err, err: 'Something went wrong..!' };
         }
     }
 }
