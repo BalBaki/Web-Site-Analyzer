@@ -8,13 +8,16 @@ import { Status } from '@/enums';
 import { cn } from '@/lib/utils';
 
 export default function UrlDropDown() {
-    const { url, setUrl, selectedReport, result: analyzeResult } = useAxeBuilderContext();
+    const { url, setUrl, selectedReport, result: analyzeResult, device } = useAxeBuilderContext();
     const [open, setOpen] = useState(false);
 
     if (analyzeResult.status === Status.Err) return <div>Something went wrong...!</div>;
 
     return (
-        <section aria-describedby="analyzed-url-list">
+        <section
+            aria-describedby="analyzed-url-list"
+            className="mt-2"
+        >
             <h3
                 id="analyzed-url-list"
                 className="sr-only"
@@ -45,7 +48,7 @@ export default function UrlDropDown() {
                         <CommandList>
                             <CommandEmpty>No Url found.</CommandEmpty>
                             <CommandGroup>
-                                {analyzeResult.data.map((result) => (
+                                {analyzeResult.data[device].map((result) => (
                                     <CommandItem
                                         key={result.url}
                                         value={result.url}

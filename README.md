@@ -23,9 +23,9 @@ A powerful suite of tools to analyze, debug, and optimize your web projects.
 ![Zod](https://img.shields.io/badge/Zod-000000?style=for-the-badge&logo=zod&logoColor=3068B7)
 ![Playwright](https://img.shields.io/badge/Playwright-45ba4b?style=for-the-badge&logo=Playwright&logoColor=white)
 
-![d1](https://github.com/user-attachments/assets/8fdfb321-438d-4e31-80f9-188702edc847)
+![d1](https://github.com/user-attachments/assets/cda455f8-654f-4ee1-83dc-6755e1753c02)
 ![d2](https://github.com/user-attachments/assets/a800a328-c2b7-40d5-b751-d8177af00b0d)
 ![d3](https://github.com/user-attachments/assets/b532979f-815e-4a13-b9d0-9c77a18acbc8)
-![mo1](https://github.com/user-attachments/assets/89600a2e-9c4b-4fb4-8c90-d5a57f86ca9d)
+![mo1](https://github.com/user-attachments/assets/ad030dde-938a-4787-aa3c-e97ac6c6907c)
 ![mo2](https://github.com/user-attachments/assets/15583f66-1791-436f-b3f6-1731b2440029)
 ![mo3](https://github.com/user-attachments/assets/a26fe1a5-8e50-484d-a037-2c8c12907ffd)

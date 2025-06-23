@@ -38,10 +38,10 @@ export default function ReportChart() {
 
     //Maybe delete useMemo
     const chartData = useMemo(() => {
-        if (!selectedReport || selectedReport.status === Status.Err || selectedReport.data.result.length <= 0)
+        if (!selectedReport || selectedReport.status === Status.Err || selectedReport.data.violations.length <= 0)
             return null;
 
-        const counts = calculateImpactErrors(selectedReport.data.result);
+        const counts = calculateImpactErrors(selectedReport.data.violations);
         const chartTickCount = Math.ceil(Object.values(counts).toSorted((a, b) => b - a)[1] / 5) + 1;
 
         return {

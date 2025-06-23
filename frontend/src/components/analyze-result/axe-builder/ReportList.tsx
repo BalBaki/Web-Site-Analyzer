@@ -14,9 +14,9 @@ export default function ReportList() {
 
     //Maybe delete useMemo
     const resultGroupedById = useMemo(() => {
-        if (!selectedReport || isErrorExists || selectedReport.data.result.length < 0) return null;
+        if (!selectedReport || isErrorExists || selectedReport.data.violations.length < 0) return null;
 
-        return selectedReport.data.result.reduce((acc: Record<string, AccessibilityViolation>, item) => {
+        return selectedReport.data.violations.reduce((acc: Record<string, AccessibilityViolation>, item) => {
             if (!acc[item.id]) {
                 acc[item.id] = { ...item, nodes: [...item.nodes] };
             } else {

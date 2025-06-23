@@ -44,6 +44,8 @@ export type AnyDetectedDataResult = {
 export type ScoreStatus = 'pass' | 'average' | 'fail';
 export type PageSpeedInsightStatusPriorty = Record<ScoreStatus, number>;
 
+export type Device = 'desktop' | 'tablet' | 'mobile';
+
 // =============================================================================
 // ACCESSIBILITY & AXE BUILDER TYPES
 // =============================================================================
@@ -109,13 +111,14 @@ export interface AccessibilityViolation {
 export type ErrorCount = Record<ImpactSeverity | 'total', number>;
 
 export type AxePageScan = {
-    result: AccessibilityViolation[];
+    violations: AccessibilityViolation[];
     headingTree: HeadingElement[];
     tabNavigationOrder: TabbableElementInfo[];
 };
 
 export type AxePageScanError = BaseError;
 export type AxePageScanResult = { url: string } & Result<AxePageScan, AxePageScanError>;
+export type AxeDevice = Record<Device, AxePageScanResult[]>;
 export type AxeResultError = string;
 
 // =============================================================================
@@ -436,7 +439,7 @@ export type SimpleRenderConfig = Omit<RenderConfig, 'render' | 'childConfigs'> &
 export type AnalyzeSearchParams = z.infer<typeof analyzeSearchParamsSchema>;
 export type AnalyzeFormData = z.infer<typeof analyzeFormSchema>;
 
-export type AxeResult = Result<AxePageScanResult[], AxeResultError>;
+export type AxeResult = Result<AxeDevice, AxeResultError>;
 export type WhoIsResult = Result<WhoisData, string>;
 export type PageSpeedInsightResult = Result<PageSpeedInsightData, string>;
 export type AskResult = AsyncResult<Ask, AskError>;

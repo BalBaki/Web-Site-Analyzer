@@ -2,6 +2,7 @@ import * as z from 'zod';
 import { analyzeSchema, assistantSchema } from './schemas';
 import AxeBuilder from '@axe-core/playwright';
 import { Status } from './enums';
+import type { ViewportSize } from 'playwright';
 
 // =============================================================================
 // CORE UTILITY TYPES
@@ -10,6 +11,7 @@ import { Status } from './enums';
 export type Result<Ok, Err> = { status: Status.Ok; data: Ok } | { status: Status.Err; err: Err };
 export type AsyncResult<Ok, Err> = Promise<Result<Ok, Err>>;
 type BaseError = string;
+export type Device = 'desktop' | 'tablet' | 'mobile';
 
 // =============================================================================
 // SCHEMA PAYLOAD TYPES
@@ -42,15 +44,20 @@ export interface HeadingElementData {
 }
 
 export type AxePageScan = {
-    result: AxeViolations;
+    violations: AxeViolations;
     headingTree: HeadingElementData[];
     tabNavigationOrder: TabbableElementInfo[];
 };
 
+export type DeviceViewport = {
+    [key in Device]: ViewportSize;
+};
+
 export type AxePageScanError = BaseError;
 export type AxePageScanResult = { url: string } & Result<AxePageScan, AxePageScanError>;
+export type AxeDevice = Record<Device, AxePageScanResult[]>;
 export type AxeResultError = string;
-export type AxeResult = AsyncResult<AxePageScanResult[], AxeResultError>;
+export type AxeResult = AsyncResult<AxeDevice, AxeResultError>;
 
 // =============================================================================
 // ANALYSIS & SERVICE TYPES

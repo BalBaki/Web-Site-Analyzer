@@ -6,17 +6,24 @@ import { Status } from 'src/enums';
 import type {
     AxeResult,
     AnalyzePayload,
-    AxePageScanResult,
     AxeViolations,
     HeadingElementData,
     TabbableElementInfo,
+    DeviceViewport,
+    Device,
+    AxeDevice,
+    AxePageScanResult,
 } from 'src/types';
 
 @Injectable()
 export class AxeBuilderService implements AnalyzerTool {
+    private readonly deviceViewport: DeviceViewport = {
+        mobile: { width: 390, height: 844 },
+        tablet: { width: 768, height: 1024 },
+        desktop: { width: 1920, height: 1080 },
+    };
     private readonly localePatterns: RegExp[] = [/^\/[a-z]{2}(-[A-Z]{2})?\//, /\/[a-z]{2}(-[A-Z]{2})?\//];
     private readonly excludedURLParts = ['javascript:', 'mailto:', 'tel:', 'sms:', 'data:', 'ftp:', 'file:'];
-    private pageGoToOptions: Parameters<playwright.Page['goto']>[1] = { waitUntil: 'load' };
     private readonly possibleSrOnlyCssOption: Partial<Record<keyof CSSStyleDeclaration, string[]>> = {
         position: ['absolute'],
         width: ['1px'],
@@ -40,18 +47,23 @@ export class AxeBuilderService implements AnalyzerTool {
         'audio[controls]',
         'video[controls]',
         'details summary',
+        'details:not([disabled])',
+        'svg[focusable="true"]',
+        '[role="button"]:not([disabled])',
+        '[role="link"]:not([disabled])',
     ];
 
     async analyze({ url, deepscan }: AnalyzePayload): AxeResult {
-        const browser = await playwright.chromium.launch({ headless: true });
+        const browser = await playwright.chromium.launch();
+        const context = await browser.newContext();
 
         try {
             const mainUrlAsURL = new URL(url);
-            const context = await browser.newContext();
             const page = await context.newPage();
             let urls = [mainUrlAsURL.href];
 
-            await page.goto(mainUrlAsURL.href, { ...this.pageGoToOptions, waitUntil: 'networkidle' });
+            await page.goto(mainUrlAsURL.href);
+            await page.waitForLoadState('networkidle');
 
             if (deepscan) {
                 const validLinks = await this.extractLinks(page, mainUrlAsURL);
@@ -68,6 +80,7 @@ export class AxeBuilderService implements AnalyzerTool {
             await browser.close();
         }
     }
+
     private async extractLinks(page: playwright.Page, mainURL: URL) {
         return await page.evaluate(
             async ({ mainURL, localePatterns }) => {
@@ -92,39 +105,34 @@ export class AxeBuilderService implements AnalyzerTool {
             { mainURL, localePatterns: this.localePatterns },
         );
     }
-    private async scan(page: playwright.Page, urls: string[]): Promise<AxePageScanResult[]> {
-        const results: AxePageScanResult[] = [];
+
+    private async scan(page: playwright.Page, urls: string[]): Promise<AxeDevice> {
+        const result: AxeDevice = { desktop: [], mobile: [], tablet: [] };
 
         for (const url of urls) {
             try {
                 const isLinkDownloadable = await this.checkLinkDownloadable(url);
 
-                if (!isLinkDownloadable) {
-                    await page.goto(url, this.pageGoToOptions);
+                if (isLinkDownloadable) continue;
 
-                    const [result, headingTree, tabNavigationOrder] = await Promise.all([
-                        new AxeBuilder({ page }).analyze(),
-                        this.extractHeadingTree(page),
-                        this.extractTabNavigationOrder(page),
-                    ]);
+                if (page.url() !== url) {
+                    await page.goto(url);
+                    await page.waitForLoadState('networkidle');
+                }
 
-                    results.push({
-                        status: Status.Ok,
-                        url,
-                        data: {
-                            result: this.formatResult(result),
-                            headingTree,
-                            tabNavigationOrder,
-                        },
-                    });
+                for (const device of Object.keys(this.deviceViewport)) {
+                    const typedDevice = device as Device;
+
+                    result[typedDevice].push(await this.analyzeForDevice(page, url, typedDevice));
                 }
             } catch (error) {
-                results.push({ status: Status.Err, url, err: 'Page Crashed..!' });
+                this.pushErrorToAllDevices(result, url, 'Page crashed..!');
             }
         }
 
-        return results;
+        return result;
     }
+
     private async checkLinkDownloadable(url: string | URL) {
         try {
             const { href } = typeof url === 'string' ? new URL(url) : url;
@@ -146,6 +154,7 @@ export class AxeBuilderService implements AnalyzerTool {
             return true;
         }
     }
+
     private formatResult(result: Awaited<ReturnType<AxeBuilder['analyze']>>): AxeViolations {
         return result.incomplete
             .concat(result.violations, result.inapplicable)
@@ -164,6 +173,7 @@ export class AxeBuilderService implements AnalyzerTool {
                 return result;
             });
     }
+
     private async extractHeadingTree(page: playwright.Page) {
         return await page.evaluate(
             async ({ srCssOption }) => {
@@ -192,6 +202,7 @@ export class AxeBuilderService implements AnalyzerTool {
             { srCssOption: this.possibleSrOnlyCssOption },
         );
     }
+
     private async extractTabNavigationOrder(page: playwright.Page): Promise<TabbableElementInfo[]> {
         return await page.evaluate(
             async ({ tabbableSelectors }) => {
@@ -210,8 +221,7 @@ export class AxeBuilderService implements AnalyzerTool {
                                 ariaLabel: elem.ariaLabel,
                                 title: elem.getAttribute('title'),
                                 name: elem.getAttribute('name'),
-                                // @ts-expect-errors
-                                disabled: elem.disabled ?? false,
+                                disabled: 'disabled' in elem ? (elem as any).disabled : false,
                             });
                         }
 
@@ -222,5 +232,47 @@ export class AxeBuilderService implements AnalyzerTool {
             },
             { tabbableSelectors: this.tabbableSelectors },
         );
+    }
+
+    private async analyzeForDevice(
+        page: playwright.Page,
+        url: string,
+        device: Device = 'desktop',
+    ): Promise<AxePageScanResult> {
+        try {
+            await page.setViewportSize(this.deviceViewport[device]);
+
+            const [analyzeResult, headingTree, tabNavigationOrder] = await Promise.all([
+                new AxeBuilder({ page }).analyze(),
+                this.extractHeadingTree(page),
+                this.extractTabNavigationOrder(page),
+            ]);
+
+            return {
+                status: Status.Ok,
+                url,
+                data: {
+                    violations: this.formatResult(analyzeResult),
+                    headingTree,
+                    tabNavigationOrder,
+                },
+            };
+        } catch {
+            return {
+                status: Status.Err,
+                err: 'Error at analyzing page..!',
+                url,
+            };
+        }
+    }
+
+    private async pushErrorToAllDevices(result: AxeDevice, url: string, err: string = 'Something went wrong') {
+        for (const device of Object.keys(this.deviceViewport)) {
+            result[device].push({
+                status: Status.Err,
+                err,
+                url,
+            });
+        }
     }
 }
