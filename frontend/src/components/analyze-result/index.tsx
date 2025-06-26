@@ -3,7 +3,7 @@ import PageSpeedInsight from './page-speed-insight';
 import WhoIs from './WhoIs';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Status } from '@/enums';
-import analyzer from '@/services/analyzer.service';
+import { AnalyzerService } from '@/services/analyzer.service';
 import type { AnalyzeResult, AnalyzeSearchParams } from '@/types';
 
 type AnalyzeResultProps = {
@@ -17,7 +17,7 @@ const services = {
 } as const;
 
 export default async function AnalyzeResult({ searchParams }: AnalyzeResultProps) {
-    const analyzeResult = await analyzer.analyze(searchParams);
+    const analyzeResult = await AnalyzerService.analyze(searchParams);
 
     if (analyzeResult.status === Status.Err) return <div>{analyzeResult.err || 'Something went wrong..!'}</div>;
 

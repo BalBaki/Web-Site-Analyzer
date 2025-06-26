@@ -5,12 +5,10 @@ import { Status } from '@/enums';
 import { stringifyObjectValues } from '@/lib/utils';
 import type { AnalyzeFormData, AnalyzeResult, AskPayload, AskResult } from '@/types';
 
-class Analyzer {
-    private readonly apiUrl = env.apiUrl;
+export class AnalyzerService {
+    static readonly apiUrl = env.apiUrl;
 
-    constructor() {}
-
-    analyze = async (params: AnalyzeFormData): AnalyzeResult => {
+    static analyze = async (params: AnalyzeFormData): AnalyzeResult => {
         try {
             const res = await fetch(this.apiUrl + 'analyze?' + new URLSearchParams(stringifyObjectValues(params)));
 
@@ -46,7 +44,7 @@ class Analyzer {
         }
     };
 
-    assistant = async (payload: AskPayload): AskResult => {
+    static assistant = async (payload: AskPayload): AskResult => {
         try {
             const res = await fetch(this.apiUrl + 'assistant', {
                 method: 'POST',
@@ -83,6 +81,3 @@ class Analyzer {
         }
     };
 }
-
-const analyzer = new Analyzer();
-export default analyzer;

@@ -1,10 +1,10 @@
 import { Status } from '@/enums';
 import type { AskPayload, AskResult } from '@/types';
 
-class ApiService {
-    private readonly baseApiUrl = 'api';
+export class ApiService {
+    static readonly baseApiUrl = 'api';
 
-    ask = async (payload: AskPayload): AskResult => {
+    static ask = async (payload: AskPayload): AskResult => {
         const response = await fetch(`${this.baseApiUrl}/assistant`, {
             method: 'POST',
             headers: {
@@ -18,7 +18,3 @@ class ApiService {
         return (await response.json()) as AskResult;
     };
 }
-
-const apiService = new ApiService();
-
-export default apiService;
