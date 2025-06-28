@@ -63,7 +63,7 @@ export default function Features() {
                     return (
                         <motion.div
                             key={feature.title}
-                            className="bg-feature-card min-h-48 rounded-3xl border-2 p-4"
+                            className="bg-feature-card dark:bg-feature-card-dark min-h-48 rounded-3xl border-2 p-4"
                             role="listitem"
                             initial={{ y: '50px', opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}

@@ -1,4 +1,3 @@
-import plugin from 'tailwindcss/plugin';
 import type { Config } from 'tailwindcss';
 
 export default {
@@ -89,21 +88,12 @@ export default {
                 'accordion-up': 'accordion-up 0.2s ease-out',
                 'load-progress-circle': 'load-progress-circle 1s ease',
             },
-            background: {
-                'feature-card': '(ellipse at right top, #107667ed 0%, var(--background) 47%, var(--background) 100%)',
+            backgroundImage: {
+                'feature-card-dark':
+                    'radial-gradient(ellipse at right top, #107667ed 0%, hsl(var(--background)) 50%, hsl(var(--background)) 100%)',
+                'feature-card':
+                    'radial-gradient(ellipse at right top, #00458f8f 0%, hsl(var(--background)) 50%, hsl(var(--background)) 100%)',
             },
         },
     },
-    plugins: [
-        // eslint-disable-next-line @typescript-eslint/no-require-imports
-        require('tailwindcss-animate'),
-        plugin(function ({ addUtilities }) {
-            addUtilities({
-                '.popover-content-width-same-as-its-trigger': {
-                    width: 'var(--radix-popover-trigger-width)',
-                    'max-height': 'var(--radix-popover-content-available-height)',
-                },
-            });
-        }),
-    ],
 } satisfies Config;
