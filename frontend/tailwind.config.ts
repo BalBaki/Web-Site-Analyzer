@@ -54,6 +54,7 @@ export default {
                 'score-pass': '#0c6',
                 'score-avarage': '#fa3',
                 'score-fail': '#f33',
+                'dark-error': '#E27E7E',
             },
             borderRadius: {
                 lg: 'var(--radius)',
@@ -87,6 +88,9 @@ export default {
                 'accordion-down': 'accordion-down 0.2s ease-out',
                 'accordion-up': 'accordion-up 0.2s ease-out',
                 'load-progress-circle': 'load-progress-circle 1s ease',
+            },
+            background: {
+                'feature-card': '(ellipse at right top, #107667ed 0%, var(--background) 47%, var(--background) 100%)',
             },
         },
     },

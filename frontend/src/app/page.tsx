@@ -1,15 +1,13 @@
-import AnalyzeForm from '@/components/AnalyzeForm';
+import AnalyzeForm from '@/components/home/analyze-form';
+import Features from '@/components/home/Features';
+import Info from '@/components/home/Info';
 
 export default function HomePage() {
     return (
-        <section aria-describedby="analyze-form">
-            <h2
-                id="analyze-form"
-                className="sr-only"
-            >
-                Analyze Form
-            </h2>
+        <div className="container mx-auto mb-4">
             <AnalyzeForm />
-        </section>
+            <Info />
+            <Features />
+        </div>
     );
 }

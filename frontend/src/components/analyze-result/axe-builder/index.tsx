@@ -59,20 +59,22 @@ export default function AxeBuilder({ analyzeResult, defaultUrl }: AxeBuilderProp
 
     if (isErrorExists) return <div>Error at AxeBuilder Service</div>;
 
+    const key = selectedUrl + device;
+
     return (
         <AxeBuilderContext
             value={{ url: selectedUrl, setUrl, selectedReport, result: analyzeResult, device, setDevice: changeDevice }}
         >
             <h2 className="sr-only">Axe Builder Analyze Result</h2>
-            <DeviceTabs />
             <UrlDropDown />
+            <DeviceTabs />
             {selectedReport && selectedReport.status === Status.Ok ? (
                 <>
-                    <div className="mb-2 grid grid-cols-1 gap-y-2 rounded-md border-2 shadow-sm md:grid-cols-2 md:divide-x-2">
+                    <div className="m-2 grid grid-cols-1 gap-y-2 rounded-md border-2 shadow-sm md:grid-cols-2 md:divide-x-2">
                         <ReportChart />
-                        <ExtraInfo />
+                        <ExtraInfo key={key} />
                     </div>
-                    <ReportList />
+                    <ReportList key={key} />
                 </>
             ) : (
                 <div>Error at Analyzing at this page..</div>

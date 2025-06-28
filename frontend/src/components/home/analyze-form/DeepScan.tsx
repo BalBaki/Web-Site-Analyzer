@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
-import { Checkbox } from './ui/checkbox';
-import { FormControl, FormDescription, FormField, FormItem, FormLabel } from './ui/form';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+import { Checkbox } from '@/components/ui/checkbox';
+import { FormControl, FormDescription, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type { AnalyzeFormData } from '@/types';
 
 export default function DeepScan() {
@@ -38,14 +38,18 @@ export default function DeepScan() {
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <div className="flex h-fit items-center justify-center gap-1 space-y-0 rounded-md border px-4 py-2 shadow-sm">
+                                <div className="relative mb-0 flex h-9 min-w-44 items-center justify-center gap-1 space-y-0 rounded-md border px-6 shadow-sm after:ml-1 after:text-sm after:content-['Deep_Scan']">
                                     <FormControl>
                                         <Checkbox
                                             checked={field.value}
                                             onCheckedChange={field.onChange}
-                                        />
+                                            aria-label="Deep scan"
+                                            className="dark:data-[state=checked]:bg-primary relative data-[state=checked]:bg-blue-600"
+                                        >
+                                            Deep Scan
+                                        </Checkbox>
                                     </FormControl>
-                                    <FormLabel>Deep Scan</FormLabel>
+                                    <FormLabel className="absolute inset-0 z-50"></FormLabel>
                                 </div>
                             </TooltipTrigger>
                             <TooltipContent>

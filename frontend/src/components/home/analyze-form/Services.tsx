@@ -46,7 +46,7 @@ export default function Services() {
                                     variant="outline"
                                     role="combobox"
                                     className={cn(
-                                        'w-full justify-between sm:w-52',
+                                        'w-full min-w-48 justify-between',
                                         !field.value && 'text-muted-foreground',
                                     )}
                                     aria-label="Select your services"
@@ -79,7 +79,7 @@ export default function Services() {
                                                 <div className="flex w-full items-center text-sm font-normal">
                                                     {name}
                                                     {field.value?.some((data) => data === value) && (
-                                                        <FaCheck className={'ml-auto h-4 w-4'} />
+                                                        <FaCheck className="ml-auto h-4 w-4 text-blue-600 dark:text-white" />
                                                     )}
                                                 </div>
                                             </CommandItem>

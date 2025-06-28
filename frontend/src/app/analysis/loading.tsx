@@ -10,7 +10,9 @@ export default function AnalysisPageLoading() {
                 height={128}
                 unoptimized
             />
-            <p className="mt-4 w-max text-lg font-medium">Analyzing, please wait...</p>
+            <p className="mt-4 text-lg font-medium">
+                Analyzing, please wait...If you have activated Deepscan, the process may take a bit longer.
+            </p>
         </div>
     );
 }

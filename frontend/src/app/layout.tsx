@@ -77,23 +77,14 @@ export default function RootLayout({
             lang="en"
             suppressHydrationWarning
         >
-            <body
-                className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col px-2! antialiased`}
-            >
-                {env.isDevelopment && <ReactScan />}
+            <body className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen flex-col antialiased`}>
                 <Providers>
+                    {env.isDevelopment && <ReactScan />}
                     <Header />
                     <main
                         role="main"
-                        className="mt-1 flex-1"
-                        aria-describedby="web-site-analyzer"
+                        className="mt-1 flex-1 px-2!"
                     >
-                        <h1
-                            id="web-site-analyzer"
-                            className="sr-only"
-                        >
-                            Web Site Analyzer
-                        </h1>
                         {children}
                     </main>
                 </Providers>

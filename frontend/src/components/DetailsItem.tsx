@@ -37,21 +37,23 @@ export default function DetailsItem({
 
     return (
         <div
-            className={cn('flex break-all', wrapperClassName)}
+            className={cn('break-all', wrapperClassName)}
             {...otherWrapperProps}
         >
-            <dt
-                className={cn('shrink-0 font-semibold capitalize', nameClassName)}
-                {...otherNameProps}
-            >
-                {name}
-            </dt>
-            <span
-                className={cn('mx-1 font-semibold', seperatorClassName)}
-                {...otherSeperatorProps}
-            >
-                {seperator}
-            </span>
+            <div className="float-left flex">
+                <dt
+                    className={cn('shrink-0 font-semibold capitalize', nameClassName)}
+                    {...otherNameProps}
+                >
+                    {name}
+                </dt>
+                <span
+                    className={cn('mx-1 shrink-0 font-semibold', seperatorClassName)}
+                    {...otherSeperatorProps}
+                >
+                    {seperator}
+                </span>
+            </div>
             <dd
                 className={cn(valueClassName)}
                 {...otherValueProps}
