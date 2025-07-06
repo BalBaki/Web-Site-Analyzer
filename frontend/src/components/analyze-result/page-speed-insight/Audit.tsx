@@ -10,13 +10,14 @@ import type { LighthouseAuditResultV5, RenderConfig, SimpleRenderConfig } from '
 
 type AuditProps = {
     audit: LighthouseAuditResultV5;
+    categoryId?: string | null;
 };
 
 const builderRenderConfigTree = (configs: SimpleRenderConfig[]): RenderConfig[] => {
     if (!configs.length) return [];
 
     return configs.map((config) => {
-        const { isLink, childConfigs = [], ...rest } = config;
+        const { isLink, childConfigs = [], truncateMiddle, ...rest } = config;
         const transformedChildConfigs = builderRenderConfigTree(childConfigs);
 
         return {
@@ -33,6 +34,7 @@ const builderRenderConfigTree = (configs: SimpleRenderConfig[]): RenderConfig[] 
                             key={key}
                             data={{ name, value }}
                             isLink={isLink}
+                            truncateMiddle={truncateMiddle}
                         />
                     );
                 } else {
@@ -70,9 +72,9 @@ const renderConfigTree = builderRenderConfigTree([
             { name: 'Wasted Percent', key: 'wastedPercent' },
             { name: 'Cache Hit Probability', key: 'cacheHitProbability' },
             { name: 'Cache Life Time Ms', key: 'cacheLifetimeMs' },
-            { name: 'URL', key: 'url', isLink: true },
+            { name: 'URL', key: 'url', isLink: true, truncateMiddle: true },
             { name: 'Href', key: 'href', isLink: true },
-            { name: 'Script URL', key: 'scriptUrl', isLink: true },
+            { name: 'Script URL', key: 'scriptUrl', isLink: true, truncateMiddle: true },
             { name: 'Wasted Ms', key: 'wastedMs' },
             { name: 'Blocking Time', key: 'blockingTime' },
             { name: 'Entity', key: 'entity' },
@@ -88,7 +90,7 @@ const renderConfigTree = builderRenderConfigTree([
                     { name: 'Node Label', key: 'nodeLabel' },
                     { name: 'Path', key: 'path' },
                     { name: 'Explanation', key: 'explanation' },
-                    { name: 'Element', key: 'snippet' },
+                    { name: 'Element', key: 'snippet', truncateMiddle: true },
                 ],
             },
             {
@@ -105,7 +107,7 @@ const renderConfigTree = builderRenderConfigTree([
                             { name: 'Node Label', key: 'nodeLabel' },
                             { name: 'Path', key: 'path' },
                             { name: 'Explanation', key: 'explanation' },
-                            { name: 'Element', key: 'snippet' },
+                            { name: 'Element', key: 'snippet', truncateMiddle: true },
                         ],
                     },
                 ],
@@ -125,7 +127,7 @@ const renderConfigTree = builderRenderConfigTree([
                                 childConfigs: [
                                     { key: 'column', name: 'Column' },
                                     { key: 'line', name: 'Line' },
-                                    { key: 'url', name: 'URL', isLink: true },
+                                    { key: 'url', name: 'URL', isLink: true, truncateMiddle: true },
                                 ],
                             },
                         ],
@@ -136,7 +138,7 @@ const renderConfigTree = builderRenderConfigTree([
     },
 ]);
 
-export default function Audit({ audit }: AuditProps) {
+export default function Audit({ audit, categoryId }: AuditProps) {
     const scoreStatus = getScoreStatus(audit.score * 100);
     const isFail = scoreStatus === 'fail';
     const isAverage = scoreStatus === 'average';
@@ -163,18 +165,7 @@ export default function Audit({ audit }: AuditProps) {
         <dl>
             {audit.displayValue && <DetailsItem data={{ name: 'Value', value: audit.displayValue }} />}
             {audit.description && <DetailsItem data={{ name: 'Description', value: audit.description }} />}
-            <DetailsItem
-                data={{ name: 'Score', value: audit.score }}
-                config={{
-                    value: {
-                        className: cn({
-                            'text-score-pass': isPass,
-                            'text-score-avarage': isAverage,
-                            'text-score-fail': isFail,
-                        }),
-                    },
-                }}
-            />
+            <DetailsItem data={{ name: 'Score', value: audit.score }} />
             {audit.details && (
                 <div>
                     <h4 className="text-2xl font-semibold underline">Details</h4>
@@ -186,7 +177,7 @@ export default function Audit({ audit }: AuditProps) {
 
     if (!audit.details) {
         return (
-            <div className="mt-1 space-y-2 border-b-2 break-all">
+            <div className="mt-1 space-y-2">
                 <h5 className="flex items-center gap-2 text-xl font-medium">
                     {scoreIcon}
                     {audit.title}
@@ -197,10 +188,10 @@ export default function Audit({ audit }: AuditProps) {
     }
 
     return (
-        <AccordionItem value={audit.id || ''}>
-            <AccordionTrigger className="cursor-pointer justify-normal space-x-2 text-xl">
+        <AccordionItem value={`${audit.id}-${categoryId}`}>
+            <AccordionTrigger className="group cursor-pointer items-center justify-normal gap-2 text-xl data-[state=closed]:overflow-hidden [&>svg]:ml-auto">
                 {scoreIcon}
-                {audit.title}
+                <span className="group-data-[state=closed]:truncate"> {audit.title}</span>
             </AccordionTrigger>
             <AccordionContent>{content}</AccordionContent>
         </AccordionItem>

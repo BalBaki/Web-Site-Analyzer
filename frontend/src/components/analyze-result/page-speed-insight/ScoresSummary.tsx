@@ -32,9 +32,9 @@ export default function ScoresSummary({ categories }: ScoresSummaryProps) {
                                 config={{
                                     svg: {
                                         className: cn({
-                                            'bg-score-pass/60': scoreStatus === 'pass',
-                                            'bg-score-avarage/60': scoreStatus === 'average',
-                                            'bg-score-fail/60': scoreStatus === 'fail',
+                                            'bg-score-pass/80': scoreStatus === 'pass',
+                                            'bg-score-avarage/80': scoreStatus === 'average',
+                                            'bg-score-fail/80': scoreStatus === 'fail',
                                         }),
                                     },
                                     progressStick: {

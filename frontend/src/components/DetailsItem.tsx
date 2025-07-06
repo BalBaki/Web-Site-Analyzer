@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Link from 'next/link';
-import { cn, stringifyValue } from '@/lib/utils';
+import { cn, stringifyValue, truncateTextMiddle } from '@/lib/utils';
 import type { ComponentPropsWithRef } from 'react';
 
 type ItemData = { name: string; value: any; seperator?: string };
@@ -16,16 +16,19 @@ type DetailsItemProps =
           data: ItemData;
           isLink?: false;
           config?: BaseConfigProps & { link?: never };
+          truncateMiddle?: boolean;
       }
     | {
           data: ItemData;
           isLink: true;
           config?: BaseConfigProps & { link?: Omit<ComponentPropsWithRef<typeof Link>, 'href'> };
+          truncateMiddle?: boolean;
       };
 
 export default function DetailsItem({
     data: { name, value, seperator = ':' },
     isLink = false,
+    truncateMiddle = false,
     config = {},
 }: DetailsItemProps) {
     const stringifiedValue = stringifyValue(value);
@@ -34,6 +37,7 @@ export default function DetailsItem({
     const { className: seperatorClassName, ...otherSeperatorProps } = config.seperator || {};
     const { className: valueClassName, ...otherValueProps } = config.value || {};
     const { className: linkClassName, ...otherLinkProps } = config.link || {};
+    const text = truncateMiddle ? truncateTextMiddle(stringifiedValue) : stringifiedValue;
 
     return (
         <div
@@ -42,7 +46,10 @@ export default function DetailsItem({
         >
             <div className="float-left flex">
                 <dt
-                    className={cn('shrink-0 font-semibold capitalize', nameClassName)}
+                    className={cn(
+                        'shrink-0 font-semibold text-[#8B4513] capitalize dark:text-[#D2B48C]',
+                        nameClassName,
+                    )}
                     {...otherNameProps}
                 >
                     {name}
@@ -66,12 +73,10 @@ export default function DetailsItem({
                         className={cn(linkClassName)}
                         {...otherLinkProps}
                     >
-                        {stringifiedValue.length > 100
-                            ? stringifiedValue.slice(0, 90) + '...' + stringifiedValue.slice(-5)
-                            : stringifiedValue}
+                        {text}
                     </Link>
                 ) : (
-                    stringifiedValue
+                    text
                 )}
             </dd>
         </div>

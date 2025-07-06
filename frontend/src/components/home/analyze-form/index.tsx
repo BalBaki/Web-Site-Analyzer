@@ -65,7 +65,7 @@ export default function AnalyzeForm() {
                                             {...field}
                                         />
                                     </FormControl>
-                                    <FormDescription />
+                                    <FormDescription className="sr-only">The url you want to analyze</FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}

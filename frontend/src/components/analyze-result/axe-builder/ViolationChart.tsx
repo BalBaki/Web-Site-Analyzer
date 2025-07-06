@@ -13,27 +13,27 @@ const chartConfig = {
     },
     critical: {
         label: 'Critical',
-        color: 'hsl(var(--chart-1))',
+        color: 'hsl(var(--critical))',
     },
     serious: {
         label: 'Serious',
-        color: 'hsl(var(--chart-2))',
+        color: 'hsl(var(--serious))',
     },
     moderate: {
         label: 'Moderate',
-        color: 'hsl(var(--chart-3))',
+        color: 'hsl(var(--moderate))',
     },
     minor: {
         label: 'Minor',
-        color: 'hsl(var(--chart-4))',
+        color: 'hsl(var(--minor))',
     },
     trivial: {
         label: 'Trivial',
-        color: 'hsl(var(--chart-5))',
+        color: 'hsl(var(--trivial))',
     },
 } satisfies ChartConfig;
 
-export default function ReportChart() {
+export default function ViolationChart() {
     const { selectedReport } = useAxeBuilderContext();
 
     //Maybe delete useMemo
@@ -56,22 +56,22 @@ export default function ReportChart() {
 
     return (
         <section
-            aria-describedby="error-count-chart"
+            aria-describedby="violation-chart"
             className="pb-1"
         >
             <h3
-                id="error-count-chart"
+                id="violation-chart"
                 className="sr-only"
             >
-                Error Count Chart
+                Violation Chart
             </h3>
             <Card
                 id="chart"
-                className="shadow-background border-0 p-2 md:p-4"
+                className="shadow-background border-0 p-2 md:px-2 md:py-4"
             >
                 <CardHeader className="p-0">
-                    <CardTitle className="sr-only">Error Count</CardTitle>
-                    <CardDescription className="sr-only">This card shows count of errors</CardDescription>
+                    <CardTitle className="sr-only">Violation Count</CardTitle>
+                    <CardDescription className="sr-only">This card shows count of violations</CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
                     <ChartContainer

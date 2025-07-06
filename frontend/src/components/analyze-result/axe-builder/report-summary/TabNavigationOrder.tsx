@@ -10,20 +10,11 @@ export default function TabNavigationOrder() {
     if (!selectedReport || selectedReport.status === Status.Err) return null;
 
     return (
-        <section
-            aria-labelledby="tab-navigation-order"
-            className="overflow-y-auto pb-2"
-        >
-            <h3
-                id="tab-navigation-order"
-                className="m-3 text-3xl font-semibold"
-            >
-                Tab Navigation Order
-            </h3>
+        <>
+            <h4 className="mx-2 my-3 text-3xl font-semibold">Tab Navigation Order</h4>
             <div
-                className="space-y-2 px-3 py-1"
+                className="space-y-2 px-2 py-1"
                 role="list"
-                aria-label="Tabbeable Element List"
             >
                 {selectedReport.data.tabNavigationOrder.length > 0 ? (
                     selectedReport.data.tabNavigationOrder
@@ -50,6 +41,6 @@ export default function TabNavigationOrder() {
                     <p className="p-4 text-center text-gray-500">No tabbelable is found in page</p>
                 )}
             </div>
-        </section>
+        </>
     );
 }

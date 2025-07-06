@@ -24,7 +24,12 @@ export type AssistantPayload = z.infer<typeof assistantSchema>;
 // ACCESSIBILITY SCAN TYPES
 // =============================================================================
 
-export type AxeViolations = Awaited<ReturnType<AxeBuilder['analyze']>>['violations'];
+export type AxeResults = Awaited<ReturnType<AxeBuilder['analyze']>>;
+type AxeViolation = AxeResults['violations'][number];
+type NormalizedAxeViolation = Omit<AxeViolation, 'impact'> & {
+    impact: NonNullable<AxeViolation['impact']> | 'trivial';
+};
+export type AxeViolations = NormalizedAxeViolation[];
 
 export interface TabbableElementInfo {
     elementType: string;
@@ -52,6 +57,8 @@ export type AxePageScan = {
 export type DeviceViewport = {
     [key in Device]: ViewportSize;
 };
+
+export type ViolationImpactPriorty = Record<NonNullable<AxeViolations[number]['impact'] | 'trivial'>, number>;
 
 export type AxePageScanError = BaseError;
 export type AxePageScanResult = { url: string } & Result<AxePageScan, AxePageScanError>;

@@ -49,7 +49,6 @@ export default function Services() {
                                         'w-full min-w-48 justify-between',
                                         !field.value && 'text-muted-foreground',
                                     )}
-                                    aria-label="Select your services"
                                 >
                                     Select Service
                                 </Button>
@@ -60,8 +59,6 @@ export default function Services() {
                             side="bottom"
                         >
                             <Command>
-                                {/* <CommandInput placeholder="Search language..." className="h-9" />
-                                <CommandEmpty>No language found.</CommandEmpty> */}
                                 <CommandGroup>
                                     <CommandList>
                                         {services.map(({ value, name }) => (

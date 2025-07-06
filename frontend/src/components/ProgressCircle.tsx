@@ -36,7 +36,7 @@ export default function ProgressCircle({ percentage, progressStickThickness = 8,
                     cy="50"
                     r="46"
                     strokeWidth={progressStickThickness}
-                    className={cn('stroke-current text-gray-200', circleClassName)}
+                    className={cn('stroke-current text-white dark:text-gray-200', circleClassName)}
                     fill="none"
                     {...circleProps}
                 />
@@ -53,7 +53,10 @@ export default function ProgressCircle({ percentage, progressStickThickness = 8,
                 />
             </svg>
             <span
-                className={cn('absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-4xl', textClassName)}
+                className={cn(
+                    'absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-4xl text-white',
+                    textClassName,
+                )}
                 {...textProps}
             >
                 {percentage}

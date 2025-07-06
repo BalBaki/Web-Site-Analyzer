@@ -11,7 +11,7 @@ type TabProps = {
 
 export default function Tab({ data }: TabProps) {
     return (
-        <div className="rounded-md border-2 border-gray-400 p-4">
+        <div className="py-2">
             <ScoresSummary categories={data.categories} />
             <section aria-describedby="audit-list">
                 <h3
@@ -23,15 +23,18 @@ export default function Tab({ data }: TabProps) {
                 <div className="space-y-8">
                     <Accordion type="multiple">
                         {data.audits.map(({ category, results }) => (
-                            <div
-                                key={category.id}
-                                className="mb-4 border-t-4"
-                            >
-                                <h4 className="mb-4 text-2xl font-bold">{category.title}</h4>
+                            <div key={category.id}>
+                                <h4 className="my-2 border-y-2 p-3 text-2xl font-bold">{category.title}</h4>
                                 {results.map((result) => {
                                     return (
-                                        <article key={result.id}>
-                                            <Audit audit={result} />
+                                        <article
+                                            key={result.id}
+                                            className="mx-3 py-1 not-last:border-b-2"
+                                        >
+                                            <Audit
+                                                audit={result}
+                                                categoryId={category.id}
+                                            />
                                         </article>
                                     );
                                 })}

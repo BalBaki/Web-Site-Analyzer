@@ -10,11 +10,25 @@ type AnalyzeResultProps = {
     searchParams: AnalyzeSearchParams;
 };
 
-const services = {
-    axebuilder: 'Axe Builder',
-    pagespeedinsight: 'Page Speed Insight',
-    whois: 'Who Is',
-} as const;
+interface Service {
+    name: string;
+    icon: React.ReactNode;
+}
+
+const serviceInfo: Record<string, Service> = {
+    axebuilder: {
+        name: 'Axe Builder',
+        icon: '🛠️',
+    },
+    pagespeedinsight: {
+        name: 'Page Speed Insight',
+        icon: '⚡',
+    },
+    whois: {
+        name: 'Who Is',
+        icon: '🔍',
+    },
+};
 
 export default async function AnalyzeResult({ searchParams }: AnalyzeResultProps) {
     const analyzeResult = await AnalyzerService.analyze(searchParams);
@@ -23,15 +37,16 @@ export default async function AnalyzeResult({ searchParams }: AnalyzeResultProps
 
     return (
         <Tabs defaultValue={Object.keys(analyzeResult.data)[0]}>
-            <TabsList className="h-auto w-auto flex-wrap justify-normal gap-y-1.5">
+            <TabsList className="mx-auto h-11 w-full justify-normal max-sm:h-auto max-sm:flex-col max-sm:gap-y-3 max-sm:pt-2 max-sm:[&>button]:w-full">
                 {Object.keys(analyzeResult.data).map((service) => {
                     return (
                         <TabsTrigger
                             key={service}
                             value={service}
-                            className="capitalize"
+                            className="text-normal max-sm:border-border px-3 max-sm:not-last:border-b-2 sm:text-lg"
                         >
-                            {services[service as keyof typeof services]}
+                            <span>{serviceInfo[service].icon}</span>
+                            {serviceInfo[service].name}
                         </TabsTrigger>
                     );
                 })}

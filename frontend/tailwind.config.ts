@@ -44,16 +44,17 @@ export default {
                 input: 'hsl(var(--input))',
                 ring: 'hsl(var(--ring))',
                 chart: {
-                    '1': 'hsl(var(--chart-1))',
-                    '2': 'hsl(var(--chart-2))',
-                    '3': 'hsl(var(--chart-3))',
-                    '4': 'hsl(var(--chart-4))',
-                    '5': 'hsl(var(--chart-5))',
+                    '1': 'hsl(var(--critical))',
+                    '2': 'hsl(var(--serious))',
+                    '3': 'hsl(var(--moderate))',
+                    '4': 'hsl(var(--minor))',
+                    '5': 'hsl(var(--trivial))',
                 },
-                'score-pass': '#0c6',
-                'score-avarage': '#fa3',
-                'score-fail': '#f33',
+                'score-pass': 'hsl(var(--score-pass))',
+                'score-avarage': 'hsl(var(--score-avarage))',
+                'score-fail': 'hsl(var(--score-fail))',
                 'dark-error': '#E27E7E',
+                'selected-tab': '#1976d2',
             },
             borderRadius: {
                 lg: 'var(--radius)',
@@ -87,12 +88,6 @@ export default {
                 'accordion-down': 'accordion-down 0.2s ease-out',
                 'accordion-up': 'accordion-up 0.2s ease-out',
                 'load-progress-circle': 'load-progress-circle 1s ease',
-            },
-            backgroundImage: {
-                'feature-card-dark':
-                    'radial-gradient(ellipse at right top, #107667ed 0%, hsl(var(--background)) 50%, hsl(var(--background)) 100%)',
-                'feature-card':
-                    'radial-gradient(ellipse at right top, #00458f8f 0%, hsl(var(--background)) 50%, hsl(var(--background)) 100%)',
             },
         },
     },

@@ -13,20 +13,11 @@ export default function HeadingStructure() {
     if (!selectedReport || selectedReport.status === Status.Err) return null;
 
     return (
-        <section
-            aria-labelledby="heading-structure"
-            className="overflow-y-auto"
-        >
-            <h3
-                id="heading-structure"
-                className="m-3 text-3xl font-semibold"
-            >
-                Heading Structure
-            </h3>
+        <>
+            <h4 className="mx-2 my-3 text-3xl font-semibold">Document Heading Structure</h4>
             <div
-                className="space-y-2 px-3 py-1"
+                className="space-y-2 px-2 py-1"
                 role="list"
-                aria-label="Document heading hierarchy"
             >
                 {selectedReport.data.headingTree.length > 0 ? (
                     selectedReport.data.headingTree.map((heading, index, arr) => {
@@ -48,7 +39,7 @@ export default function HeadingStructure() {
                                 <span className="relative mr-1 flex size-9 shrink-0 items-center justify-center rounded-full border-3 border-black bg-blue-600 font-semibold text-white dark:border-white">
                                     {heading.srOnly && (
                                         <FaEyeLowVision
-                                            className="absolute inset-0 z-50 size-full opacity-40"
+                                            className="absolute inset-0 z-30 size-full opacity-40"
                                             aria-label="Screen reader only"
                                             title="This heading is only visible to screen readers"
                                             color="red"
@@ -84,6 +75,6 @@ export default function HeadingStructure() {
                     <p className="p-4 text-center text-gray-500">No heading is found in page</p>
                 )}
             </div>
-        </section>
+        </>
     );
 }

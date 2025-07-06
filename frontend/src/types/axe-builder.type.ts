@@ -24,7 +24,7 @@ interface RelatedNode {
 
 interface NodeResult {
     html: string;
-    impact?: ImpactSeverity;
+    impact: ImpactSeverity;
     target: UnlabelledFrameSelector;
     xpath?: string[];
     ancestry?: UnlabelledFrameSelector;

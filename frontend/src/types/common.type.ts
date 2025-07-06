@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import * as z from 'zod';
 import { Status } from '@/enums';
 import type { ReactNode } from 'react';
 
@@ -11,7 +12,7 @@ export type DataType = 'null' | 'undefined' | 'string' | 'number' | 'boolean' | 
 
 export type DataTypeWithSchema = {
     type: DataType;
-    schema: Zod.ZodSchema<any>;
+    schema: z.ZodSchema<any>;
 };
 
 type DataTypeToTSType = {
@@ -47,5 +48,6 @@ export type RenderConfig = {
 
 export type SimpleRenderConfig = Omit<RenderConfig, 'render' | 'childConfigs'> & {
     isLink?: boolean;
+    truncateMiddle?: boolean;
     childConfigs?: SimpleRenderConfig[];
 };

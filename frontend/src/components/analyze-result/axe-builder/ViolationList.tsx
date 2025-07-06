@@ -4,11 +4,12 @@ import ViolationDetail from './ViolationDetail';
 import ViolationDetailCarousel from './ViolationDetailCarousel';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Status } from '@/enums';
+import { cn } from '@/lib/utils';
 import type { AccessibilityViolation } from '@/types';
 
 const COLUMN_COUNT = 2;
 
-export default function ReportList() {
+export default function ViolationList() {
     const { selectedReport } = useAxeBuilderContext();
     const isErrorExists = selectedReport && selectedReport.status === Status.Err;
 
@@ -35,8 +36,19 @@ export default function ReportList() {
 
         return (
             <article key={id}>
-                <AccordionItem value={id + selectedReport?.url}>
-                    <AccordionTrigger className="text-red-400 underline">{violation.help}</AccordionTrigger>
+                <AccordionItem
+                    value={id + selectedReport?.url}
+                    className={cn('rounded-2xl border-2 px-2 last:border-b-2', {
+                        'border-[hsl(var(--critical))]': violation.impact === 'critical',
+                        'border-[hsl(var(--serious))]': violation.impact === 'serious',
+                        'border-[hsl(var(--moderate))]': violation.impact === 'moderate',
+                        'border-[hsl(var(--minor))]': violation.impact === 'minor',
+                        'border-[hsl(var(--trivial))]': violation.impact === 'trivial',
+                    })}
+                >
+                    <AccordionTrigger className="group data-[state=closed]:overflow-hidden">
+                        <span className="group-data-[state=closed]:truncate">{violation.help}</span>
+                    </AccordionTrigger>
                     <AccordionContent>
                         {violation.nodes.length > 1 ? (
                             <ViolationDetailCarousel violation={violation} />
@@ -55,16 +67,19 @@ export default function ReportList() {
     const widthPercantage = Number(100 / COLUMN_COUNT).toFixed(2);
 
     return (
-        <section aria-describedby="violations-list">
+        <section
+            aria-describedby="violation-list"
+            className="px-1 pt-2"
+        >
             <h3
-                id="violations-list"
+                id="violation-list"
                 className="sr-only"
             >
-                Violations List
+                Violation List
             </h3>
             <Accordion
                 type="multiple"
-                className="md:flex md:gap-x-2"
+                className="md: gap-2 max-md:space-y-2 md:flex"
             >
                 {Array.from({ length: COLUMN_COUNT }, (_, index) => {
                     return (
@@ -73,7 +88,7 @@ export default function ReportList() {
                             style={{
                                 width: `${widthPercantage}%`,
                             }}
-                            className="flex flex-col max-md:w-full!"
+                            className="flex flex-col gap-2 max-md:w-full!"
                         >
                             {renderedResult.slice(
                                 index * itemCountPerColumn,

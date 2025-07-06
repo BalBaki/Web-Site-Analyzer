@@ -169,3 +169,12 @@ export const renderNestedData = (configs: RenderConfig[], value: any): ReactNode
 };
 
 export const extractHeadingLevel = (tag: string): number => Number(tag.toLocaleLowerCase().replaceAll('h', '')) || 0;
+
+export const truncateTextMiddle = (
+    text: string,
+    { start = 90, end = 5 }: { start?: number; end?: number } = {},
+): string => {
+    if (text.length <= start) return text;
+
+    return text.slice(0, start) + '........' + text.slice(-end);
+};

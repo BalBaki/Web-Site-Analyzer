@@ -1,6 +1,6 @@
+import Badges from './Badges';
 import Assistant from '@/components/Assistant';
 import DetailsItem from '@/components/DetailsItem';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { AccessibilityViolation } from '@/types';
 
@@ -19,24 +19,15 @@ export default function ViolationDetail({ data: { violation, node } }: Violation
                 config={{
                     value: {
                         className: cn('capitalize', {
-                            'text-[hsl(var(--chart-1))]': node.impact === 'critical',
-                            'text-[hsl(var(--chart-2))]': node.impact === 'serious',
-                            'text-[hsl(var(--chart-3))]': node.impact === 'moderate',
-                            'text-[hsl(var(--chart-4))]': node.impact === 'minor',
-                            'text-[hsl(var(--chart-5))]': node.impact === 'trivial',
+                            'text-[hsl(var(--critical))]': node.impact === 'critical',
+                            'text-[hsl(var(--serious))]': node.impact === 'serious',
+                            'text-[hsl(var(--moderate))]': node.impact === 'moderate',
+                            'text-[hsl(var(--minor))]': node.impact === 'minor',
+                            'text-[hsl(var(--trivial))]': node.impact === 'trivial',
                         }),
                     },
                 }}
             />
-            <DetailsItem data={{ name: 'HTML', value: node.html }} />
-            <DetailsItem data={{ name: 'Selector', value: node.target[0] }} />
-            <DetailsItem data={{ name: 'Description', value: violation.description }} />
-            <DetailsItem data={{ name: 'Help', value: violation.help }} />
-            <DetailsItem
-                data={{ name: 'Help URL', value: violation.helpUrl }}
-                isLink
-            />
-
             {node.all.length > 0 && (
                 <>
                     <DetailsItem data={{ name: 'Message', value: node.all[0].message }} />
@@ -48,6 +39,17 @@ export default function ViolationDetail({ data: { violation, node } }: Violation
                     )}
                 </>
             )}
+            <DetailsItem data={{ name: 'Description', value: violation.description }} />
+            <DetailsItem
+                data={{ name: 'HTML', value: node.html }}
+                truncateMiddle
+            />
+            <DetailsItem data={{ name: 'Selector', value: node.target[0] }} />
+            <DetailsItem data={{ name: 'Help', value: violation.help }} />
+            <DetailsItem
+                data={{ name: 'Help URL', value: violation.helpUrl }}
+                isLink
+            />
             <Assistant
                 data={{
                     type: 'acccessbility',
@@ -56,12 +58,7 @@ export default function ViolationDetail({ data: { violation, node } }: Violation
                     tool: 'chatgpt',
                 }}
             />
-            <div className="mt-2 flex flex-wrap items-center gap-2">
-                <Badge className="capitalize">{node.impact}</Badge>
-                {violation.tags.map((tag) => (
-                    <Badge key={tag}>{tag}</Badge>
-                ))}
-            </div>
+            <Badges tags={[node.impact, ...violation.tags]} />
         </dl>
     );
 }

@@ -49,15 +49,18 @@
         --accent-foreground: 240 5.9% 10%;
         --destructive: 0 84.2% 60.2%;
         --destructive-foreground: 0 0% 98%;
-        --border: 240 5.9% 90%;
+        --border: 220 7% 87%;
         --input: 240 5.9% 90%;
         --ring: 240 10% 3.9%;
-        --chart-1: 0 100% 64%;
-        --chart-2: 36 91% 43%;
-        --chart-3: 48 92% 46%;
-        --chart-4: 217 91% 60%;
-        --chart-5: 220 9% 66%;
+        --critical: 0 100% 40%;
+        --serious: 35 90% 45%;
+        --moderate: 50 90% 45%;
+        --minor: 210 90% 45%;
+        --trivial: 220 15% 50%;
         --radius: 0.5rem;
+        --score-pass: 135 63% 40%;
+        --score-avarage: 45 100% 51%;
+        --score-fail: 354 70% 54%;
     }
     .dark {
         --background: 240 10% 3.9%;
@@ -79,11 +82,14 @@
         --border: 220 13% 29%;
         --input: 220 13% 29%;
         --ring: 240 4.9% 83.9%;
-        --chart-1: 0 100% 64%;
-        --chart-2: 36 91% 43%;
-        --chart-3: 48 92% 46%;
-        --chart-4: 217 91% 60%;
-        --chart-5: 220 9% 66%;
+        --critical: 0 90% 65%;
+        --serious: 35 90% 65%;
+        --moderate: 50 90% 60%;
+        --minor: 210 90% 65%;
+        --trivial: 220 25% 75%;
+        --score-pass: 120 39% 54%;
+        --score-avarage: 47 88% 50%;
+        --score-fail: 6 78% 57%;
     }
 }
 

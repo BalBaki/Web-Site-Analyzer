@@ -1,11 +1,11 @@
 'use client';
 
 import { createContext, use, useMemo, useState } from 'react';
-import DeviceTabs from './DeviceTabs';
-import ExtraInfo from './extra-info';
-import ReportChart from './ReportChart';
-import ReportList from './ReportList';
+import DeviceDropdown from './DeviceDropdown';
+import ReportSummary from './report-summary';
 import UrlDropDown from './UrlDropdown';
+import ViolationChart from './ViolationChart';
+import ViolationList from './ViolationList';
 import { Status } from '@/enums';
 import type { AxePageScanResult, AxeResult, Device } from '@/types';
 
@@ -65,20 +65,32 @@ export default function AxeBuilder({ analyzeResult, defaultUrl }: AxeBuilderProp
         <AxeBuilderContext
             value={{ url: selectedUrl, setUrl, selectedReport, result: analyzeResult, device, setDevice: changeDevice }}
         >
-            <h2 className="sr-only">Axe Builder Analyze Result</h2>
-            <UrlDropDown />
-            <DeviceTabs />
-            {selectedReport && selectedReport.status === Status.Ok ? (
-                <>
-                    <div className="m-2 grid grid-cols-1 gap-y-2 rounded-md border-2 shadow-sm md:grid-cols-2 md:divide-x-2">
-                        <ReportChart />
-                        <ExtraInfo key={key} />
+            <div className="mt-3 rounded-lg border-2 py-2 shadow-sm">
+                <h2 className="sr-only">Axe Builder Analyze Result</h2>
+                <section aria-describedby="analyze-result-filters">
+                    <h3
+                        id="analyze-result-filters"
+                        className="sr-only"
+                    >
+                        Analyze result filters
+                    </h3>
+                    <div className="mb-2 grid items-center gap-2 px-2 sm:max-w-3xl sm:grid-cols-[1fr_auto]">
+                        <UrlDropDown />
+                        <DeviceDropdown />
                     </div>
-                    <ReportList key={key} />
-                </>
-            ) : (
-                <div>Error at Analyzing at this page..</div>
-            )}
+                </section>
+                {selectedReport && selectedReport.status === Status.Ok ? (
+                    <>
+                        <div className="grid grid-cols-1 gap-y-2 border-y-2 max-md:divide-y-2 md:grid-cols-2 md:divide-x-2">
+                            <ViolationChart />
+                            <ReportSummary key={key} />
+                        </div>
+                        <ViolationList key={key} />
+                    </>
+                ) : (
+                    <div>Error at Analyzing at this page..</div>
+                )}
+            </div>
         </AxeBuilderContext>
     );
 }
