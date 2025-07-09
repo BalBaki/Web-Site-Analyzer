@@ -11,7 +11,7 @@ export class WhoIsService implements AnalyzerTool {
     constructor(private readonly envService: EnvService) {}
 
     // TODO : Fix "any" return type
-    async analyze({ url }: AnalyzePayload): WhoIsResult {
+    async analyze({ url }: AnalyzePayload, abortController: AbortController): WhoIsResult {
         try {
             const response = await fetch(
                 this.baseUrl +
@@ -23,6 +23,7 @@ export class WhoIsService implements AnalyzerTool {
                         Authorization: `TOKEN=${this.envService.whoIsApiKey}`,
                     }),
                     method: 'GET',
+                    signal: abortController.signal,
                 },
             );
 

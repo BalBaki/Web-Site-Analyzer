@@ -13,7 +13,7 @@ export class PageSpeedInsightService implements AnalyzerTool {
     constructor(private readonly envService: EnvService) {}
 
     // TODO : Fix "any" return type
-    async analyze({ url }: AnalyzePayload): PageSpeedInsightResult {
+    async analyze({ url }: AnalyzePayload, abortController: AbortController): PageSpeedInsightResult {
         try {
             const searchParams = new URLSearchParams({
                 key: this.envService.pageSpeedInsightApiKey,
@@ -25,7 +25,7 @@ export class PageSpeedInsightService implements AnalyzerTool {
                 this.strategies.map((strategy) => {
                     searchParams.set('strategy', strategy.toLocaleLowerCase());
 
-                    return fetch(this.baseUrl + searchParams);
+                    return fetch(this.baseUrl + searchParams, { signal: abortController.signal });
                 }),
             );
 

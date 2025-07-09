@@ -1,4 +1,5 @@
 import * as z from 'zod';
-import { envSchema } from '@/schemas';
+import { clientEnvSchema, serverEnvSchema } from '@/schemas';
 
-export type Env = z.infer<typeof envSchema>;
+export type ServerEnv = z.infer<typeof serverEnvSchema>;
+export type ClientEnv = z.infer<typeof clientEnvSchema>;

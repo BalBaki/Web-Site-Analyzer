@@ -57,7 +57,7 @@ export default function AxeBuilder({ analyzeResult, defaultUrl }: AxeBuilderProp
         setDevice(newDevice);
     };
 
-    if (isErrorExists) return <div>Error at AxeBuilder Service</div>;
+    if (isErrorExists) return <div>{analyzeResult.err || 'Error at AxeBuilder Service'}</div>;
 
     const key = selectedUrl + device;
 

@@ -27,7 +27,7 @@ export const analyzeFormSchema = z.object({
     deepscan: z.boolean().default(false),
 });
 
-export const envSchema = z
+export const serverEnvSchema = z
     .object({
         API_URL: z
             .string()
@@ -52,6 +52,10 @@ export const envSchema = z
             path: ['SITE_URL'],
         },
     );
+
+export const clientEnvSchema = z.object({
+    NEXT_PUBLIC_API_URL: z.string().min(1),
+});
 
 export const askSchema = z.object({
     type: z.enum(['acccessbility', 'performance', 'seo', 'best-practice', 'normal']).default('normal'),

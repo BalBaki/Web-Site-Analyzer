@@ -1,4 +1,4 @@
-import { env } from '@/services/env.service';
+import { env } from '@/services/env/server';
 import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {

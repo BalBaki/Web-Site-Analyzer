@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import 'server-only';
-import { env } from './env.service';
+import { env } from './env/server';
 import { Status } from '@/enums';
 import { stringifyObjectValues } from '@/lib/utils';
 import type { AnalyzeFormData, AnalyzeResult, AskPayload, AskResult } from '@/types';

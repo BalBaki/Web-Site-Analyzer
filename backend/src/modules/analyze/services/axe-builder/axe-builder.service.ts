@@ -14,9 +14,11 @@ import type {
     AxeDevice,
     AxePageScanResult,
     AxeResults,
+    AxeBuilderStreamData,
 } from 'src/types';
-import { VIOLATION_IMPACT_PRIORTY } from 'src/constants';
+import { TOOL_STAGE, VIOLATION_IMPACT_PRIORTY } from 'src/constants';
 import type { Page } from 'playwright';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class AxeBuilderService implements AnalyzerTool {
@@ -57,7 +59,7 @@ export class AxeBuilderService implements AnalyzerTool {
         '[role="link"]:not([disabled])',
     ];
 
-    async analyze({ url, deepscan }: AnalyzePayload): AxeResult {
+    async analyze({ url, deepscan }: AnalyzePayload, abortController: AbortController): AxeResult {
         const isLinkViewable = await this.checkLinkViewable(url);
 
         if (!isLinkViewable) return { status: Status.Err, err: 'Cannot scan this url.' };
@@ -73,9 +75,7 @@ export class AxeBuilderService implements AnalyzerTool {
             await this.goToPageWithFallback(page, mainUrlAsURL.href, { loadState: { timeout: 5000 } });
 
             if (deepscan) {
-                const validLinks = await this.extractLinks(page, mainUrlAsURL);
-
-                urls = [...new Set(urls.concat(validLinks))];
+                urls = await this.extractLinks(page, mainUrlAsURL);
             }
 
             return { status: Status.Ok, data: await this.scan(page, urls) };
@@ -129,17 +129,19 @@ export class AxeBuilderService implements AnalyzerTool {
     }
 
     private async extractLinks(page: playwright.Page, mainURL: URL) {
-        return await page.evaluate(
+        let urls = [mainURL.href];
+
+        const otherUrls = await page.evaluate(
             async ({ mainURL, localePatterns }) => {
-                const { origin: mainUrlOrigin } = mainURL;
+                const { hostname: mainHostname } = mainURL;
 
                 return Array.from(document.querySelectorAll('a[href]'))
                     .filter((a: HTMLAnchorElement) => {
                         try {
-                            const { href, origin } = new URL(a.href);
+                            const { href, hostname } = new URL(a.href);
 
                             return (
-                                origin === mainUrlOrigin &&
+                                hostname === mainHostname &&
                                 !a.hasAttribute('download') &&
                                 !localePatterns.some((pattern) => pattern.test(href))
                             );
@@ -151,6 +153,12 @@ export class AxeBuilderService implements AnalyzerTool {
             },
             { mainURL, localePatterns: this.localePatterns },
         );
+
+        for (const url of otherUrls) {
+            if (!urls.includes(url) && (await this.checkLinkViewable(url))) urls.push(url);
+        }
+
+        return urls;
     }
 
     private async scan(page: playwright.Page, urls: string[]): Promise<AxeDevice> {
@@ -306,5 +314,170 @@ export class AxeBuilderService implements AnalyzerTool {
                 url,
             });
         }
+    }
+
+    //STREAMING
+
+    // New streaming method for SSE
+    analyzeStream$(
+        { url, deepscan }: AnalyzePayload,
+        abortController: AbortController,
+    ): Observable<AxeBuilderStreamData> {
+        const progressSubject = new Subject<AxeBuilderStreamData>();
+
+        this.runStreamAnalysis(url, deepscan, progressSubject, abortController).catch((error) => {
+            progressSubject.error({
+                status: Status.Err,
+                message: error.message || 'AxeBuilder analysis failed',
+                stage: TOOL_STAGE.COMMON.TOOL_ERROR,
+            });
+        });
+
+        return progressSubject.asObservable();
+    }
+
+    private async runStreamAnalysis(
+        url: string,
+        deepscan: boolean,
+        progressSubject: Subject<AxeBuilderStreamData>,
+        abortController: AbortController,
+    ): Promise<void> {
+        let browser: playwright.Browser;
+
+        try {
+            const isLinkViewable = await this.checkLinkViewable(url);
+
+            if (!isLinkViewable) {
+                progressSubject.error({
+                    status: Status.Err,
+                    message: 'Cannot scan downloadable url.',
+                    stage: TOOL_STAGE.COMMON.TOOL_ERROR,
+                });
+
+                return;
+            }
+
+            browser = await this.launchBrowser(progressSubject, abortController, { headless: false });
+
+            const context = await browser.newContext({ viewport: this.deviceViewport.desktop });
+            const page = await context.newPage();
+            const mainUrlAsURL = new URL(url);
+            let urls = [mainUrlAsURL.href];
+
+            await this.goToPageWithFallback(page, mainUrlAsURL.href, { loadState: { timeout: 5000 } });
+
+            // Extract links if deepscan
+            if (deepscan) {
+                progressSubject.next({
+                    stage: TOOL_STAGE.AXE.LINK_EXTRACTION,
+                    message: 'Extracting links for deep scan...',
+                });
+
+                urls = await this.extractLinks(page, mainUrlAsURL);
+            }
+
+            progressSubject.next({
+                stage: TOOL_STAGE.AXE.LINK_EXTRACTION_COMPLETE,
+                message: `Found ${urls.length} URLs to analyze`,
+                urls,
+            });
+
+            // Start scanning
+            await this.streamingScan$(page, urls, progressSubject);
+
+            progressSubject.complete();
+        } catch (error) {
+            console.error('Streaming analysis error:', error);
+
+            progressSubject.error({
+                stage: TOOL_STAGE.COMMON.COMPLETE_TOOL,
+                message: 'Axebuilder Analysis failed',
+            });
+        } finally {
+            if (browser) {
+                await browser.close();
+            }
+        }
+    }
+
+    private async streamingScan$(
+        page: playwright.Page,
+        urls: string[],
+        progressSubject: Subject<AxeBuilderStreamData>,
+    ): Promise<void> {
+        const result: AxeDevice = { desktop: [], mobile: [], tablet: [] };
+        const devices = Object.keys(this.deviceViewport) as Device[];
+
+        for (const [urlIndex, url] of urls.entries()) {
+            try {
+                progressSubject.next({
+                    stage: TOOL_STAGE.AXE.URL_PROCESSING,
+                    message: `Processing URL ${urlIndex + 1}/${urls.length}: ${url}`,
+                    currentUrl: url,
+                    urlIndex: urlIndex + 1,
+                    totalUrls: urls.length,
+                });
+
+                if (page.url() !== url) {
+                    await this.goToPageWithFallback(page, url);
+                }
+
+                for (const device of devices) {
+                    try {
+                        const deviceResult = await this.analyzeForDevice(page, url, device);
+
+                        result[device].push(deviceResult);
+                    } catch (error) {
+                        console.error(`Error analyzing ${device} for ${url}:`, error);
+
+                        this.pushErrorToAllDevices(result, url, 'Device analysis failed');
+                    }
+                }
+
+                progressSubject.next({
+                    stage: TOOL_STAGE.AXE.URL_PROCESS_COMPLETE,
+                    message: `URL ${url} analysis completed`,
+                    currentUrl: url,
+                    urlIndex: urlIndex + 1,
+                    totalUrls: urls.length,
+                });
+            } catch (error) {
+                console.error(`Error processing URL ${url}:`, error);
+
+                this.pushErrorToAllDevices(result, url, 'Page crashed..!');
+            }
+        }
+
+        // Send final result
+        progressSubject.next({
+            stage: TOOL_STAGE.COMMON.COMPLETE_TOOL,
+            message: 'Axebuilder analysis completed successfully',
+            result: {
+                status: Status.Ok,
+                data: result,
+            },
+        });
+    }
+
+    private async launchBrowser(
+        progressSubject: Subject<AxeBuilderStreamData>,
+        abortController: AbortController,
+        options?: playwright.LaunchOptions,
+    ): Promise<playwright.Browser> {
+        const browser = await playwright.chromium.launch(options);
+
+        abortController.signal.addEventListener('abort', async () => {
+            try {
+                console.log('Client disconnected, cleaning up browser...');
+
+                await browser.close();
+            } catch (error) {
+                console.error('Error closing browser:', error);
+            }
+
+            progressSubject.complete();
+        });
+
+        return browser;
     }
 }

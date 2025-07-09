@@ -1,5 +1,17 @@
-import type { AnalyzePayload, AsyncResult, Result } from 'src/types';
+import { Observable } from 'rxjs';
+import type {
+    AnalyzePayload,
+    AsyncResult,
+    AxeBuilderStreamData,
+    PageSpeedInsightStreamData,
+    Result,
+    WhoIsStreamData,
+} from 'src/types';
 
 export interface AnalyzerTool {
-    analyze(payload: AnalyzePayload): Result<any, string> | AsyncResult<any, string>;
+    analyze(payload: AnalyzePayload, abortController: AbortController): Result<any, string> | AsyncResult<any, string>;
+    analyzeStream$?: (
+        payload: AnalyzePayload,
+        abortController: AbortController,
+    ) => Observable<AxeBuilderStreamData | PageSpeedInsightStreamData | WhoIsStreamData>;
 }

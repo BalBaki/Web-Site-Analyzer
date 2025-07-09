@@ -4,7 +4,7 @@ import './globals.css';
 import Providers from './providers';
 import Header from '@/components/Header';
 import ReactScan from '@/components/ReactScan';
-import { env } from '@/services/env.service';
+import { env } from '@/services/env/server';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
