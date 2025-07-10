@@ -10,7 +10,7 @@ export default function Header() {
                 className="mr-auto flex items-center gap-2"
             >
                 <Image
-                    src="/assets/header-icon.png"
+                    src="/assets/header-icon.webp"
                     alt="Header icon"
                     width={35}
                     height={35}
@@ -19,7 +19,7 @@ export default function Header() {
                     aria-hidden
                 />
                 <Image
-                    src="/assets/header-icon-dark.png"
+                    src="/assets/header-icon-dark.webp"
                     alt="Dark mode header icon"
                     width={35}
                     height={35}

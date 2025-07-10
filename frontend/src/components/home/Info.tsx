@@ -51,14 +51,14 @@ export default function Info() {
                     className="shrink-0"
                 >
                     <Image
-                        src={'/assets/home-hero-dark.png'}
+                        src={'/assets/home-hero-dark.webp'}
                         alt="Dark mode home page hero picture"
                         width={400}
                         height={100}
                         className="-mt-16 hidden h-fit md:max-lg:w-90 dark:block"
                     />
                     <Image
-                        src={'/assets/home-hero.png'}
+                        src={'/assets/home-hero.webp'}
                         alt="Home page hero picture"
                         width={400}
                         height={100}
