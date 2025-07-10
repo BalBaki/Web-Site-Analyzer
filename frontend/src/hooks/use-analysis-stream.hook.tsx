@@ -1,73 +1,94 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import { stringifyObjectValues } from '@/lib/utils';
 import { clientEnv } from '@/services/env/client';
 import type { Analyze, AnalyzeSearchParams, ServiceEvent, StartOrCompleteEvent, StreamEvent } from '@/types';
 
+type AnalysisStream = {
+    events: StreamEvent[];
+    error: string | null;
+    isLoading: boolean;
+    result: Analyze | undefined;
+};
+type Action =
+    | { type: 'START' }
+    | { type: 'ADD_STREAM_EVENT'; payload: StreamEvent }
+    | { type: 'SET_ERROR'; payload: string }
+    | { type: 'ADD_RESULT'; payload: Analyze }
+    | { type: 'RESET' }
+    | { type: 'END' };
+
+const initialAnalysisStream: AnalysisStream = { events: [], error: null, isLoading: false, result: undefined };
+const reducer = (state: AnalysisStream, action: Action): AnalysisStream => {
+    switch (action.type) {
+        case 'START':
+            return { ...state, isLoading: true, error: null };
+        case 'ADD_STREAM_EVENT':
+            return { ...state, events: [...state.events, action.payload] };
+        case 'SET_ERROR':
+            return { ...state, error: action.payload, isLoading: false };
+        case 'ADD_RESULT':
+            return { ...state, result: { ...state.result, ...action.payload } };
+        case 'RESET':
+            return initialAnalysisStream;
+        case 'END':
+            return { ...state, isLoading: false };
+        default:
+            return state;
+    }
+};
+
 export const useAnalysisStream = (payload: AnalyzeSearchParams) => {
-    const [streamEvents, setStreamEvents] = useState<StreamEvent[]>([]);
-    const [error, setError] = useState<string | null>();
-    const [isLoading, setIsLoading] = useState(false);
-    const [result, setResult] = useState<Analyze>();
+    const [analysisStream, dispatch] = useReducer(reducer, initialAnalysisStream);
 
     useEffect(() => {
-        setIsLoading(true);
+        dispatch({ type: 'START' });
 
         const eventSource = new EventSource(
-            clientEnv.apiUrl + '/analyze-stream?' + new URLSearchParams(stringifyObjectValues(payload)),
+            clientEnv.apiUrl + 'analyze-stream?' + new URLSearchParams(stringifyObjectValues(payload)),
         );
 
         eventSource.addEventListener('service', (event) => {
-            const parsed = JSON.parse(event.data) as ServiceEvent;
+            const parsedEvent = JSON.parse(event.data) as ServiceEvent;
 
-            switch (parsed.streamData.stage) {
+            switch (parsedEvent.streamData.stage) {
                 case 'complete_tool':
-                    setResult((prev) => ({
-                        ...prev,
-                        [parsed.service]: (parsed.streamData as any).result,
-                    }));
+                case 'tool_error':
+                    dispatch({
+                        type: 'ADD_RESULT',
+                        payload: { [parsedEvent.service]: (parsedEvent.streamData as any).result },
+                    });
 
                     break;
-                case 'tool_error': {
-                    setResult((prev) => ({
-                        ...prev,
-                        [parsed.service]: (parsed.streamData as any).result,
-                    }));
-                }
                 default:
                     break;
             }
 
-            setStreamEvents((prev) => [...prev, parsed]);
+            dispatch({ type: 'ADD_STREAM_EVENT', payload: parsedEvent });
         });
         eventSource.addEventListener('start', (event) => {
-            const parsed = JSON.parse(event.data) as StartOrCompleteEvent;
+            const parsedEvent = JSON.parse(event.data) as StartOrCompleteEvent;
 
-            setStreamEvents((prev) => [...prev, parsed]);
+            dispatch({ type: 'ADD_STREAM_EVENT', payload: parsedEvent });
         });
 
         eventSource.addEventListener('complete', (event) => {
-            const parsed = JSON.parse(event.data) as StartOrCompleteEvent;
+            const parsedEvent = JSON.parse(event.data) as StartOrCompleteEvent;
 
-            setStreamEvents((prev) => [...prev, parsed]);
+            dispatch({ type: 'ADD_STREAM_EVENT', payload: parsedEvent });
 
             eventSource.close();
 
             setTimeout(() => {
-                setIsLoading(false);
+                dispatch({ type: 'END' });
             }, 1000);
         });
 
         eventSource.onerror = () => {
-            console.log('An error occurred while attempting to connect.');
-
             eventSource.close();
 
-            setError('Something went wrong..!');
-
-            setIsLoading(false);
+            dispatch({ type: 'SET_ERROR', payload: 'Something went wrong..!' });
         };
 
         return () => {
@@ -75,5 +96,5 @@ export const useAnalysisStream = (payload: AnalyzeSearchParams) => {
         };
     }, [payload]);
 
-    return { streamEvents, result, error, isLoading };
+    return analysisStream;
 };

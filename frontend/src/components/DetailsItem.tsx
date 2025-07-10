@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Link from 'next/link';
 import { cn, stringifyValue, truncateTextMiddle } from '@/lib/utils';
 import type { ComponentPropsWithRef } from 'react';

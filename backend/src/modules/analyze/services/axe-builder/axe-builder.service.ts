@@ -316,9 +316,6 @@ export class AxeBuilderService implements AnalyzerTool {
         }
     }
 
-    //STREAMING
-
-    // New streaming method for SSE
     analyzeStream$(
         { url, deepscan }: AnalyzePayload,
         abortController: AbortController,
@@ -357,7 +354,7 @@ export class AxeBuilderService implements AnalyzerTool {
                 return;
             }
 
-            browser = await this.launchBrowser(progressSubject, abortController, { headless: false });
+            browser = await this.launchBrowser(progressSubject, abortController);
 
             const context = await browser.newContext({ viewport: this.deviceViewport.desktop });
             const page = await context.newPage();
@@ -366,7 +363,6 @@ export class AxeBuilderService implements AnalyzerTool {
 
             await this.goToPageWithFallback(page, mainUrlAsURL.href, { loadState: { timeout: 5000 } });
 
-            // Extract links if deepscan
             if (deepscan) {
                 progressSubject.next({
                     stage: TOOL_STAGE.AXE.LINK_EXTRACTION,
@@ -382,7 +378,6 @@ export class AxeBuilderService implements AnalyzerTool {
                 urls,
             });
 
-            // Start scanning
             await this.streamingScan$(page, urls, progressSubject);
 
             progressSubject.complete();
@@ -448,7 +443,6 @@ export class AxeBuilderService implements AnalyzerTool {
             }
         }
 
-        // Send final result
         progressSubject.next({
             stage: TOOL_STAGE.COMMON.COMPLETE_TOOL,
             message: 'Axebuilder analysis completed successfully',

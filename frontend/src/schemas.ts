@@ -29,10 +29,6 @@ export const analyzeFormSchema = z.object({
 
 export const serverEnvSchema = z
     .object({
-        API_URL: z
-            .string()
-            .url()
-            .transform((value) => (value.endsWith('/') ? value : `${value}/`)),
         NODE_ENV: z.enum(['production', 'development', 'test']).default('development'),
         SITE_URL: z
             .string()
@@ -54,7 +50,10 @@ export const serverEnvSchema = z
     );
 
 export const clientEnvSchema = z.object({
-    NEXT_PUBLIC_API_URL: z.string().min(1),
+    NEXT_PUBLIC_API_URL: z
+        .string()
+        .url()
+        .transform((value) => (value.endsWith('/') ? value : `${value}/`)),
 });
 
 export const askSchema = z.object({

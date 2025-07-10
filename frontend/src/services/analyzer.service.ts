@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import 'server-only';
-import { env } from './env/server';
+import { clientEnv } from './env/client';
 import { Status } from '@/enums';
 import { stringifyObjectValues } from '@/lib/utils';
 import type { AnalyzeFormData, AnalyzeResult, AskPayload, AskResult } from '@/types';
 
 export class AnalyzerService {
-    static readonly apiUrl = env.apiUrl;
+    static readonly apiUrl = clientEnv.apiUrl;
 
     static analyze = async (params: AnalyzeFormData): AnalyzeResult => {
         try {
@@ -36,6 +34,7 @@ export class AnalyzerService {
             }
 
             return (await res.json()) as AnalyzeResult;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             return {
                 status: Status.Err,
@@ -44,7 +43,7 @@ export class AnalyzerService {
         }
     };
 
-    static assistant = async (payload: AskPayload): AskResult => {
+    static ask = async (payload: AskPayload): AskResult => {
         try {
             const res = await fetch(this.apiUrl + 'assistant', {
                 method: 'POST',
@@ -73,6 +72,7 @@ export class AnalyzerService {
             }
 
             return (await res.json()) as AskResult;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             return {
                 status: Status.Err,

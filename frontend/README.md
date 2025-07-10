@@ -31,6 +31,6 @@ npm run scan
 Create a `.env` file in the root directory and add the following variables:
 
 ```
-API_URL=your_api_url  # Back-end Api URL
+NEXT_PUBLIC_API_URL=your_api_url  # Back-end Api URL
 SITE_URL=https://your-production-domain.com/  # Production Web Site URL
 ```

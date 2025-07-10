@@ -17,10 +17,6 @@ class ServerEnvService extends BaseEnvService<ServerEnv> {
         return ServerEnvService.instance;
     }
 
-    get apiUrl() {
-        return this.get('API_URL');
-    }
-
     get isDevelopment() {
         return this.get('NODE_ENV') === 'development';
     }

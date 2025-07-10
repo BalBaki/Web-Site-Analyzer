@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { BaseError, Result } from './common.type';
 
 export type ScoreStatus = 'pass' | 'average' | 'fail';

@@ -3,7 +3,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { Button } from './ui/button';
 import { Status } from '@/enums';
-import { ApiService } from '@/services/api.service';
+import { AnalyzerService } from '@/services/analyzer.service';
 import type { AskPayload } from '@/types';
 
 type AssistantProps = {
@@ -17,7 +17,7 @@ export default function Assistant({ data }: AssistantProps) {
         isPending,
         mutate: ask,
     } = useMutation({
-        mutationFn: ApiService.ask,
+        mutationFn: AnalyzerService.ask,
     });
     const handleAskClick = () => {
         ask(data);

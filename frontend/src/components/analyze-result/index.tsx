@@ -32,11 +32,11 @@ const serviceInfo: Record<string, Service> = {
 };
 
 export default function AnalyzeResult({ searchParams }: AnalyzeResultProps) {
-    const { streamEvents, result: analyzeResult, isLoading, error } = useAnalysisStream(searchParams);
+    const { events: streamEvents, result: analyzeResult, isLoading, error } = useAnalysisStream(searchParams);
 
     if (error) return <div>Something went wrong..!</div>;
 
-    if (isLoading && streamEvents.length > 0) {
+    if (isLoading) {
         return (
             <div className="container mx-auto mb-1 rounded-lg border-2 p-2">
                 {streamEvents.map((streamEvent, index) => {

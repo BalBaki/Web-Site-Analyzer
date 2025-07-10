@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import type { BaseError, Device, Result } from './common.type';
 
 export type ImpactSeverity = 'trivial' | 'minor' | 'moderate' | 'serious' | 'critical';
