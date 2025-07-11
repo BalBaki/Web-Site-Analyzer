@@ -38,8 +38,6 @@ export class WhoIsService implements AnalyzerTool {
                 data: await response.json(),
             };
         } catch (error) {
-            console.error(error);
-
             return {
                 status: Status.Err,
                 err: `Error at WhoIs Analzyer..! Check the server console.`,

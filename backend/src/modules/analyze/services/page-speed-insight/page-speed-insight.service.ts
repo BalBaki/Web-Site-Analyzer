@@ -46,8 +46,6 @@ export class PageSpeedInsightService implements AnalyzerTool {
                 }, {}),
             };
         } catch (error) {
-            console.error(error);
-
             return {
                 status: Status.Err,
                 err: `Error at PageSpeed Insight Analzyer..! Check the server console.`,

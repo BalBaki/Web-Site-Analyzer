@@ -7,16 +7,7 @@ export const envSchema = z.object({
 });
 
 export const analyzeSchema = z.object({
-    url: z
-        .string()
-        .url()
-        .transform((value) => {
-            const url = new URL(value);
-
-            if (!url.hostname.startsWith('www.')) url.hostname = 'www.' + url.hostname;
-
-            return url.href;
-        }),
+    url: z.string().url(),
     services: z
         .string()
         .transform((val) => {
