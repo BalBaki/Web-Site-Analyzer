@@ -34,8 +34,8 @@ export class AnalyzeService {
             data: {
                 service: serviceName,
                 totalServices: payload.services.length,
-                event: EVENT_TYPE.SERVICE,
-                message: `Started ${serviceName} analysis...`,
+                type: EVENT_TYPE.SERVICE,
+                message: `Started ${serviceName} analysis`,
                 timestamp: new Date().toISOString(),
                 streamData: {
                     stage: TOOL_STAGE.COMMON.START_TOOL,
@@ -47,7 +47,7 @@ export class AnalyzeService {
     private createToolError$(serviceName: Service, payload: AnalyzePayload, err: any) {
         return of<StreamServiceEvent>({
             data: {
-                event: EVENT_TYPE.SERVICE,
+                type: EVENT_TYPE.SERVICE,
                 service: serviceName,
                 totalServices: payload.services.length,
                 message: `${serviceName} analysis failed`,
@@ -75,7 +75,7 @@ export class AnalyzeService {
             if (isStreamingTool) {
                 return tool.analyzeStream$(payload, abortController).pipe(
                     startWith({
-                        message: `Started ${serviceName} analysis...`,
+                        message: `Started ${serviceName} analysis`,
                         stage: TOOL_STAGE.COMMON.START_TOOL,
                     }),
                     map(({ message, ...rest }) => ({
@@ -84,7 +84,7 @@ export class AnalyzeService {
                             totalServices: payload.services.length,
                             message,
                             timestamp: new Date().toISOString(),
-                            event: EVENT_TYPE.SERVICE,
+                            type: EVENT_TYPE.SERVICE,
                             streamData: rest,
                         },
                     })),
@@ -100,7 +100,7 @@ export class AnalyzeService {
                         service: serviceName,
                         totalServices: payload.services.length,
                         message: `${serviceName} analysis completed`,
-                        event: EVENT_TYPE.SERVICE,
+                        type: EVENT_TYPE.SERVICE,
                         timestamp: new Date().toISOString(),
                         streamData: {
                             stage: TOOL_STAGE.COMMON.COMPLETE_TOOL,

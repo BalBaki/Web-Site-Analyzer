@@ -175,5 +175,9 @@ export const truncateTextMiddle = (
 ): string => {
     if (text.length <= start) return text;
 
-    return text.slice(0, start) + '........' + text.slice(-end);
+    return text.slice(0, start) + '......' + text.slice(-end);
+};
+
+export const capitilizeFirstLetter = (text: string) => {
+    return text.slice(0, 1).toLocaleUpperCase() + text.slice(1);
 };

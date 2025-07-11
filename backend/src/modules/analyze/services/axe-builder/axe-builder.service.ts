@@ -366,7 +366,7 @@ export class AxeBuilderService implements AnalyzerTool {
             if (deepscan) {
                 progressSubject.next({
                     stage: TOOL_STAGE.AXE.LINK_EXTRACTION,
-                    message: 'Extracting links for deep scan...',
+                    message: 'Extracting links for deep scan',
                 });
 
                 urls = await this.extractLinks(page, mainUrlAsURL);

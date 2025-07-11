@@ -55,6 +55,7 @@ export default {
                 'score-fail': 'hsl(var(--score-fail))',
                 'dark-error': '#E27E7E',
                 'selected-tab': '#1976d2',
+                'progress-log': 'hsl(var(--progress-log))',
             },
             borderRadius: {
                 lg: 'var(--radius)',

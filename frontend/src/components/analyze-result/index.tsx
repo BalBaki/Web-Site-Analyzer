@@ -1,5 +1,6 @@
 'use client';
 
+import AnalysisProgressLog from './AnalysisProgressLog';
 import AxeBuilder from './axe-builder';
 import PageSpeedInsight from './page-speed-insight';
 import WhoIs from './WhoIs';
@@ -37,32 +38,11 @@ export default function AnalyzeResult({ searchParams }: AnalyzeResultProps) {
     if (error) return <div>Something went wrong..!</div>;
 
     if (isLoading) {
-        return (
-            <div className="container mx-auto mb-1 rounded-lg border-2 p-2">
-                {streamEvents.map((streamEvent, index) => {
-                    if (streamEvent.event === 'error')
-                        return (
-                            <div
-                                key={index}
-                                className="capitalize"
-                            >
-                                {streamEvent.message}
-                            </div>
-                        );
-
-                    return (
-                        <p
-                            key={index}
-                            className="break-all"
-                        >{`${(streamEvent.service, streamEvent.message)}`}</p>
-                    );
-                })}
-            </div>
-        );
+        return <AnalysisProgressLog events={streamEvents} />;
     }
 
     return (
-        analyzeResult && (
+        !!analyzeResult && (
             <Tabs defaultValue={Object.keys(analyzeResult)[0]}>
                 <TabsList className="mx-auto h-11 w-full justify-normal max-sm:h-auto max-sm:flex-col max-sm:gap-y-3 max-sm:pt-2 max-sm:[&>button]:w-full">
                     {Object.keys(analyzeResult).map((service) => {

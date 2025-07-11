@@ -178,22 +178,22 @@ interface BaseStreamEventData {
 }
 
 export interface StreamStartEventData extends BaseStreamEventData {
-    event: EventType['START'];
+    type: EventType['START'];
     totalServices: number;
 }
 export interface StreamCompleteEventData extends BaseStreamEventData {
-    event: EventType['COMPLETE'];
+    type: EventType['COMPLETE'];
     totalServices: number;
 }
 export interface StreamServiceEventData extends BaseStreamEventData {
-    event: EventType['SERVICE'];
+    type: EventType['SERVICE'];
     service: Service;
     totalServices: number;
     serviceIndex?: number;
     streamData: AllStreamData;
 }
 export interface StreamErrorEventData extends BaseStreamEventData {
-    event: EventType['ERROR'];
+    type: EventType['ERROR'];
 }
 
 export interface StreamStartEvent {

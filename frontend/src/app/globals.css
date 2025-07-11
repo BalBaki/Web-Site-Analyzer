@@ -61,6 +61,7 @@
         --score-pass: 135 63% 40%;
         --score-avarage: 45 100% 51%;
         --score-fail: 354 70% 54%;
+        --progress-log: 206 100% 37%;
     }
     .dark {
         --background: 240 10% 3.9%;
@@ -90,6 +91,7 @@
         --score-pass: 120 39% 54%;
         --score-avarage: 47 88% 50%;
         --score-fail: 6 78% 57%;
+        --progress-log: 210 100% 70%;
     }
 }
 

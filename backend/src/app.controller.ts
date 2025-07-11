@@ -41,7 +41,7 @@ export class AppController {
         return this.appService.analyzeStream$(query, abortController).pipe(
             map((event) => ({
                 data: event.data,
-                type: event.data.event || EVENT_TYPE.SERVICE,
+                type: event.data.type || EVENT_TYPE.SERVICE,
             })),
         );
     }

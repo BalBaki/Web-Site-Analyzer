@@ -91,7 +91,7 @@ export type AllStreamData = AxeBuilderStreamData | PageSpeedInsightStreamData | 
 export type StreamEvent = StartOrCompleteEvent | ErrorEvent | ServiceEvent;
 
 export type StartOrCompleteEvent = {
-    event: 'start' | 'complete';
+    type: 'start' | 'complete';
     message: string;
     service: AnalyzeFormData['services'];
     timestamp: string;
@@ -100,13 +100,13 @@ export type StartOrCompleteEvent = {
 };
 
 export type ErrorEvent = {
-    event: 'error';
+    type: 'error';
     message: string;
     timestamp: string;
 };
 
 export type ServiceEvent = {
-    event: 'service';
+    type: 'service';
     message: string;
     service: AnalyzeFormData['services'][number];
     timestamp: string;
@@ -114,3 +114,5 @@ export type ServiceEvent = {
     serviceIndex?: number;
     streamData: AllStreamData;
 };
+
+export type ProgressStatus = 'start' | 'analyzing' | 'error' | 'completed';

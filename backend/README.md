@@ -69,34 +69,13 @@ CHATGPT_API_KEY=your_api_key             # OpenAI ChatGPT API key
 
 ### Analyze
 
-- **GET** `/analyze`
+- **SSE** `/analyze`
 - **Request Query:**
     ```json
     {
         "url": "string",
         "services": "array",
         "deepscan": "boolean"
-    }
-    ```
-- **Response:**
-
-    ```json
-    {
-        "status": "ok",
-        "data": {
-            "axebuilder"?: {},
-            "pagespeedinsight"?: {},
-            "whois"?: {}
-        }
-    }
-    ```
-
-    or
-
-    ```json
-    {
-        "status": "err",
-        "err": "string"
     }
     ```
 

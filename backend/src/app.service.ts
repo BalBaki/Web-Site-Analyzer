@@ -56,7 +56,7 @@ export class AppService {
     analyzeStream$(payload: AnalyzePayload, abortController: AbortController): Observable<StreamEvent> {
         const start$ = of<StreamStartEvent>({
             data: {
-                event: EVENT_TYPE.START,
+                type: EVENT_TYPE.START,
                 message: 'Analysis started',
                 timestamp: new Date().toISOString(),
                 totalServices: payload.services.length,
@@ -68,7 +68,7 @@ export class AppService {
         const mergedServices$ = from(serviceStreams$).pipe(mergeMap((service$) => service$, 1));
         const end$ = of<StreamCompleteEvent>({
             data: {
-                event: EVENT_TYPE.COMPLETE,
+                type: EVENT_TYPE.COMPLETE,
                 message: 'All services analysis completed',
                 timestamp: new Date().toISOString(),
                 totalServices: payload.services.length,
@@ -80,7 +80,7 @@ export class AppService {
             catchError(() =>
                 of({
                     data: {
-                        event: EVENT_TYPE.ERROR,
+                        type: EVENT_TYPE.ERROR,
                         message: 'Analysis failed',
                         timestamp: new Date().toISOString(),
                     },
